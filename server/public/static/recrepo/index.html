@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> repo </title>
+    <meta charset="utf8" />
+    <script src="vue/vue-2.6.11-dev.js"></script>
+</head>
+
+<body>
+    <div id="data_area">
+        <div v-for="srcnode in srclist">
+            <div><h3>{{ srcnode[0] }}</h3></div>
+            <table border="1px">
+                <tr v-for="address in srcnode[1]">
+                    <td>{{ address[0] }}</td>
+                    <td>{{ address[1] }}</td>
+                    <td>{{ address[2] }}</td>
+                    <td>{{ address[3] }}</td>
+                    <td>{{ address[4] }}</td>
+                </tr>
+            </table><br>
+        </div>
+    </div>
+</body>
+<script>
+    let localhost=window.location.protocol+'//'+window.location.host+window.location.pathname;
+    new Vue({
+        el: '#data_area',
+        data: {
+            srclist:
+                [
+                    ['vue',
+                        [
+                            ['v2.6.11', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', 'cdn', 'dev',''],
+                            ['v2.6.11', localhost+'vue/vue-2.6.11-dev.js', 'local', 'dev',''],
+                        ]
+                    ],
+                    ['axios',
+                        [
+                            ['v0.19.2',localhost+'axios/axios.min.js','local','min',''],
+                            ['v0.19.2','https://unpkg.com/axios/dist/axios.min.js','cdn','min',''],
+                        ]
+                    ],
+                    ['jquery',
+                        [
+                            ['v1.10.2', 'https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js', 'cdn', 'min',''],
+                            ['v2.1.4', 'https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js', 'cdn', 'min',''],
+                            ['v2.0.2', 'https://upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.2.min.js', 'cdn', 'min',''],
+                            ['v2.0.2', 'https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js', 'cdn', 'min',''],
+                            ['v1.10.2', 'https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', 'cdn', 'min',''],
+                            ['v1.9.0', 'https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js', 'cdn', 'min',''],
+                            ['v1.9.0', localhost+'jquery/jquery-1.10.2-min.js', 'local', 'min',''],
+                        ]
+                    ],
+                    ['bootstrap3 multi',
+                        [
+                            ['v3.3.7', 'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css', 'cdn', 'min',''],
+                            ['v3.3.7', 'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js', 'cdn', 'min',''],
+                            ['v3.3.7', 'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css', 'cdn', 'min','一般不用'],
+                            ['', '', '', ''],
+                            ['v3.3.7', localhost+'bootstrap3.3.7/css/bootstrap.min.css', 'local', 'min',''],
+                            ['v3.3.7', localhost+'bootstrap3.3.7/js/bootstrap.min.js', 'local', 'min',''],
+                            ['v3.3.7', localhost+'bootstrap3.3.7/css/bootstrap-theme.min.css', 'local', 'min','一般不用'],
+                        ]
+                    ],
+                    ['bootstrap3 jquery fileupload',
+                        [
+                            ['v3.3.7', 'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css', 'cdn', 'min',''],
+                            ['v3.3.7', 'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js', 'cdn', 'min',''],
+                            ['v3.3.7', 'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css', 'cdn', 'min','一般不用'],
+                            ['', '', '', ''],
+                            ['v3.3.7', localhost+'bootstrap3.3.7/css/bootstrap.min.css', 'local', 'min',''],
+                            ['v3.3.7', localhost+'bootstrap3.3.7/js/bootstrap.min.js', 'local', 'min',''],
+                            ['v3.3.7', localhost+'bootstrap3.3.7/css/bootstrap-theme.min.css', 'local', 'min','一般不用'],
+                        ]
+                    ],
+                    ['caramel multi',
+                        [
+                            ['v1.5.1',localhost+'caramel/css/caramel.css', 'local', 'dev',''],
+                            ['v1.5.1',localhost+'caramel/css/caramel.min.css','local','min',''],
+                            ['v1.5.1',localhost+'caramel/js/caramel.js','local','dev',''],
+                            ['v1.5.1',localhost+'caramel/js/caramel.min.js','local','min',''],
+                            ['v2.2.4',localhost+'caramel/js/jquery.min.js','local','universal',''],
+
+                        ]
+                    ],
+                    ['caramel multi',
+                        [
+                            ['*',localhost+'marked/marked.min.css', 'local', 'pro',''],
+                        ]
+                    ],
+                ]
+        }
+    });
+</script>
+</html>

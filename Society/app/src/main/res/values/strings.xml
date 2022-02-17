@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Society</string>
+
+    <string name="global_alert_title_confirm">Confirm</string>
+    <string name="alert_device_register_failed_push_sdk">This Device Registered Failed in PushSDK</string>
+    <string name="main_message_send">Send</string>
+    <string name="global_alert_title_alert">Alert</string>
+    <string name="main_message_send_alert">You Should Add One PushKey</string>
+    <string name="global_alert_ok">OK</string>
+    <string name="global_alert_cancel">Cancel</string>
+    <string name="global_swipetodismiss_alert_delete">Delete?</string>
+</resources>

@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: io.noties.markwon:ext-tasklist:4.6.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/37f31848fa3341fbc3dd1fe1e7b973d4/transformed/jetified-ext-tasklist-4.6.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/37f31848fa3341fbc3dd1fe1e7b973d4/transformed/jetified-ext-tasklist-4.6.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/37f31848fa3341fbc3dd1fe1e7b973d4/transformed/jetified-ext-tasklist-4.6.2/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.noties.markwon/ext-tasklist/4.6.2/5faadaca53461ed2f1e1fe1b2018581eb64c2b1b/ext-tasklist-4.6.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.noties.markwon/ext-tasklist/4.6.2/fda197b59f22ae318d97052373c9c247cbd0eabb/ext-tasklist-4.6.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

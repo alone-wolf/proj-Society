@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: io.noties.markwon:image-coil:4.6.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/628eb301858e09d69ac97ff01056ff58/transformed/jetified-image-coil-4.6.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/628eb301858e09d69ac97ff01056ff58/transformed/jetified-image-coil-4.6.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/628eb301858e09d69ac97ff01056ff58/transformed/jetified-image-coil-4.6.2/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.noties.markwon/image-coil/4.6.2/c9cdb3aeed4e8022e3a00f90a1e3e72aa9ae29d4/image-coil-4.6.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.noties.markwon/image-coil/4.6.2/53627e1c585d9e8926c9ef34af9d068bba22ddf9/image-coil-4.6.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
