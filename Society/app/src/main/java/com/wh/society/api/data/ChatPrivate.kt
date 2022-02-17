@@ -1,12 +1,21 @@
 package com.wh.society.api.data
 
-class ChatPrivate {
-    var id:Int = 0
-    var userId:Int = 0
-    var username:String = ""
-    var userIconUrl:String = ""
-    var opUserId:Int = 0
-    var message:String = ""
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.RealIconUrl
+
+class ChatPrivate : RealIconUrl {
+    var id: Int = 0
+    var userId: Int = 0
+    var username: String = ""
+    var userIconUrl: String = ""
+    var opUserId: Int = 0
+    var message: String = ""
+    override val realIconUrl: String
+        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
+            userIconUrl
+        else
+            ServerApi.picUrl(userIconUrl)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

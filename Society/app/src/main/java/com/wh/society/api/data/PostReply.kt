@@ -1,6 +1,9 @@
 package com.wh.society.api.data
 
-class PostReply {
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.RealIconUrl
+
+class PostReply:RealIconUrl {
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
@@ -13,6 +16,12 @@ class PostReply {
     var deviceName: String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
+
+    override val realIconUrl: String
+        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
+            userIconUrl
+        else
+            ServerApi.picUrl(userIconUrl)
 
     override fun toString(): String {
         return "PostReply(id=$id, societyId=$societyId, societyName='$societyName', postId=$postId, postTitle='$postTitle', userId=$userId, userIconUrl='$userIconUrl', username='$username', reply='$reply', deviceName='$deviceName', createTimestamp='$createTimestamp', updateTimestamp='$updateTimestamp')"

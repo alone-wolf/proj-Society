@@ -1,6 +1,9 @@
 package com.wh.society.api.data
 
-class Post {
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.RealIconUrl
+
+class Post:RealIconUrl {
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
@@ -13,6 +16,13 @@ class Post {
     var post: String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
+
+    override val realIconUrl: String
+        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
+            userIconUrl
+        else
+            ServerApi.picUrl(userIconUrl)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

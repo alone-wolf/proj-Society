@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.wh.society.api.ServerApi
@@ -48,15 +49,14 @@ fun MinePicList(requestHolder: RequestHolder) {
                 itemContent = { it: PicData ->
                     Image(
                         painter = rememberImagePainter(
-                            data = ServerApi.picUrl(
-                                it.newFilename,
-                                requestHolder.userInfo.id
-                            )
+                            data = ServerApi.picUrl(it.newFilename)
                         ), contentDescription = "", modifier = Modifier
                             .size(120.dp)
                             .shadow(5.dp)
 //                        .padding(4.dp)
-                            .border(width = 2.dp, color = Color.White)
+                            .border(width = 2.dp, color = Color.White),
+                        contentScale = ContentScale.Crop
+
                     )
                 })
             empty(requestHolder.apiViewModel.picDataList)

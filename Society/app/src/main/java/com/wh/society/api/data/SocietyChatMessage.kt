@@ -2,9 +2,11 @@ package com.wh.society.api.data
 
 import com.wh.common.typeExt.toTimestamp
 import com.wh.common.util.TimeUtils
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.util.CurrentTimeUtil
 
-class SocietyChatMessage {
+class SocietyChatMessage:RealIconUrl {
     var id:Int = 0
     var societyId:Int = 0
     var userId:Int = 0
@@ -13,6 +15,15 @@ class SocietyChatMessage {
     var message:String = ""
     var createTimestamp:String = ""
     var updateTimestamp:String = ""
+
+
+    override val realIconUrl: String
+        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
+            userIconUrl
+        else
+            ServerApi.picUrl(userIconUrl)
+
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

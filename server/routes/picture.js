@@ -35,31 +35,26 @@ apiRouter.get("/list", (req, res, next) => {
     });
 });
 
-apiRouter.get("/:userId", (req, res, next) => {
-  let userId = req.params.userId;
-  if (!userId) {
-    res.status(400).json(STATUS.STATUS_400);
-    return;
-  }
-  Picture.findAll({ where: { userId } })
-    .then((data) => {
-      res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
-    })
-    .catch((e) => {
-      res.status(500).json(STATUS.STATUS_500);
-      console.log(e);
-    }); 0
-});
+// apiRouter.get("/:userId", (req, res, next) => {
+//   let userId = req.params.userId;
+//   if (!userId) {
+//     res.status(400).json(STATUS.STATUS_400);
+//     return;
+//   }
+//   Picture.findAll({ where: { userId } })
+//     .then((data) => {
+//       res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
+//     })
+//     .catch((e) => {
+//       res.status(500).json(STATUS.STATUS_500);
+//       console.log(e);
+//     }); 0
+// });
 
 // for universal usage
-apiRouter.get("/:userId/:token", (req, res, next) => {
-  let userId = req.params.userId;
+apiRouter.get("/:token", (req, res, next) => {
   let newFilename = req.params.token;
-  if (!(userId && newFilename)) {
-    res.status(404).json(STATUS.STATUS_404);
-    return;
-  }
-  Picture.findOne({ where: { userId, newFilename } })
+  Picture.findOne({ where: { newFilename } })
     .then((data) => {
       if (data) {
         res.download(

@@ -42,7 +42,7 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
     val shadowClipShapeR = borderShapeR + border
     Image(
         painter = rememberImagePainter(
-            requestHolder.userInfo.iconUrl,
+            requestHolder.userInfo.realIconUrl,
             imageLoader = requestHolder.coilImageLoader
         ),
         contentDescription = "",

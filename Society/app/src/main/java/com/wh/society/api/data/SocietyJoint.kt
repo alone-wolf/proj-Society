@@ -1,6 +1,9 @@
 package com.wh.society.api.data
 
-class SocietyJoint {
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.RealIconUrl
+
+class SocietyJoint :RealIconUrl{
     var id:Int = 0
     var userId: Int = 0
     var societyId: Int = 0
@@ -10,6 +13,12 @@ class SocietyJoint {
     var userIconUrl:String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
+
+    override val realIconUrl: String
+        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
+            userIconUrl
+        else
+            ServerApi.picUrl(userIconUrl)
 
     fun levelToString(): String {
         return when(permissionLevel){
