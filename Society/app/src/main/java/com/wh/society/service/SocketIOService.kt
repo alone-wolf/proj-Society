@@ -375,7 +375,7 @@ class SocketIOService : Service() {
     ) {
         notifyBase(
             channel = USER_CHAT_PRIVATE,
-            title = "${username}发来了私信",
+            title = "$username 发来了私信",
             text = message,
             id = 6
         )
