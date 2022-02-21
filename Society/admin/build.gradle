@@ -65,4 +65,15 @@ dependencies {
 
     implementation project(path: ':common')
 
+    final def accompanist_version = "0.24.2-alpha"
+//    implementation "com.google.accompanist:accompanist-flowlayout:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
+    // If using insets-ui
+    implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
+
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+
+    // If using indicators, also depend on
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+
 }
