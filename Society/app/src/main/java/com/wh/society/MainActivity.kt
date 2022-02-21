@@ -11,9 +11,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -83,9 +81,8 @@ class MainActivity : AppCompatActivity(), RequestHolder {
     override val settingStore: SettingStore by lazy { (application as App).storeKeeper.settingStore }
 
     override val societyList: List<Society> by lazy { apiViewModel.societyList.data }
-    override val collegeList: List<String> by lazy { apiViewModel.collegeList }
+    override val collegeList:ReturnListData<College> by lazy { apiViewModel.collegeList }
     override val bbsList: List<BBS> by lazy { apiViewModel.bbsList }
-    override val userInfo: UserInfo by lazy { apiViewModel.userInfo.notNullOrBlank(UserInfo()) }
 
     override var transSociety: Society = Society()
     override var transBBS: BBS = BBS()

@@ -27,10 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.wh.society.api.data.BBS
-import com.wh.society.api.data.Post
-import com.wh.society.api.data.PostReply
-import com.wh.society.api.data.Society
+import com.wh.society.api.data.*
 import com.wh.society.componment.RequestHolder
 
 @Composable
@@ -38,11 +35,12 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
     val padding = 4.dp
     val size = 80.dp
     val border = 3.dp
-    val borderShapeR = size / 2 + padding
-    val shadowClipShapeR = borderShapeR + border
+//    val borderShapeR = size / 2 + padding
+//    val shadowClipShapeR = borderShapeR + border
+
     Image(
         painter = rememberImagePainter(
-            requestHolder.userInfo.realIconUrl,
+            requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).realIconUrl,
             imageLoader = requestHolder.coilImageLoader
         ),
         contentDescription = "",
@@ -52,10 +50,10 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
             .border(
                 width = border,
                 color = Color.White,
-                shape = RoundedCornerShape(borderShapeR)
+                shape = CircleShape
             )
-            .shadow(5.dp, shape = RoundedCornerShape(shadowClipShapeR))
-            .clip(shape = RoundedCornerShape(shadowClipShapeR))
+            .shadow(5.dp, shape = CircleShape)
+            .clip(shape = CircleShape)
             .clickable { Log.d("WH_", "MinePage: onClick") }
             .background(Color.Green),
         contentScale = ContentScale.Crop

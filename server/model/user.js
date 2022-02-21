@@ -8,9 +8,13 @@ User.init(
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: DataTypes.STRING,
     username: DataTypes.STRING,
+    college: {
+      defaultValue: "未知",
+      type: DataTypes.STRING
+    },
     phone: { type: DataTypes.STRING, defaultValue: "" },
     email: { type: DataTypes.STRING, defaultValue: "" },
-    studentNumber: DataTypes.STRING,
+    studentNumber: { type: DataTypes.STRING, defaultValue: "" },
     password: DataTypes.STRING,
     describe: { type: DataTypes.STRING, defaultValue: "" },
     iconUrl: { type: DataTypes.STRING, defaultValue: "" },

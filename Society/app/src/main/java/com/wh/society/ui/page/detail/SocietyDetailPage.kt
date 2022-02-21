@@ -26,10 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.wh.society.R
-import com.wh.society.api.data.BBS
-import com.wh.society.api.data.MemberRequest
-import com.wh.society.api.data.ReturnListData
-import com.wh.society.api.data.SocietyJoint
+import com.wh.society.api.data.*
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.conditionItem
@@ -42,7 +39,11 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
     var thisSocietyJointList by remember { mutableStateOf(ReturnListData.blank<SocietyJoint>()) }
     var memberRequestList by remember { mutableStateOf(ReturnListData.blank<MemberRequest>()) }
 
-    val myJoint = thisSocietyJointList.data.find { it.userId == requestHolder.userInfo.id }
+    val myJoint = thisSocietyJointList.data.find {
+        it.userId == requestHolder.apiViewModel.userInfo.notNullOrBlank(
+            UserInfo()
+        ).id
+    }
     val isJoint: Boolean = myJoint != null
 
 
@@ -219,9 +220,9 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     Button(
                         onClick = {
                             requestHolder.apiViewModel.societyMemberRequestCreate(
-                                requestHolder.userInfo.id,
+                                requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
                                 requestHolder.transSociety.id,
-                                request = "${requestHolder.userInfo.username}'s leave request for ${requestHolder.transSociety.name}",
+                                request = "${requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).username}'s leave request for ${requestHolder.transSociety.name}",
                                 isJoin = false
                             ) {}
                         },
@@ -237,9 +238,9 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     Button(
                         onClick = {
                             requestHolder.apiViewModel.societyMemberRequestCreate(
-                                requestHolder.userInfo.id,
+                                requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
                                 requestHolder.transSociety.id,
-                                request = "${requestHolder.userInfo.username}'s join request for ${requestHolder.transSociety.name}",
+                                request = "${requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).username}'s join request for ${requestHolder.transSociety.name}",
                                 isJoin = true
                             ) {}
                         },

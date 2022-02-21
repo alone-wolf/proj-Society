@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wh.society.api.data.PostReply
 import com.wh.society.api.data.ReturnListData
+import com.wh.society.api.data.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.spacer
@@ -43,7 +44,7 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
                     requestHolder.apiViewModel.societyBBSPostReplyCreate(
                         societyId = requestHolder.transSociety.id,
                         postId = requestHolder.transPost!!.id,
-                        userId = requestHolder.userInfo.id,
+                        userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
                         reply = it,
                         deviceName = requestHolder.deviceName
                     ) {
@@ -60,10 +61,10 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
         },
         actions = {
             requestHolder.transPost?.let {
-                if (it.userId == requestHolder.userInfo.id) {
+                if (it.userId == requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id) {
                     IconButton(onClick = {
                         requestHolder.apiViewModel.societyBBSPostDelete(
-                            userId = requestHolder.userInfo.id,
+                            userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
                             postId = it.id
                         ) {
                             requestHolder.globalNav.goBack()

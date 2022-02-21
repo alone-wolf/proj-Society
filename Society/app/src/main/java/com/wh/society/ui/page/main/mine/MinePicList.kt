@@ -2,16 +2,17 @@ package com.wh.society.ui.page.main.mine
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,7 @@ import com.wh.society.api.data.PicData
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
+import com.wh.society.typeExt.everyNForRow
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.GlobalScaffold
 
@@ -43,22 +45,29 @@ fun MinePicList(requestHolder: RequestHolder) {
     ) {
 
         LazyColumn(content = {
-            items(
+
+            everyNForRow(
                 items = requestHolder.apiViewModel.picDataList.data,
-                key = { item: PicData -> item.id },
-                itemContent = { it: PicData ->
+                n = 3,
+                itemContent = { it, m ->
                     Image(
                         painter = rememberImagePainter(
-                            data = ServerApi.picUrl(it.newFilename)
-                        ), contentDescription = "", modifier = Modifier
-                            .size(120.dp)
-                            .shadow(5.dp)
-//                        .padding(4.dp)
+                            data = ServerApi.picUrl(it.newFilename),
+                            imageLoader = requestHolder.coilImageLoader,
+                            builder = {
+                                crossfade(true)
+                            }
+                        ),
+                        contentDescription = "",
+                        modifier = m
+                            .height(120.dp)
+                            .padding(2.dp)
                             .border(width = 2.dp, color = Color.White),
-                        contentScale = ContentScale.Crop
-
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center
                     )
-                })
+                }
+            )
             empty(requestHolder.apiViewModel.picDataList)
             spacer()
         }, modifier = Modifier.fillMaxSize())

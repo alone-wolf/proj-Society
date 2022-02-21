@@ -13,9 +13,9 @@ interface ServerApi {
         private const val ssl = false
         private const val port = 5001
         private const val sioPort = 5002
-        val baseUrl:String
-        get() = "${if (ssl) "https://" else "http://"}${host}:${port}"
-        val sioUrl:String
+        val baseUrl: String
+            get() = "${if (ssl) "https://" else "http://"}${host}:${port}"
+        val sioUrl: String
             get() = "${if (ssl) "https://" else "http://"}${host}:${sioPort}"
 
 
@@ -47,7 +47,7 @@ interface ServerApi {
         @Field("userId") userId: Int,
         @Field("societyId") societyId: Int,
         @Field("request") request: String,
-        @Field("isJoin") isJoin:Boolean,
+        @Field("isJoin") isJoin: Boolean,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
     ): String
@@ -55,10 +55,10 @@ interface ServerApi {
     @FormUrlEncoded
     @POST("/society/member/request/list")
     suspend fun societyMemberRequestList(
-        @Field("societyId")societyId: Int,
+        @Field("societyId") societyId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ):ReturnListData<MemberRequest>
+    ): ReturnListData<MemberRequest>
 
     @FormUrlEncoded
     @POST("/society/joint")
@@ -140,6 +140,16 @@ interface ServerApi {
     // /user
 
     @FormUrlEncoded
+    @POST("/user/register")
+    suspend fun userRegister(
+        @Field("username") username: String,
+        @Field("phone") phone: String,
+        @Field("email") email: String,
+        @Field("name") name: String,
+        @Field("password") password: String
+    ): String
+
+    @FormUrlEncoded
     @POST("/user/info")
     suspend fun userInfo(
         @Field("userId") userId: Int,
@@ -154,6 +164,21 @@ interface ServerApi {
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
     ): ReturnObjectData<UserInfo>
+
+    @FormUrlEncoded
+    @POST("/user/info/update")
+    suspend fun userInfoUpdate(
+        @Field("userId") userId: Int,
+        @Field("username") username: String,
+        @Field("email") email: String,
+        @Field("studentNumber") studentNumber: String,
+        @Field("iconUrl") iconUrl: String,
+        @Field("phone") phone: String,
+        @Field("name") name: String,
+        @Field("college") college: String,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int,
+    ): String
 
     @FormUrlEncoded
     @POST("/user/login")
@@ -215,10 +240,10 @@ interface ServerApi {
     suspend fun userChatPrivateCreate(
         @Field("userId") userId: Int,
         @Field("opUserId") opUserId: Int,
-        @Field("message") message:String,
+        @Field("message") message: String,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ):String
+    ): String
 
     @FormUrlEncoded
     @POST("/user/chat/private/list")
@@ -227,7 +252,7 @@ interface ServerApi {
         @Field("opUserId") opUserId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ):ReturnListData<ChatPrivate>
+    ): ReturnListData<ChatPrivate>
 
 
     // /pic
@@ -244,7 +269,7 @@ interface ServerApi {
     suspend fun picCreate(
         @Part imageBodyPart: MultipartBody.Part,
         @Part userId: MultipartBody.Part
-    ):String
+    ): String
 
     @FormUrlEncoded
     @POST("/pic/delete")
@@ -254,4 +279,7 @@ interface ServerApi {
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
     ): String
+
+    @POST("/college/list")
+    suspend fun collegeList(): ReturnListData<College>
 }

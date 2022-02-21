@@ -44,6 +44,36 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         return ReturnObjectData.blank()
     }
 
+    suspend fun userInfoUpdate(
+        userId: Int,
+        username: String,
+        email: String,
+        studentNumber: String,
+        iconUrl: String,
+        phone: String,
+        name: String,
+        college: String,
+        cookieToken: String,
+        authUserId: Int
+    ): String {
+        try {
+            return serverApi.userInfoUpdate(
+                userId,
+                username,
+                email,
+                studentNumber,
+                iconUrl,
+                phone,
+                name,
+                college,
+                cookieToken, authUserId
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "userInfoUpdate: ${e.localizedMessage}")
+        }
+        return "failed"
+    }
+
     suspend fun userLogin(
         phoneStudentIdEmail: String,
         password: String
@@ -101,10 +131,14 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         return "failed"
     }
 
-    suspend fun societyMemberRequestList(societyId: Int,cookieToken: String,authUserId: Int): ReturnListData<MemberRequest> {
+    suspend fun societyMemberRequestList(
+        societyId: Int,
+        cookieToken: String,
+        authUserId: Int
+    ): ReturnListData<MemberRequest> {
         try {
-            return serverApi.societyMemberRequestList(societyId,cookieToken, authUserId)
-        }catch (e:Exception){
+            return serverApi.societyMemberRequestList(societyId, cookieToken, authUserId)
+        } catch (e: Exception) {
             Log.e(TAG, "societyMemberRequestList: ${e.localizedMessage}")
         }
         return ReturnListData.blank()
@@ -244,6 +278,21 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         return "failed"
     }
 
+    suspend fun userRegister(
+        username: String,
+        phone: String,
+        email: String,
+        name: String,
+        password: String
+    ): String {
+        try {
+            return serverApi.userRegister(username, phone, email, name, password)
+        } catch (e: Exception) {
+            Log.e(TAG, "userRegister: ${e.localizedMessage}")
+        }
+        return "failed"
+    }
+
     suspend fun userJoint(
         userId: Int,
         cookieToken: String,
@@ -312,27 +361,33 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
 
     suspend fun userChatPrivateCreate(
         userId: Int,
-        opUserId:Int,
-        message:String,
+        opUserId: Int,
+        message: String,
         cookieToken: String,
         authUserId: Int
     ): String {
         Log.d(TAG, "userChatPrivateCreate: userId:${userId}")
         Log.d(TAG, "userChatPrivateCreate: opUserId:${opUserId}")
-        try{
-            return serverApi.userChatPrivateCreate(userId, opUserId, message, cookieToken, authUserId)
-        }catch (e:Exception){
+        try {
+            return serverApi.userChatPrivateCreate(
+                userId,
+                opUserId,
+                message,
+                cookieToken,
+                authUserId
+            )
+        } catch (e: Exception) {
             Log.e(TAG, "userChatPrivateCreate: ${e.localizedMessage}")
         }
         return "failed"
     }
 
     suspend fun userChatPrivateList(
-        userId: Int,opUserId: Int,cookieToken: String,authUserId: Int
+        userId: Int, opUserId: Int, cookieToken: String, authUserId: Int
     ): ReturnListData<ChatPrivate> {
         try {
             return serverApi.userChatPrivateList(userId, opUserId, cookieToken, authUserId)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "userChatPrivateList: ${e.localizedMessage}")
         }
         return ReturnListData.blank()
@@ -373,5 +428,14 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
             Log.e(TAG, "picDelete: ${e.localizedMessage}")
         }
         return "failed"
+    }
+
+    suspend fun collegeList(): ReturnListData<College> {
+        try {
+            return serverApi.collegeList()
+        } catch (e: Exception) {
+            Log.e(TAG, "collegeList: ${e.localizedMessage}")
+        }
+        return ReturnListData.blank()
     }
 }

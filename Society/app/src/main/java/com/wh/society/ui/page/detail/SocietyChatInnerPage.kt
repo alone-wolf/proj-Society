@@ -24,6 +24,7 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.wh.society.api.data.SocietyChatMessage
 import com.wh.society.api.data.ReturnListData
+import com.wh.society.api.data.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
@@ -70,7 +71,7 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                         items = chatMessageList.data,
                         key = { item: SocietyChatMessage -> item.id }
                     ) { it ->
-                        if (requestHolder.userInfo.id == it.userId) {
+                        if (requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id == it.userId) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End
@@ -147,7 +148,7 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                         focusManager.clearFocus()
                         requestHolder.apiViewModel.societyChatInnerCreate(
                             societyId = requestHolder.transSociety.id,
-                            userId = requestHolder.userInfo.id,
+                            userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
                             message = message
                         ) {
                             requestHolder.apiViewModel.societyChatInnerList(

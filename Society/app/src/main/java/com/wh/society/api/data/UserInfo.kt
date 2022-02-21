@@ -16,6 +16,21 @@ class UserInfo : IContain,RealIconUrl {
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
 
+    fun copy(): UserInfo {
+        return UserInfo().apply {
+            this.id = this@UserInfo.id
+            this.username = this@UserInfo.username
+            this.email = this@UserInfo.email
+            this.studentNumber = this@UserInfo.studentNumber
+            this.iconUrl = this@UserInfo.iconUrl
+            this.phone = this@UserInfo.phone
+            this.name = this@UserInfo.name
+            this.college = this@UserInfo.college
+            this.createTimestamp = this@UserInfo.createTimestamp
+            this.updateTimestamp = this@UserInfo.updateTimestamp
+        }
+    }
+
     override val realIconUrl: String
         get() = if (iconUrl.startsWith("http://") || iconUrl.startsWith("https://") || iconUrl.isBlank())
             iconUrl

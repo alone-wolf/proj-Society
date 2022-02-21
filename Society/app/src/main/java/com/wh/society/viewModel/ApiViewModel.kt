@@ -15,7 +15,7 @@ import okhttp3.MultipartBody
 class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     var societyList by mutableStateOf(ReturnListData.blank<Society>())
-    var collegeList by mutableStateOf(emptyList<String>())
+
     var bbsList by mutableStateOf(emptyList<BBS>())
 
     var userInfo by mutableStateOf(ReturnObjectData.blank<UserInfo>())
@@ -23,6 +23,7 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     var loginToken by mutableStateOf(ReturnObjectData.blank<LoginReturn>())
 
     var picDataList by mutableStateOf(ReturnListData.blank<PicData>())
+    var collegeList by mutableStateOf(ReturnListData.blank<College>())
 
     val TAG = "WH_"
 
@@ -40,10 +41,10 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
                 c.add(it.college)
                 b.add(BBS.fromSociety(it))
             }
-            collegeList = c.distinct()
+//            collegeList = c.distinct()
             bbsList = b
             Log.d(TAG, "societyList: ${societyList.data.size}")
-            Log.d(TAG, "collegeList: ${collegeList.size}")
+//            Log.d(TAG, "collegeList: ${collegeList.size}")
             Log.d(TAG, "bbsList: ${bbsList.size}")
         }
     }
@@ -73,6 +74,32 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
                 authUserId = userInfo.data!!.id
             )
             onReturn(userInfo.data!!)
+        }
+    }
+
+    fun userInfoUpdate(
+        username: String,
+        email: String,
+        studentNumber: String,
+        iconUrl: String,
+        phone: String,
+        name: String,
+        college: String,
+        onReturn: CoroutineScope.() -> Unit
+    ) {
+        viewModelScope.launch {
+            val a = apiRepository.userInfoUpdate(
+                userId = userInfo.data!!.id,
+                username = username,
+                email = email,
+                studentNumber = studentNumber,
+                iconUrl = iconUrl,
+                phone = phone,
+                name = name, college = college,
+                cookieToken = loginToken.data!!.cookieToken,
+                authUserId = userInfo.data!!.id
+            )
+            onReturn()
         }
     }
 
@@ -280,6 +307,20 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         }
     }
 
+    fun userRegister(
+        username: String,
+        phone: String,
+        email: String,
+        name: String,
+        password: String,
+        onReturn: CoroutineScope.() -> Unit
+    ) {
+        viewModelScope.launch {
+            val a = apiRepository.userRegister(username, phone, email, name, password)
+            onReturn()
+        }
+    }
+
     fun userJoint(userId: Int, onReturn: CoroutineScope.(ReturnListData<SocietyJoint>) -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.userJoint(
@@ -351,7 +392,7 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 //        }
 //    }
 
-    fun userChatPrivateCreate(opUserId:Int,message:String,onReturn: CoroutineScope.() -> Unit){
+    fun userChatPrivateCreate(opUserId: Int, message: String, onReturn: CoroutineScope.() -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.userChatPrivateCreate(
                 userId = userInfo.data!!.id,
@@ -364,7 +405,10 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         }
     }
 
-    fun userChatPrivateList(opUserId: Int,onReturn: CoroutineScope.(ReturnListData<ChatPrivate>) -> Unit){
+    fun userChatPrivateList(
+        opUserId: Int,
+        onReturn: CoroutineScope.(ReturnListData<ChatPrivate>) -> Unit
+    ) {
         viewModelScope.launch {
             val a = apiRepository.userChatPrivateList(
                 userId = userInfo.data!!.id,
@@ -418,6 +462,12 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
                 authUserId = userInfo.data!!.id
             )
             onReturn()
+        }
+    }
+
+    fun collegeList() {
+        viewModelScope.launch {
+            collegeList = apiRepository.collegeList()
         }
     }
 

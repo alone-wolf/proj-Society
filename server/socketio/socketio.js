@@ -66,7 +66,22 @@ const brdMemberChanged = (societyId, societyName) => {
         "society-member-changed",
         { societyId, societyName }
     )
-}
+};
+
+const brdNewNoticeMember = (societyId, societyName, postUserId, postUsername, title) => {
+    emitPushBrd(
+        `society-member-${societyId}`,
+        "society-new-notice",
+        { societyName, postUserId, postUsername, title }
+    )
+};
+const brdNewNoticeWatcher = (societyId, societyName, postUserId, postUsername, title) => {
+    emitPushBrd(
+        `society-watcher-${societyId}`,
+        "society-new-notice",
+        { societyName, postUserId, postUsername, title }
+    )
+};
 
 const srdNewPostReply = (postUserId, replyUserId, replyUsername, societyId, bbsName, postTitle, reply) => {
     emitPushSrd(
@@ -102,6 +117,8 @@ module.exports = {
     brdNewPost,
     brdMemberChanged,
     brdNewMemberRequest,
+    brdNewNoticeMember,
+    brdNewNoticeWatcher,
     srdNewPostReply,
     srdMemberRequestReply,
     srdChatPrivate

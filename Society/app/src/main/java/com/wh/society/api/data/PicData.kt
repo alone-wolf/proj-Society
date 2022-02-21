@@ -1,12 +1,19 @@
 package com.wh.society.api.data
 
-class PicData {
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.RealIconUrl
+
+class PicData : RealIconUrl {
     var id: Int = 0
     var userId: Int = 0
     var originalFilename: String = ""
     var newFilename: String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
+
+    override val realIconUrl
+        get() = ServerApi.picUrl(newFilename)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

@@ -33,6 +33,7 @@ import com.wh.society.R
 import com.wh.society.api.data.BBSInfo
 import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.SocietyJoint
+import com.wh.society.api.data.UserInfo
 import com.wh.society.componment.RequestHolder
 
 @ExperimentalAnimationApi
@@ -75,28 +76,28 @@ fun MinePageTopInfoCard(requestHolder: RequestHolder) {
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "姓名: ")
-                        Text(text = requestHolder.userInfo.name)
+                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).name)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "学号: ")
-                        Text(text = requestHolder.userInfo.studentNumber.toString())
+                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).studentNumber)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "邮箱: ")
-                        Text(text = requestHolder.userInfo.email)
+                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).email)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "电话: ")
-                        Text(text = requestHolder.userInfo.phone)
+                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).phone)
                     }
                 }
             }

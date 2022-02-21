@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.wh.society.api.data.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.ui.componment.GlobalScaffold
@@ -40,7 +41,7 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
 
     GlobalScaffold(page = GlobalNavPage.DetailPostEditor, requestHolder = requestHolder, actions = {
         IconButton(onClick = {
-            val userId = requestHolder.userInfo.id
+            val userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id
             val societyId = requestHolder.transBBS.id
             requestHolder.apiViewModel.societyBBSPostCreate(
                 societyId = societyId,

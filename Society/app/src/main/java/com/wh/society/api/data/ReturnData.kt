@@ -1,6 +1,7 @@
 package com.wh.society.api.data
 
 
+
 class ReturnObjectData<T> {
     var code: Int = 200
     var message: String = ""

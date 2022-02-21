@@ -1,6 +1,8 @@
 package com.wh.society.ui.page.main
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -9,8 +11,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
+import coil.transform.BlurTransformation
+import coil.transform.Transformation
 import com.wh.common.typeExt.firstN
 import com.wh.society.api.data.*
 import com.wh.society.componment.RequestHolder
@@ -21,47 +29,85 @@ private var userPostList by mutableStateOf(ReturnListData.blank<Post>())
 private var userPostReplyList by mutableStateOf(ReturnListData.blank<PostReply>())
 private var userJointList by mutableStateOf(ReturnListData.blank<SocietyJoint>())
 private var userJoinRequestList by mutableStateOf(ReturnListData.blank<MemberRequest>())
-//private var picDataList by mutableStateOf(ReturnListData.blank<PicData>())
 
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun MinePage(requestHolder: RequestHolder) {
     LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.userPostList(requestHolder.userInfo.id) { it ->
+        requestHolder.apiViewModel.userPostList(
+            requestHolder.apiViewModel.userInfo.notNullOrBlank(
+                UserInfo()
+            ).id
+        ) { it ->
             requestHolder.transPostList = it
             userPostList = it
         }
-        requestHolder.apiViewModel.userPostReplyList(requestHolder.userInfo.id) { it ->
+        requestHolder.apiViewModel.userPostReplyList(
+            requestHolder.apiViewModel.userInfo.notNullOrBlank(
+                UserInfo()
+            ).id
+        ) { it ->
             userPostReplyList = it
         }
-        requestHolder.apiViewModel.userJoint(requestHolder.userInfo.id) { it ->
+        requestHolder.apiViewModel.userJoint(
+            requestHolder.apiViewModel.userInfo.notNullOrBlank(
+                UserInfo()
+            ).id
+        ) { it ->
             userJointList = it
         }
-        requestHolder.apiViewModel.userJoinRequestList(requestHolder.userInfo.id) { it ->
+        requestHolder.apiViewModel.userJoinRequestList(
+            requestHolder.apiViewModel.userInfo.notNullOrBlank(
+                UserInfo()
+            ).id
+        ) { it ->
             userJoinRequestList = it
         }
-//        requestHolder.apiViewModel.picList(requestHolder.userInfo.id) { it ->
-//            picDataList = it
-//        }
     }
 
     LazyColumn(modifier = Modifier.fillMaxWidth(), content = {
         item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                UserBigIcon(
-                    requestHolder = requestHolder,
-                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+            Box {
+                Image(
+                    painter = rememberImagePainter(
+                        data = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).realIconUrl,
+                        builder = {
+                            crossfade(true)
+                            transformations(BlurTransformation(requestHolder.activity))
+                        }),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    contentScale = ContentScale.FillWidth
                 )
-                Text(
-                    text = requestHolder.userInfo.username,
-                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+
+                Spacer(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(120.dp)
+//                        .background(color = Color.h)
+                        .align(Alignment.Center)
+//                        .clip(shape = Round)
                 )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    UserBigIcon(
+                        requestHolder = requestHolder,
+                        modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                    )
+                    Text(
+                        text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).username,
+                        modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                    )
+                }
             }
+
         }
         minePageTopInfoCard(requestHolder = requestHolder)
 

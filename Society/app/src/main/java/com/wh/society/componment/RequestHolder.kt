@@ -28,12 +28,10 @@ interface RequestHolder {
     val notifyViewModel:NotifyViewModel
 
     val societyList: List<Society>
-    val collegeList: List<String>
+    val collegeList: ReturnListData<College>
     val bbsList: List<BBS>
 
     val settingStore: SettingStore
-
-    val userInfo: UserInfo
 
     val coroutineScope: CoroutineScope
 
@@ -98,7 +96,7 @@ interface RequestHolder {
             apiViewModel.userInfo = ReturnObjectData.blank()
             apiViewModel.societyList = ReturnListData.blank()
             apiViewModel.bbsList = emptyList()
-            apiViewModel.collegeList = emptyList()
+            apiViewModel.collegeList = ReturnListData.blank()
             apiViewModel.loginToken = ReturnObjectData.blank()
             apiViewModel.picDataList = ReturnListData.blank()
             transSociety = Society()
