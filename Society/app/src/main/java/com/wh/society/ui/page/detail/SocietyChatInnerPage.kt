@@ -22,9 +22,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.wh.society.api.data.SocietyChatMessage
+import com.wh.society.api.data.society.SocietyChatMessage
 import com.wh.society.api.data.ReturnListData
-import com.wh.society.api.data.UserInfo
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
@@ -42,7 +42,7 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.societyChatInnerList(requestHolder.transSociety.id) { it ->
+        requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
             chatMessageList = it
         }
     }
@@ -57,7 +57,7 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
     GlobalScaffold(
         page = GlobalNavPage.SocietyChatInnerPage,
         remoteOperate = {
-            requestHolder.apiViewModel.societyChatInnerList(requestHolder.transSociety.id) { it ->
+            requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
                 chatMessageList = it
             }
         },
@@ -147,12 +147,12 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                     onClick = {
                         focusManager.clearFocus()
                         requestHolder.apiViewModel.societyChatInnerCreate(
-                            societyId = requestHolder.transSociety.id,
+                            societyId = requestHolder.trans.society.id,
                             userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
                             message = message
                         ) {
                             requestHolder.apiViewModel.societyChatInnerList(
-                                requestHolder.transSociety.id
+                                requestHolder.trans.society.id
                             ) { it ->
                                 chatMessageList = it
                             }

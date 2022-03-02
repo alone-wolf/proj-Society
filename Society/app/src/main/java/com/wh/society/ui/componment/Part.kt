@@ -14,7 +14,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,10 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.wh.society.R
-import com.wh.society.api.data.BBSInfo
+import com.wh.society.api.data.society.bbs.BBSInfo
 import com.wh.society.api.data.ReturnListData
-import com.wh.society.api.data.SocietyJoint
-import com.wh.society.api.data.UserInfo
+import com.wh.society.api.data.society.SocietyMember
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 
 @ExperimentalAnimationApi
@@ -108,7 +107,7 @@ fun MinePageTopInfoCard(requestHolder: RequestHolder) {
 @Composable
 fun SocietyDetailTopInfoPart(
     requestHolder: RequestHolder,
-    thisSocietyJointList: ReturnListData<SocietyJoint>
+    thisSocietyMemberList: ReturnListData<SocietyMember>
 ) {
     Row(
         modifier = Modifier
@@ -117,7 +116,7 @@ fun SocietyDetailTopInfoPart(
     ) {
         Image(
             painter = rememberImagePainter(
-                data = requestHolder.transSociety.iconUrl,
+                data = requestHolder.trans.society.realIconUrl,
                 imageLoader = requestHolder.coilImageLoader,
                 builder = {
                     this.placeholder(R.drawable.ic_baseline_supervisor_account_24)
@@ -145,7 +144,7 @@ fun SocietyDetailTopInfoPart(
                 .align(Alignment.CenterVertically)
         ) {
             Text(
-                text = requestHolder.transSociety.name,
+                text = requestHolder.trans.society.name,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
@@ -154,7 +153,7 @@ fun SocietyDetailTopInfoPart(
             )
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = " ${thisSocietyJointList.data.size}成员 ",
+                    text = " ${thisSocietyMemberList.data.size}成员 ",
                     fontSize = 12.sp,
                     modifier = Modifier
                         .alpha(0.8F)
@@ -168,7 +167,7 @@ fun SocietyDetailTopInfoPart(
                         .align(Alignment.CenterVertically)
                 )
                 Text(
-                    text = requestHolder.transSociety.describe,
+                    text = requestHolder.trans.society.describe,
                     fontSize = 14.sp,
                     modifier = Modifier.alpha(0.8F)
                 )
@@ -187,7 +186,7 @@ fun BBSDetailTopInfoCard(requestHolder: RequestHolder, thisInfo: BBSInfo) {
     ) {
         Column(modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)) {
             Text(
-                text = requestHolder.transBBS.name,
+                text = requestHolder.trans.bbs.name,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
@@ -195,7 +194,7 @@ fun BBSDetailTopInfoCard(requestHolder: RequestHolder, thisInfo: BBSInfo) {
                 modifier = Modifier.alpha(0.9F)
             )
             Text(
-                text = requestHolder.transBBS.describe,
+                text = requestHolder.trans.bbs.describe,
                 fontSize = 14.sp,
                 modifier = Modifier.alpha(0.8F)
             )

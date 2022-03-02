@@ -4,11 +4,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.wh.society.api.data.Post
+import com.wh.society.api.data.society.bbs.Post
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
@@ -25,10 +23,10 @@ fun MinePostListPage(requestHolder: RequestHolder) {
     ) {
         LazyColumn(
             content = {
-                empty(requestHolder.transPostList)
+                empty(requestHolder.trans.postList)
 
                 items(
-                    items = requestHolder.transPostList.data,
+                    items = requestHolder.trans.postList.data,
                     key = { item: Post -> item.id },
                     itemContent = { item: Post ->
                         PostItem(requestHolder = requestHolder, post = item)

@@ -1,4 +1,4 @@
-package com.wh.society.api.data
+package com.wh.society.api.data.society
 
 import com.wh.common.typeExt.toTimestamp
 import com.wh.common.util.TimeUtils

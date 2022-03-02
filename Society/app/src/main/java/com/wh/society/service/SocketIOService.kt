@@ -36,6 +36,7 @@ class SocketIOService : Service() {
         const val BBS_NEW_POST = "bbs-new-post"
         const val BBS_NEW_POST_REPLY = "bbs-new-post-reply"
         const val SOCIETY_NEW_MEMBER_REQUEST = "society-new-member-request"
+        const val SOCIETY_ACTIVITY_REQUEST = "society-new-activity-request"
         const val SOCIETY_MEMBER_CHANGED = "society-member-changed"
         const val USER_CHAT_PRIVATE = "user-chat-private"
 
@@ -63,57 +64,36 @@ class SocketIOService : Service() {
 
     private val notifyRepository by lazy { (application as App).repositoryKeeper.notifyRepository }
 
+    private fun setupNotificationChannel(channels: Map<String, String>) {
+        notificationManager.run {
+            channels.entries.forEach {
+                createNotificationChannel(
+                    NotificationChannel(
+                        it.key,
+                        it.value,
+                        NotificationManager.IMPORTANCE_DEFAULT
+                    )
+                )
+            }
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         sio = IO.socket(address)
 
         notificationManager = getSystemService(NotificationManager::class.java)
 
-        val societyChatInnerChannel = NotificationChannel(
-            SOCIETY_CHAT_INNER,
-            "Society Inner Chat",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        val bbsNewPostChannel = NotificationChannel(
-            BBS_NEW_POST,
-            "BBS New Post",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        val bbsNewPostReplyChannel = NotificationChannel(
-            BBS_NEW_POST_REPLY,
-            "BBS New Reply",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        val societyNewMemberRequestChannel = NotificationChannel(
-            SOCIETY_NEW_MEMBER_REQUEST,
-            "Society New Member Request",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        val societyMemberChangedChannel = NotificationChannel(
-            SOCIETY_MEMBER_CHANGED,
-            "Society Member Changed",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        val userChatPrivateChannel = NotificationChannel(
-            USER_CHAT_PRIVATE,
-            "User Private Chat",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        val serviceNotifyChannel = NotificationChannel(
-            "service-notify",
-            "Service Notify",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-
-        notificationManager.createNotificationChannels(
-            listOf(
-                societyChatInnerChannel,
-                bbsNewPostChannel,
-                bbsNewPostReplyChannel,
-                societyNewMemberRequestChannel,
-                societyMemberChangedChannel,
-                userChatPrivateChannel,
-                serviceNotifyChannel
+        setupNotificationChannel(
+            mapOf(
+                SOCIETY_CHAT_INNER to "Society Inner Chat",
+                BBS_NEW_POST to "BBS New Post",
+                BBS_NEW_POST_REPLY to "BBS New Reply",
+                SOCIETY_NEW_MEMBER_REQUEST to "Society New Member Request",
+                SOCIETY_MEMBER_CHANGED to "Society Member Changed",
+                USER_CHAT_PRIVATE to "User Private Chat",
+                SOCIETY_ACTIVITY_REQUEST to "Society Activity Request",
+                "service-notify" to "Service Notify",
             )
         )
 
@@ -263,6 +243,23 @@ class SocketIOService : Service() {
                     }
                 }
 
+                sio.on(SOCIETY_ACTIVITY_REQUEST) { out ->
+//                    performOperatePlatform(GlobalNavPage.S)
+                    (out[0] as JSONObject).let { it ->
+                        val username = it.optString("username")
+                        val userId = it.optInt("userId")
+                        val request = it.optString("request")
+                        val societyName = it.optString("societyName")
+                        if (userId == this.userId){
+                            Log.d(TAG, "onStartCommand: $SOCIETY_ACTIVITY_REQUEST isMe")
+                        }else{
+                            Log.d(TAG, "onStartCommand: $SOCIETY_ACTIVITY_REQUEST isNotMe")
+                            notifySocietyActivityRequest(username, request, societyName)
+                        }
+                    }
+
+                }
+
                 sio.on("notify") { out ->
                     Log.d(TAG, "onStartCommand: on-notify $out")
                 }
@@ -281,10 +278,10 @@ class SocketIOService : Service() {
         }
     }
 
-    private fun performOperatePlatform(path: String){
+    private fun performOperatePlatform(path: String) {
         sendBroadcast(Intent().apply {
             action = OPERATE_PLATFORM
-            putExtra("path",path)
+            putExtra("path", path)
         })
     }
 
@@ -378,6 +375,17 @@ class SocketIOService : Service() {
             title = "$username 发来了私信",
             text = message,
             id = 6
+        )
+    }
+
+    private fun notifySocietyActivityRequest(
+        username: String, request: String, societyName: String
+    ) {
+        notifyBase(
+            channel = SOCIETY_ACTIVITY_REQUEST,
+            title = "$username 发来了活动申请 · $societyName",
+            text = request,
+            id = 7
         )
     }
 }

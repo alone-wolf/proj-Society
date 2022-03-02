@@ -4,5 +4,5 @@ class OperatePlatform {
 
     var currentRoute: String = ""
 
-    var currentOperate:()->Unit = {}
+    var currentOperate: () -> Unit = {}
 }

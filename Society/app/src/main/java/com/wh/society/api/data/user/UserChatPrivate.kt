@@ -1,9 +1,9 @@
-package com.wh.society.api.data
+package com.wh.society.api.data.user
 
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.RealIconUrl
 
-class ChatPrivate : RealIconUrl {
+class UserChatPrivate : RealIconUrl {
     var id: Int = 0
     var userId: Int = 0
     var username: String = ""
@@ -20,7 +20,7 @@ class ChatPrivate : RealIconUrl {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ChatPrivate
+        other as UserChatPrivate
 
         if (id != other.id) return false
         if (userId != other.userId) return false

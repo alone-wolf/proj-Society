@@ -1,4 +1,4 @@
-package com.wh.society.api.data
+package com.wh.society.api.data.society.bbs
 
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.RealIconUrl

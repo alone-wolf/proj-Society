@@ -6,11 +6,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
-import com.wh.society.api.data.BBSInfo
-import com.wh.society.api.data.Post
+import com.wh.society.api.data.society.bbs.BBSInfo
+import com.wh.society.api.data.society.bbs.Post
 import com.wh.society.api.data.ReturnObjectData
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
@@ -30,7 +29,7 @@ fun BBSDetailPage(requestHolder: RequestHolder) {
     }
 
     LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.societyBBSInfo(requestHolder.transBBS.id) { s ->
+        requestHolder.apiViewModel.societyBBSInfo(requestHolder.trans.bbs.id) { s ->
             thisBBSInfo = s
         }
     }
@@ -42,7 +41,7 @@ fun BBSDetailPage(requestHolder: RequestHolder) {
         requestHolder = requestHolder,
         actions = {
             IconButton(onClick = {
-                requestHolder.apiViewModel.societyBBSInfo(requestHolder.transBBS.id) { s ->
+                requestHolder.apiViewModel.societyBBSInfo(requestHolder.trans.bbs.id) { s ->
                     thisBBSInfo = s
                 }
             }) {

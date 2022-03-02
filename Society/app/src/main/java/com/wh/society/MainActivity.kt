@@ -22,6 +22,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.wh.society.api.data.*
+import com.wh.society.api.data.society.*
+import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.componment.OperatePlatform
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
@@ -81,19 +83,13 @@ class MainActivity : AppCompatActivity(), RequestHolder {
     override val settingStore: SettingStore by lazy { (application as App).storeKeeper.settingStore }
 
     override val societyList: List<Society> by lazy { apiViewModel.societyList.data }
-    override val collegeList:ReturnListData<College> by lazy { apiViewModel.collegeList }
+    override val collegeList: ReturnListData<College> by lazy { apiViewModel.collegeList }
     override val bbsList: List<BBS> by lazy { apiViewModel.bbsList }
 
-    override var transSociety: Society = Society()
-    override var transBBS: BBS = BBS()
-    override var transPost: Post? = null
-    override var transPostList: ReturnListData<Post> = ReturnListData.blank()
-    override var transUserInfo: UserInfo = UserInfo()
-    override var transUserJoint: ReturnListData<SocietyJoint> = ReturnListData.blank()
-    override var transPostReplyList: ReturnListData<PostReply> = ReturnListData.blank()
-    override var transSocietyRequestList: ReturnListData<MemberRequest> = ReturnListData.blank()
-    override var transSocietyJoint: SocietyJoint = SocietyJoint()
-    override var transSocietyJointList: List<SocietyJoint> = emptyList()
+
+    override val trans: RequestHolder.DataTrans by lazy {
+        object : RequestHolder.DataTrans() {}
+    }
 
     override lateinit var deviceName: String
 
@@ -101,7 +97,7 @@ class MainActivity : AppCompatActivity(), RequestHolder {
         object : RequestHolder.AlertRequestCompact(this.resources, this) {}
     }
 
-    override lateinit var imagePicker: ActivityResultLauncher<String>
+    override lateinit var imagePicker: RequestHolder.ImagePickerRequest
 
     override val startSocketIOService: (Int, String) -> Unit by lazy {
         { userId: Int, cookieToken: String ->
@@ -143,11 +139,13 @@ class MainActivity : AppCompatActivity(), RequestHolder {
 
         registerReceiver(onOperationRequestReceiver, IntentFilter(SocketIOService.OPERATE_PLATFORM))
 
-//        registerReceiver(onSIOServiceEventReceiver, IntentFilter(SocketIOService.PREPARED))
+        imagePicker = object : RequestHolder.ImagePickerRequest(
+            ActivityOpener
+                .imagePickerActivity(this, this), this
+        ) {}
 
         deviceName = SystemUtil.getDeviceModel()
 
-        imagePicker = ActivityOpener.forUserIconImage(this, this)
 
         setContent {
             coroutineScope = rememberCoroutineScope()
@@ -233,6 +231,22 @@ class MainActivity : AppCompatActivity(), RequestHolder {
                             }
                             composable(GlobalNavPage.SocietyMemberDetailPage) {
                                 SocietyMemberDetailPage(requestHolder = this@MainActivity)
+                            }
+                            composable(GlobalNavPage.SocietyActivityListPage) {
+                                SocietyActivityListPage(requestHolder = this@MainActivity)
+                            }
+                            composable(GlobalNavPage.SocietyActivityRequestListPage) {
+                                SocietyActivityRequestListPage(requestHolder = this@MainActivity)
+                            }
+                            composable(GlobalNavPage.SocietyActivityDetailPage) {
+                                SocietyActivityDetailPage(requestHolder = this@MainActivity)
+                            }
+                            composable(GlobalNavPage.SocietyPictureListPage) {
+                                SocietyPictureListPage(requestHolder = this@MainActivity)
+                            }
+
+                            composable(GlobalNavPage.SocietyInfoEditorPage){
+                                SocietyInfoEditor(requestHolder = this@MainActivity)
                             }
                         }
 

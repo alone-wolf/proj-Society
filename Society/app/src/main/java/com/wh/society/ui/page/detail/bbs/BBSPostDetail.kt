@@ -10,9 +10,11 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.wh.society.api.data.PostReply
+import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.ReturnListData
-import com.wh.society.api.data.UserInfo
+import com.wh.society.api.data.ReturnObjectData
+import com.wh.society.api.data.society.bbs.Post
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.spacer
@@ -27,10 +29,16 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
     var postReplyList by remember {
         mutableStateOf(ReturnListData.blank<PostReply>())
     }
+    var post by remember {
+        mutableStateOf(ReturnObjectData.blank<Post>())
+    }
     LaunchedEffect(Unit) {
-        requestHolder.transPost?.let {
-            requestHolder.apiViewModel.societyBBSPostReplyList(it.id) { a ->
+        requestHolder.trans.postId.let {
+            requestHolder.apiViewModel.societyBBSPostReplyList(it) { a ->
                 postReplyList = a
+            }
+            requestHolder.apiViewModel.societyBBSPostById(it) { a ->
+                post = a
             }
         }
     }
@@ -42,14 +50,14 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
             FloatingActionButton(onClick = {
                 requestHolder.alertRequest.alertFor1TextFiled("reply post") {
                     requestHolder.apiViewModel.societyBBSPostReplyCreate(
-                        societyId = requestHolder.transSociety.id,
-                        postId = requestHolder.transPost!!.id,
+                        societyId = requestHolder.trans.society.id,
+                        postId = requestHolder.trans.postId,
                         userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
                         reply = it,
                         deviceName = requestHolder.deviceName
                     ) {
                         requestHolder.apiViewModel.societyBBSPostReplyList(
-                            postId = requestHolder.transPost!!.id
+                            postId = requestHolder.trans.postId
                         ) { item ->
                             postReplyList = item
                         }
@@ -60,7 +68,7 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
             }
         },
         actions = {
-            requestHolder.transPost?.let {
+            post.data?.let {
                 if (it.userId == requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id) {
                     IconButton(onClick = {
                         requestHolder.apiViewModel.societyBBSPostDelete(
@@ -80,7 +88,7 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
             item {
                 PostItem(
                     requestHolder = requestHolder,
-                    post = requestHolder.transPost!!,
+                    post = post.notNullOrBlank(Post()),
                     postMaxLine = Int.MAX_VALUE,
                     ignoreClick = true,
                     modifier = Modifier.padding(top = 8.dp)

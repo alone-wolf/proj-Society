@@ -1,6 +1,6 @@
-package com.wh.society.api.data
+package com.wh.society.api.data.society
 
-class MemberRequest {
+class SocietyMemberRequest {
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
@@ -16,7 +16,7 @@ class MemberRequest {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as MemberRequest
+        other as SocietyMemberRequest
 
         if (id != other.id) return false
         if (societyId != other.societyId) return false

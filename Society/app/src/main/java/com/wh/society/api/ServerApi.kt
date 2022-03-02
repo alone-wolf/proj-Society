@@ -1,6 +1,13 @@
 package com.wh.society.api
 
 import com.wh.society.api.data.*
+import com.wh.society.api.data.society.*
+import com.wh.society.api.data.society.bbs.BBSInfo
+import com.wh.society.api.data.society.bbs.Post
+import com.wh.society.api.data.society.bbs.PostReply
+import com.wh.society.api.data.user.UserChatPrivate
+import com.wh.society.api.data.user.UserInfo
+import com.wh.society.api.data.user.UserPicture
 import okhttp3.MultipartBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,6 +28,10 @@ interface ServerApi {
 
         fun picUrl(picToken: String): String {
             return "$baseUrl/pic/$picToken"
+        }
+
+        fun societyPicUrl(picToken: String): String {
+            return "$baseUrl/society/picture/$picToken"
         }
 
         fun create(): ServerApi {
@@ -58,7 +69,7 @@ interface ServerApi {
         @Field("societyId") societyId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ): ReturnListData<MemberRequest>
+    ): ReturnListData<SocietyMemberRequest>
 
     @FormUrlEncoded
     @POST("/society/joint")
@@ -66,7 +77,7 @@ interface ServerApi {
         @Field("id") societyId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ): ReturnListData<SocietyJoint>
+    ): ReturnListData<SocietyMember>
 
     @FormUrlEncoded
     @POST("/society/bbs/info")
@@ -88,6 +99,14 @@ interface ServerApi {
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
     ): String
+
+    @FormUrlEncoded
+    @POST("/society/bbs/post/by/id")
+    suspend fun societyBBSPostById(
+        @Field("postId") postId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int,
+    ): ReturnObjectData<Post>
 
     @FormUrlEncoded
     @POST("/society/bbs/post/delete")
@@ -137,6 +156,77 @@ interface ServerApi {
         @Header("authUserId") authUserId: Int,
     ): String
 
+    @FormUrlEncoded
+    @POST("/society/activity/list")
+    suspend fun societyActivityList(
+        @Field("societyId") societyId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int,
+    ): ReturnListData<SocietyActivity>
+
+    @FormUrlEncoded
+    @POST("/society/activity/create")
+    suspend fun societyActivityCreate(
+        @Field("societyId") societyId: Int,
+        @Field("deviceName") deviceName: String,
+        @Field("title") title: String,
+        @Field("level") level: Int,
+        @Field("activity") activity: String,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ): String
+
+    @FormUrlEncoded
+    @POST("/society/activity/request/list")
+    suspend fun societyActivityRequestList(
+        @Field("societyId") societyId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ): ReturnListData<SocietyActivityRequest>
+
+    @FormUrlEncoded
+    @POST("/society/activity/request/create")
+    suspend fun societyActivityRequestCreate(
+        @Field("societyId") societyId: Int,
+        @Field("userId") userId: Int,
+        @Field("request") request: String,
+        @Field("isJoin") isJoin: Boolean,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ): String
+
+    @FormUrlEncoded
+    @POST("/society/activity/member/list")
+    suspend fun societyActivityMemberList(
+        @Field("activityId") activityId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ): ReturnListData<SocietyActivityMember>
+
+    @FormUrlEncoded
+    @POST("/society/picture/list")
+    suspend fun societyPictureList(
+        @Field("societyId") societyId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ): ReturnListData<SocietyPicture>
+
+    @Multipart
+    @POST("/society/picture/create")
+    suspend fun societyPictureCreate(
+        @Part imageBodyPart: MultipartBody.Part,
+        @Part societyId: MultipartBody.Part
+    ): String
+
+    @FormUrlEncoded
+    @POST("/society/picture/delete")
+    suspend fun societyPictureDelete(
+        @Field("societyId") societyId: Int,
+        @Field("picToken") picToken: String,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ):String
+
     // /user
 
     @FormUrlEncoded
@@ -176,8 +266,20 @@ interface ServerApi {
         @Field("phone") phone: String,
         @Field("name") name: String,
         @Field("college") college: String,
+        @Field("password") password: String,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
+    ): String
+
+    @FormUrlEncoded
+    @POST("/user/info/update/password")
+    suspend fun userInfoUpdatePassword(
+        @Field("name") name: String,
+        @Field("username") username: String,
+        @Field("studentNumber") studentNumber: String,
+        @Field("phone") phone: String,
+        @Field("email") email: String,
+        @Field("password") password: String
     ): String
 
     @FormUrlEncoded
@@ -200,7 +302,7 @@ interface ServerApi {
         @Field("userId") userId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ): ReturnListData<SocietyJoint>
+    ): ReturnListData<SocietyMember>
 
     @FormUrlEncoded
     @POST("/user/join/request/list")
@@ -208,7 +310,7 @@ interface ServerApi {
         @Field("userId") userId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ): ReturnListData<MemberRequest>
+    ): ReturnListData<SocietyMemberRequest>
 
     @FormUrlEncoded
     @POST("/user/post/list")
@@ -252,7 +354,7 @@ interface ServerApi {
         @Field("opUserId") opUserId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ): ReturnListData<ChatPrivate>
+    ): ReturnListData<UserChatPrivate>
 
 
     // /pic
@@ -262,7 +364,7 @@ interface ServerApi {
         @Field("userId") userId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
-    ): ReturnListData<PicData>
+    ): ReturnListData<UserPicture>
 
     @Multipart
     @POST("/pic/create")

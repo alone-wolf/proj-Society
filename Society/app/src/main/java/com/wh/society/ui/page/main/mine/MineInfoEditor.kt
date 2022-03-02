@@ -1,6 +1,5 @@
 package com.wh.society.ui.page.main.mine
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,7 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -24,8 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.wh.society.api.data.PicData
-import com.wh.society.api.data.UserInfo
+import com.wh.society.api.data.user.UserPicture
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.ui.componment.GlobalScaffold
@@ -34,48 +33,21 @@ import com.wh.society.ui.componment.GlobalScaffold
 @Composable
 fun MineInfoEditor(requestHolder: RequestHolder) {
 
-//    var tempUserInfo by remember {
-//        mutableStateOf(requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()))
-//    }
-
-    var username by remember { mutableStateOf(requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).username) }
-    var phone by remember { mutableStateOf(requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).phone) }
-    var email by remember { mutableStateOf(requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).email) }
-    var name by remember { mutableStateOf(requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).name) }
-    var password by remember { mutableStateOf("") }
-    var college by remember { mutableStateOf("") }
-    var iconUrl by remember { mutableStateOf(requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).iconUrl) }
+    val tempUserInfo = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).shadow()
 
     GlobalScaffold(
         page = GlobalNavPage.MainMineInfoEditorPage,
         requestHolder = requestHolder,
         actions = {
             IconButton(onClick = {
-                requestHolder.apiViewModel.userInfoUpdate(
-                    username = username,
-                    email = email,
-                    studentNumber = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).studentNumber,
-                    iconUrl = iconUrl,
-                    phone = phone,
-                    name = name,
-                    college = college
-                ) {
-                    requestHolder.apiViewModel.userInfo {
-                        Log.d(
-                            "WH_",
-                            "MineInfoEditor:${
-                                requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo())
-                            } "
-                        )
-                    }
+                requestHolder.apiViewModel.userInfoUpdate(tempUserInfo) {
+                    requestHolder.apiViewModel.userInfo {}
                 }
                 requestHolder.globalNav.goBack()
             }) {
                 Icon(imageVector = Icons.Default.Check, contentDescription = "")
             }
         }) {
-
-
 
 
         LazyColumn(
@@ -97,7 +69,7 @@ fun MineInfoEditor(requestHolder: RequestHolder) {
                         ) {
                             Image(
                                 painter = rememberImagePainter(
-                                    data = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).realIconUrl,
+                                    data = tempUserInfo.realIconUrl,
                                     imageLoader = requestHolder.coilImageLoader
                                 ),
                                 contentDescription = "",
@@ -115,14 +87,10 @@ fun MineInfoEditor(requestHolder: RequestHolder) {
                                 content = {
                                     items(
                                         requestHolder.apiViewModel.picDataList.data,
-                                        key = { item: PicData -> item.id },
+                                        key = { item: UserPicture -> item.id },
                                         itemContent = { it ->
                                             Box(modifier = Modifier.clickable {
-                                                iconUrl = it.newFilename
-//                                                val t = tempUserInfo.copy()
-//                                                t.iconUrl = it.newFilename
-//                                                tempUserInfo = t
-//                                                Log.d("WH_", "MineInfoEditor: $tempUserInfo")
+                                                tempUserInfo.iconUrl = it.newFilename
                                             }) {
                                                 Image(
                                                     painter = rememberImagePainter(
@@ -136,7 +104,7 @@ fun MineInfoEditor(requestHolder: RequestHolder) {
                                                     contentScale = ContentScale.Crop,
                                                     alignment = Alignment.Center
                                                 )
-                                                if (requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).iconUrl == it.newFilename) {
+                                                if (tempUserInfo.iconUrl == it.newFilename) {
                                                     Icon(
                                                         imageVector = Icons.Default.Check,
                                                         contentDescription = "",
@@ -166,33 +134,43 @@ fun MineInfoEditor(requestHolder: RequestHolder) {
 
                 item {
                     TextField(
-                        value = phone,
-                        onValueChange = { phone = it },
-                        placeholder = { Text(text = "手机号码") })
+                        value = tempUserInfo.phone,
+                        onValueChange = { tempUserInfo.phone = it },
+                        placeholder = { Text(text = "手机号码") },
+                        label = { Text(text = "手机号码")}
+                    )
                 }
                 item {
                     TextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        placeholder = { Text(text = "邮箱") })
+                        value = tempUserInfo.email,
+                        onValueChange = { tempUserInfo.email = it },
+                        placeholder = { Text(text = "邮箱") },
+                        label = { Text(text = "邮箱") },
+                    )
                 }
                 item {
                     TextField(
-                        value = username,
-                        onValueChange = { username = it },
-                        placeholder = { Text(text = "用户名") })
+                        value = tempUserInfo.username,
+                        onValueChange = { tempUserInfo.username = it },
+                        placeholder = { Text(text = "用户名") },
+                        label = { Text(text = "用户名") },
+                    )
                 }
                 item {
                     TextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        placeholder = { Text(text = "姓名") })
+                        value = tempUserInfo.name,
+                        onValueChange = { tempUserInfo.name = it },
+                        placeholder = { Text(text = "姓名") },
+                        label = { Text(text = "姓名") },
+                    )
                 }
                 item {
                     TextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        placeholder = { Text(text = "密码") })
+                        value = tempUserInfo.password,
+                        onValueChange = { tempUserInfo.password = it },
+                        placeholder = { Text(text = "密码") },
+                        label = { Text(text = "密码") },
+                    )
                 }
             },
             modifier = Modifier.fillMaxSize()

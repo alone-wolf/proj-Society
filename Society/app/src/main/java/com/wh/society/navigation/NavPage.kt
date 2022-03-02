@@ -60,80 +60,110 @@ sealed class GlobalNavPage(val label: String, val route: String) {
         "User Info",
         "detail/user/info"
     )
-    object UserChatPrivate:GlobalNavPage(
+
+    object UserChatPrivate : GlobalNavPage(
         "User Private Chat",
         "user/chat/private"
     )
-    object DetailSociety:GlobalNavPage(
+
+    object DetailSociety : GlobalNavPage(
         "Society Detail",
         "detail/society"
     )
-    object DetailBBS:GlobalNavPage(
+
+    object DetailBBS : GlobalNavPage(
         "BBS Detail",
         "detail/bbs"
     )
-    object DetailPost:GlobalNavPage(
+
+    object DetailPost : GlobalNavPage(
         "Post Detail",
         "detail/bbs/post"
     )
-    object DetailPostEditor:GlobalNavPage(
+
+    object DetailPostEditor : GlobalNavPage(
         "Post Editor",
         "detail/bbs/post/editor"
     )
 
-    object Main:GlobalNavPage(
+    object Main : GlobalNavPage(
         "Main",
         "main"
     )
 
-    object MainMineSocietyListPage:GlobalNavPage(
+    object MainMineSocietyListPage : GlobalNavPage(
         "Society You Join",
         "main/mine/societyList"
     )
 
-    object MainMineSocietyRequestListPage:GlobalNavPage(
+    object MainMineSocietyRequestListPage : GlobalNavPage(
         "Society Join Request",
         "main/mine/societyRequestList"
     )
 
-    object MainMinePostListPage:GlobalNavPage(
+    object MainMinePostListPage : GlobalNavPage(
         "Your Posts",
         "main/mine/postList"
     )
 
-    object MainMinePostReplyListPage:GlobalNavPage(
+    object MainMinePostReplyListPage : GlobalNavPage(
         "Your Replies",
         "main/mine/postReplyList"
     )
 
-    object MainMineInfoEditorPage:GlobalNavPage(
+    object MainMineInfoEditorPage : GlobalNavPage(
         "Mine Info Editor",
         "main/mine/info/editor"
     )
 
-    object MainMinePicListPage:GlobalNavPage(
+    object MainMinePicListPage : GlobalNavPage(
         "Uploaded Pictures",
         "main/mine/pic"
     )
 
-    object MainMineNotifyListPage:GlobalNavPage(
+    object MainMineNotifyListPage : GlobalNavPage(
         "Notify List",
         "main/mine/notify"
     )
 
-    object SocietyChatInnerPage:GlobalNavPage(
+    object SocietyChatInnerPage : GlobalNavPage(
         "Society Inner Chat",
         "detail/society/chat/inner"
     )
 
-    object SocietyMemberListPage:GlobalNavPage(
+    object SocietyMemberListPage : GlobalNavPage(
         "Society Members",
         "detail/society/member/list"
     )
 
-    object SocietyMemberDetailPage:GlobalNavPage(
+    object SocietyMemberDetailPage : GlobalNavPage(
         "Society Member",
         "detail/society/member"
+    )
+
+    object SocietyActivityListPage : GlobalNavPage(
+        "Society Activity List",
+        "detail/society/activity/list"
+    )
+
+    object SocietyActivityRequestListPage : GlobalNavPage(
+        "Society Activity Request List",
+        "detail/society/activity/request/list"
+    )
+
+    object SocietyActivityDetailPage : GlobalNavPage(
+        "Society Activity Detail",
+        "detail/society/activity/detail"
+    )
+
+    object SocietyPictureListPage : GlobalNavPage(
+        "Society Picture List",
+        "detail/society/picture/list"
+    )
+
+    object SocietyInfoEditorPage:GlobalNavPage(
+        "Society Info Editor",
+        "detail/society/info/editor"
     )
 //    object Detail
 }

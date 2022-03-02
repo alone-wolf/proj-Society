@@ -22,3 +22,12 @@ fun Uri.contentUriToMultiPartBodyPart(
     return MultipartBody.Part.createFormData(partKey, partFileName, requestFile)
 
 }
+
+fun Uri.uriToImageMultiPartBodyPart(contentResolver: ContentResolver): MultipartBody.Part {
+    return contentUriToMultiPartBodyPart(
+        contentResolver = contentResolver,
+        mediaType = "image/*",
+        partKey = "file",
+        partFileName = "image"
+    )
+}

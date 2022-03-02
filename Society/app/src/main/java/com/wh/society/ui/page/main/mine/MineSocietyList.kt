@@ -3,10 +3,8 @@ package com.wh.society.ui.page.main.mine
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import com.wh.society.api.data.Society
+import com.wh.society.api.data.society.Society
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
@@ -23,7 +21,7 @@ fun MineSocietyList(requestHolder: RequestHolder) {
     ) {
         LazyColumn(content = {
             items(
-                items = requestHolder.transUserJoint.data,
+                items = requestHolder.trans.userMember.data,
                 key = { it.id },
                 itemContent = { it ->
                     requestHolder.societyList.find { item: Society -> it.societyId == item.id }
@@ -35,7 +33,7 @@ fun MineSocietyList(requestHolder: RequestHolder) {
                         }
                 }
             )
-            empty(requestHolder.transUserJoint)
+            empty(requestHolder.trans.userMember)
 
         })
     }

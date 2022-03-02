@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,19 +26,27 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.wh.common.typeExt.firstN
 import com.wh.society.R
 import com.wh.society.api.data.*
+import com.wh.society.api.data.society.*
+import com.wh.society.api.data.society.bbs.BBS
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
-import com.wh.society.typeExt.conditionItem
+import com.wh.society.typeExt.itemsOnCondition
+import com.wh.society.typeExt.smallListTitle
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.SocietyDetailTopInfoPart
 
 @ExperimentalMaterialApi
 @Composable
 fun SocietyDetailPage(requestHolder: RequestHolder) {
-    var thisSocietyJointList by remember { mutableStateOf(ReturnListData.blank<SocietyJoint>()) }
-    var memberRequestList by remember { mutableStateOf(ReturnListData.blank<MemberRequest>()) }
+    var thisSocietyJointList by remember { mutableStateOf(ReturnListData.blank<SocietyMember>()) }
+    var memberRequestList by remember { mutableStateOf(ReturnListData.blank<SocietyMemberRequest>()) }
+    var activityList by remember { mutableStateOf(ReturnListData.blank<SocietyActivity>()) }
+    var activityRequestList by remember { mutableStateOf(ReturnListData.blank<SocietyActivityRequest>()) }
+    var societyPictureList by remember { mutableStateOf(ReturnListData.blank<SocietyPicture>()) }
 
     val myJoint = thisSocietyJointList.data.find {
         it.userId == requestHolder.apiViewModel.userInfo.notNullOrBlank(
@@ -48,19 +57,29 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
 
 
     LaunchedEffect(myJoint) {
-        requestHolder.apiViewModel.societyJoint(requestHolder.transSociety.id) { s ->
+        requestHolder.apiViewModel.societyJoint(requestHolder.trans.society.id) { s ->
             thisSocietyJointList = s
+        }
+        requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { s ->
+            activityList = s
         }
 
         myJoint?.let {
             if (it.permissionLevel == 111) {
-                requestHolder.apiViewModel.societyMemberRequestList(requestHolder.transSociety.id) { it ->
+                requestHolder.apiViewModel.societyMemberRequestList(requestHolder.trans.society.id) { it ->
                     memberRequestList = it
+                }
+                requestHolder.apiViewModel.societyActivityRequestList(requestHolder.trans.society.id) {
+                    activityRequestList = it
+                }
+                requestHolder.apiViewModel.societyPictureList(requestHolder.trans.society.id) {
+                    societyPictureList = it
                 }
             }
         }
-
     }
+
+    val isAdmin = isJoint && myJoint!!.permissionLevel == 111
 
 
     BottomSheetScaffold(
@@ -71,18 +90,25 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     IconButton(onClick = { requestHolder.globalNav.goBack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
                     }
+                },
+                actions = if (isAdmin) {
+                    {
+                        IconButton(onClick = {
+                            requestHolder.globalNav.gotoSocietyInfoEditorPage()
+                        }) {
+                            Icon(imageVector = Icons.Default.Edit, contentDescription = "")
+                        }
+                    }
+                } else {
+                    {}
                 }
             )
         },
         content = {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxSize()
             ) {
-                item {
-                    SocietyDetailTopInfoPart(requestHolder, thisSocietyJointList)
-                }
+                item { SocietyDetailTopInfoPart(requestHolder, thisSocietyJointList) }
 
                 // member row list
                 item {
@@ -90,7 +116,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                         content = {
                             items(
                                 items = thisSocietyJointList.data.sortedByDescending { it.permissionLevel },
-                                key = { item: SocietyJoint -> item.id },
+                                key = { item: SocietyMember -> item.id },
                                 itemContent = { item ->
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -98,11 +124,13 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                             .width(50.dp)
                                             .clickable {
                                                 requestHolder.globalNav.gotoSocietyMemberDetail(item)
-                                            },
+                                            }
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .background(if (item.permissionLevel == 111) Color.Gray else Color.Unspecified),
                                     ) {
                                         Image(
                                             painter = rememberImagePainter(
-                                                data = item.userIconUrl,
+                                                data = item.realIconUrl,
                                                 builder = {
                                                     this.placeholder(R.drawable.ic_baseline_person_24)
                                                 },
@@ -120,8 +148,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                             text = item.username,
                                             fontSize = 10.sp,
                                             overflow = TextOverflow.Ellipsis,
-                                            maxLines = 1,
-                                            color = if (item.permissionLevel == 111) Color.Red else Color.Unspecified
+                                            maxLines = 1
                                         )
                                     }
                                 }
@@ -134,7 +161,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                         .width(50.dp)
                                         .clickable {
                                             requestHolder.globalNav.gotoSocietyMemberList(
-                                                thisSocietyJointList.data
+                                                thisSocietyJointList
                                             )
                                         },
                                 ) {
@@ -157,9 +184,10 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                 }
                             }
                         },
-                        horizontalArrangement = Arrangement.Center,
+                        horizontalArrangement = Arrangement.Start,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 16.dp)
                             .border(
                                 width = 3.dp,
                                 color = Color.Gray,
@@ -169,11 +197,97 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     )
                 }
 
-                // member request for admin
+                // member request list for admin
+                smallListTitle(
+                    title = "成员申请",
+                    n = memberRequestList.data.size,
+                    show = isAdmin,
+                    onClick = {}
+                )
 
-                conditionItem(isJoint && myJoint!!.permissionLevel == 111) {
-                    Text(text = memberRequestList.data.size.toString())
-                }
+                itemsOnCondition(
+                    show = isAdmin,
+                    items = memberRequestList.data.asReversed().firstN(5),
+                    key = { item: SocietyMemberRequest -> item.hashCode() },
+                    itemContent = { it ->
+                        Card(
+                            onClick = {},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = "来自${it.username}的成员申请",
+                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
+                            )
+                        }
+                    }
+                )
+
+                // activity request for admin
+                smallListTitle(
+                    title = "社团活动申请",
+                    n = activityRequestList.data.size,
+                    show = isAdmin,
+                    onClick = {
+                        requestHolder.globalNav.gotoSocietyActivityRequestList()
+                    }
+                )
+                itemsOnCondition(
+                    show = isAdmin,
+                    items = activityRequestList.data.asReversed().firstN(5),
+                    key = { item: SocietyActivityRequest -> item.hashCode() },
+                    itemContent = {
+                        Card(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(vertical = 1.dp)
+                        ) {
+                            Text(
+                                text = "来自${it.username}的活动申请",
+                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
+                            )
+                        }
+                    }
+                )
+
+                smallListTitle(
+                    title = "社团活动",
+                    n = activityList.data.size,
+                    onClick = {
+                        requestHolder.globalNav.gotoSocietyActivityList()
+                    }
+                )
+                items(
+                    items = activityList.data.asReversed().firstN(5),
+                    key = { item: SocietyActivity -> item.hashCode() },
+                    itemContent = {
+                        Card(
+                            onClick = {
+                                requestHolder.globalNav.gotoSocietyActivityDetail(it)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(vertical = 1.dp)
+                        ) {
+                            Text(
+                                text = it.title,
+                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
+                            )
+                        }
+                    }
+                )
+
+                smallListTitle(
+                    title = "社团图片",
+                    n = societyPictureList.data.size,
+                    onClick = {
+                        requestHolder.globalNav.gotoSocietyPictureListPage(societyPictureList)
+                    },
+                )
 
                 spacer(height = 100.dp)
 
@@ -191,8 +305,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 Button(
                     onClick = {
                         requestHolder.globalNav.gotoDetailBBS(
-                            BBS.fromSociety(requestHolder.transSociety),
-                            addBack = true
+                            BBS.fromSociety(requestHolder.trans.society)
                         )
                     },
                     modifier = Modifier
@@ -207,7 +320,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
 
                     Button(
                         onClick = {
-                            requestHolder.globalNav.gotoSocietyChatInner(requestHolder.transSociety)
+                            requestHolder.globalNav.gotoSocietyChatInner(requestHolder.trans.society)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -221,8 +334,12 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                         onClick = {
                             requestHolder.apiViewModel.societyMemberRequestCreate(
                                 requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
-                                requestHolder.transSociety.id,
-                                request = "${requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).username}'s leave request for ${requestHolder.transSociety.name}",
+                                requestHolder.trans.society.id,
+                                request = "${
+                                    requestHolder.apiViewModel.userInfo.notNullOrBlank(
+                                        UserInfo()
+                                    ).username
+                                }'s leave request for ${requestHolder.trans.society.name}",
                                 isJoin = false
                             ) {}
                         },
@@ -239,8 +356,12 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                         onClick = {
                             requestHolder.apiViewModel.societyMemberRequestCreate(
                                 requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
-                                requestHolder.transSociety.id,
-                                request = "${requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).username}'s join request for ${requestHolder.transSociety.name}",
+                                requestHolder.trans.society.id,
+                                request = "${
+                                    requestHolder.apiViewModel.userInfo.notNullOrBlank(
+                                        UserInfo()
+                                    ).username
+                                }'s join request for ${requestHolder.trans.society.name}",
                                 isJoin = true
                             ) {}
                         },

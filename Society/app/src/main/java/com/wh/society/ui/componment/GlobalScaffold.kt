@@ -2,14 +2,11 @@ package com.wh.society.ui.componment
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.wh.society.api.data.Society
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 

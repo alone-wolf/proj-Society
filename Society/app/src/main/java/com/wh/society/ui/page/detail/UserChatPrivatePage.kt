@@ -21,17 +21,16 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.wh.society.api.data.ChatPrivate
+import com.wh.society.api.data.user.UserChatPrivate
 import com.wh.society.api.data.ReturnListData
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
-import com.wh.society.service.SocketIOService
 import com.wh.society.typeExt.empty
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.GlobalScaffold
 import kotlinx.coroutines.launch
 
-private var chatPrivateList by mutableStateOf(ReturnListData.blank<ChatPrivate>())
+private var chatPrivateList by mutableStateOf(ReturnListData.blank<UserChatPrivate>())
 
 @ExperimentalMaterialApi
 @Composable
@@ -40,7 +39,7 @@ fun UserChatPrivatePage(requestHolder: RequestHolder) {
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.userChatPrivateList(requestHolder.transSocietyJoint.userId) { s ->
+        requestHolder.apiViewModel.userChatPrivateList(requestHolder.trans.societyMember.userId) { s ->
             chatPrivateList = s
         }
     }
@@ -57,7 +56,7 @@ fun UserChatPrivatePage(requestHolder: RequestHolder) {
     GlobalScaffold(
         page = GlobalNavPage.UserChatPrivate,
         remoteOperate = {
-            requestHolder.apiViewModel.userChatPrivateList(requestHolder.transSocietyJoint.userId) { s ->
+            requestHolder.apiViewModel.userChatPrivateList(requestHolder.trans.societyMember.userId) { s ->
                 chatPrivateList = s
             }
         },
@@ -69,7 +68,7 @@ fun UserChatPrivatePage(requestHolder: RequestHolder) {
                 content = {
                     items(
                         items = chatPrivateList.data,
-                        key = { item: ChatPrivate -> item.id },
+                        key = { item: UserChatPrivate -> item.id },
                         itemContent = { it ->
                             Text(text = it.toString())
                         }
@@ -111,11 +110,11 @@ fun UserChatPrivatePage(requestHolder: RequestHolder) {
                     onClick = {
                         focusManager.clearFocus()
                         requestHolder.apiViewModel.userChatPrivateCreate(
-                            opUserId = requestHolder.transSocietyJoint.userId,
+                            opUserId = requestHolder.trans.societyMember.userId,
                             message = message
                         ) {
                             requestHolder.apiViewModel.userChatPrivateList(
-                                requestHolder.transSocietyJoint.userId
+                                requestHolder.trans.societyMember.userId
                             ) { it ->
                                 chatPrivateList = it
                             }

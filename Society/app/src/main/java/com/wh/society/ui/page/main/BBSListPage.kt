@@ -9,7 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.wh.society.api.data.BBS
+import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.componment.RequestHolder
 import com.wh.society.typeExt.empty
 import com.wh.society.typeExt.spacer

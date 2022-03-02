@@ -1,6 +1,7 @@
-package com.wh.society.api.data
+package com.wh.society.api.data.society
 
 import com.wh.society.api.ServerApi
+import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.impl.IContain
 

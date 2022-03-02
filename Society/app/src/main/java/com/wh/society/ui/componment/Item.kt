@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -27,7 +26,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.wh.society.api.data.*
+import com.wh.society.api.data.society.Society
+import com.wh.society.api.data.society.bbs.BBS
+import com.wh.society.api.data.society.bbs.Post
+import com.wh.society.api.data.society.bbs.PostReply
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 
 @Composable
@@ -128,7 +131,7 @@ fun BBSItem(requestHolder: RequestHolder, bbs: BBS) {
 
 @ExperimentalMaterialApi
 @Composable
-fun MineTitleItem(title: String, n: Int, onClick: () -> Unit) {
+fun SmallListTitle(title: String, n: Int, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -165,9 +168,9 @@ fun MineUserPostItem(requestHolder: RequestHolder, post: Post, modifier: Modifie
     }
     Card(
         onClick = {
-            requestHolder.transSociety = society
-            requestHolder.transBBS = society.toBBS()
-            requestHolder.globalNav.gotoBBSPostDetail(post)
+            requestHolder.trans.society = society
+            requestHolder.trans.bbs = society.toBBS()
+            requestHolder.globalNav.gotoBBSPostDetail(post.id)
         },
         modifier = modifier
             .fillMaxWidth()
@@ -202,22 +205,17 @@ fun MineUserPostReplyItem(
     postReply: PostReply,
     modifier: Modifier = Modifier
 ) {
-    var post = Post()
-    requestHolder.transPostList.data.find { it.id == postReply.postId }?.let {
-        post = it
-    }
+//    var post = Post()
+//    requestHolder.transPostList.data.find { it.id == postReply.postId }?.let {
+//        post = it
+//    }
 //    var society = Society()
 //    requestHolder.societyList.find { it.id == postReply.societyId }?.let {
 //        society = it
 //    }
     Card(
         onClick = {
-//            Log.d("WH_", "MineUserPostReplyItem: $post")
-//            Log.d("WH_", "MineUserPostReplyItem: $postReply")
-//            Log.d("WH_", "MineUserPostReplyItem: $society")
-//            requestHolder.transSociety = society
-//            requestHolder.transBBS = society.toBBS()
-            requestHolder.globalNav.gotoBBSPostDetail(post)
+            requestHolder.globalNav.gotoBBSPostDetail(postReply.postId)
         },
         modifier = modifier
             .fillMaxWidth()
@@ -262,7 +260,7 @@ fun PostItem(
     Card(
         onClick = {
             if (!ignoreClick) {
-                requestHolder.globalNav.gotoBBSPostDetail(post)
+                requestHolder.globalNav.gotoBBSPostDetail(post.id)
             }
         },
         modifier = modifier
@@ -276,7 +274,7 @@ fun PostItem(
                 ) {
                     Image(
                         painter = rememberImagePainter(
-                            data = post.userIconUrl,
+                            data = post.realIconUrl,
                             imageLoader = requestHolder.coilImageLoader
                         ),
                         contentDescription = "",
@@ -353,7 +351,7 @@ fun PostReplyItem(
                 ) {
                     Image(
                         painter = rememberImagePainter(
-                            data = postReply.userIconUrl,
+                            data = postReply.realIconUrl,
                             imageLoader = requestHolder.coilImageLoader
                         ),
                         contentDescription = "",

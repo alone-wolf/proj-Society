@@ -10,6 +10,11 @@ import androidx.navigation.NavController
 import coil.ImageLoader
 import com.wh.society.MainActivity
 import com.wh.society.api.data.*
+import com.wh.society.api.data.society.*
+import com.wh.society.api.data.society.bbs.BBS
+import com.wh.society.api.data.society.bbs.Post
+import com.wh.society.api.data.society.bbs.PostReply
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.store.SettingStore
 import com.wh.society.ui.componment.RoundedTextFiled
@@ -19,13 +24,14 @@ import io.noties.markwon.Markwon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 
 interface RequestHolder {
 
-    val operatePlatform:OperatePlatform
+    val operatePlatform: OperatePlatform
 
     val apiViewModel: ApiViewModel
-    val notifyViewModel:NotifyViewModel
+    val notifyViewModel: NotifyViewModel
 
     val societyList: List<Society>
     val collegeList: ReturnListData<College>
@@ -41,24 +47,13 @@ interface RequestHolder {
     val coilImageLoader: ImageLoader
     val markdown: Markwon
 
-    var transSociety: Society
-    var transBBS: BBS
-    var transPost: Post?
-    // used to store userInfo while
-    var transUserInfo: UserInfo
-    var transUserJoint: ReturnListData<SocietyJoint>
-    var transPostList: ReturnListData<Post>
-    var transPostReplyList: ReturnListData<PostReply>
-    var transSocietyRequestList: ReturnListData<MemberRequest>
-    var transSocietyJoint: SocietyJoint
-    var transSocietyJointList: List<SocietyJoint>
+    val trans: DataTrans
 
     val alertRequest: AlertRequestCompact
 
-
-    val imagePicker: ActivityResultLauncher<String>
-    val myContentResolver:ContentResolver
-    val activity:MainActivity
+    val imagePicker: ImagePickerRequest
+    val myContentResolver: ContentResolver
+    val activity: MainActivity
 
     fun loginLogic() {
         if (settingStore.phoneStudentIdEmail.isNotBlank() && settingStore.password.isNotBlank()) {
@@ -99,20 +94,13 @@ interface RequestHolder {
             apiViewModel.collegeList = ReturnListData.blank()
             apiViewModel.loginToken = ReturnObjectData.blank()
             apiViewModel.picDataList = ReturnListData.blank()
-            transSociety = Society()
-            transBBS = BBS()
-            transPost = null
-            transUserInfo = UserInfo()
-            transPostList = ReturnListData.blank()
-            transPostReplyList = ReturnListData.blank()
-            transSocietyRequestList = ReturnListData.blank()
-            transSocietyJoint = SocietyJoint()
-            transSocietyJointList = emptyList()
+
+            trans.clear()
         }
     }
 
     val startSocketIOService: (Int, String) -> Unit
-    val stopSocketIOService:()->Unit
+    val stopSocketIOService: () -> Unit
 
     abstract class GlobalNavRequest(
         private val navController: NavController,
@@ -148,10 +136,11 @@ interface RequestHolder {
         }
 
         fun gotoUserInfo(userInfo: UserInfo) {
-            requestHolder.transUserInfo = userInfo
+            requestHolder.trans.userInfo = userInfo
             navController.navigate(GlobalNavPage.DetailUserInfo.route)
         }
-        fun gotoUserPrivateChat(){
+
+        fun gotoUserPrivateChat() {
             navController.navigate(GlobalNavPage.UserChatPrivate.route)
         }
 
@@ -159,23 +148,23 @@ interface RequestHolder {
             navController.navigate(GlobalNavPage.MainMineInfoEditorPage.route)
         }
 
-        fun gotoMainMineSocietyList(userJointList: ReturnListData<SocietyJoint>) {
-            requestHolder.transUserJoint = userJointList
+        fun gotoMainMineSocietyList(userMemberList: ReturnListData<SocietyMember>) {
+            requestHolder.trans.userMember = userMemberList
             navController.navigate(GlobalNavPage.MainMineSocietyListPage.route)
         }
 
-        fun gotoMainMineSocietyRequestList(memberRequestList: ReturnListData<MemberRequest>) {
-            requestHolder.transSocietyRequestList = memberRequestList
+        fun gotoMainMineSocietyRequestList(societyMemberRequestList: ReturnListData<SocietyMemberRequest>) {
+            requestHolder.trans.societyMemberRequestList = societyMemberRequestList
             navController.navigate(GlobalNavPage.MainMineSocietyRequestListPage.route)
         }
 
         fun gotoMainMinePostList(postList: ReturnListData<Post>) {
-            requestHolder.transPostList = postList
+            requestHolder.trans.postList = postList
             navController.navigate(GlobalNavPage.MainMinePostListPage.route)
         }
 
         fun gotoMainMinePostReplyList(postReplyList: ReturnListData<PostReply>) {
-            requestHolder.transPostReplyList = postReplyList
+            requestHolder.trans.postReplyList = postReplyList
             navController.navigate(GlobalNavPage.MainMinePostReplyListPage.route)
         }
 
@@ -183,12 +172,12 @@ interface RequestHolder {
             navController.navigate(GlobalNavPage.MainMinePicListPage.route)
         }
 
-        fun gotoMainMineNotifyList(){
+        fun gotoMainMineNotifyList() {
             navController.navigate(GlobalNavPage.MainMineNotifyListPage.route)
         }
 
         fun gotoDetailSociety(society: Society, addBack: Boolean = false) {
-            requestHolder.transSociety = society
+            requestHolder.trans.society = society
             navController.navigate(GlobalNavPage.DetailSociety.route) {
                 if (addBack) {
                     navController.popBackStack()
@@ -196,38 +185,57 @@ interface RequestHolder {
             }
         }
 
-        fun gotoDetailBBS(bbs: BBS, addBack: Boolean = false) {
-            requestHolder.transBBS = bbs
+        fun gotoDetailBBS(bbs: BBS) {
+            requestHolder.trans.bbs = bbs
             navController.navigate(GlobalNavPage.DetailBBS.route) {
-//                if (addBack) {
-//                    navController.popBackStack()
-//                }
             }
         }
 
-        fun gotoBBSPostDetail(post: Post) {
-            requestHolder.transPost = post
+        fun gotoBBSPostDetail(postId: Int) {
+            requestHolder.trans.postId = postId
             navController.navigate(GlobalNavPage.DetailPost.route)
         }
 
         fun gotoBBSPostEditor(post: Post? = null) {
-            requestHolder.transPost = post
+//            requestHolder.trans.post = post
             navController.navigate(GlobalNavPage.DetailPostEditor.route)
         }
 
         fun gotoSocietyChatInner(society: Society) {
-            requestHolder.transSociety = society
+            requestHolder.trans.society = society
             navController.navigate(GlobalNavPage.SocietyChatInnerPage.route)
         }
 
-        fun gotoSocietyMemberList(societyJoint: List<SocietyJoint>) {
-            requestHolder.transSocietyJointList = societyJoint
+        fun gotoSocietyMemberList(societyMember: ReturnListData<SocietyMember>) {
+            requestHolder.trans.societyMemberList = societyMember
             navController.navigate(GlobalNavPage.SocietyMemberListPage.route)
         }
 
-        fun gotoSocietyMemberDetail(societyJoint: SocietyJoint) {
-            requestHolder.transSocietyJoint = societyJoint
+        fun gotoSocietyMemberDetail(societyMember: SocietyMember) {
+            requestHolder.trans.societyMember = societyMember
             navController.navigate(GlobalNavPage.SocietyMemberDetailPage.route)
+        }
+
+        fun gotoSocietyActivityList() {
+            navController.navigate(GlobalNavPage.SocietyActivityListPage.route)
+        }
+
+        fun gotoSocietyActivityRequestList() {
+            navController.navigate(GlobalNavPage.SocietyActivityRequestListPage.route)
+        }
+
+        fun gotoSocietyActivityDetail(societyActivity: SocietyActivity) {
+            requestHolder.trans.societyActivity = societyActivity
+            navController.navigate(GlobalNavPage.SocietyActivityDetailPage.route)
+        }
+
+        fun gotoSocietyPictureListPage(societyPictureList: ReturnListData<SocietyPicture>) {
+            requestHolder.trans.societyPictureList = societyPictureList
+            navController.navigate(GlobalNavPage.SocietyPictureListPage.route)
+        }
+
+        fun gotoSocietyInfoEditorPage() {
+            navController.navigate(GlobalNavPage.SocietyInfoEditorPage.route)
         }
     }
 
@@ -361,6 +369,67 @@ interface RequestHolder {
             onOk: () -> Unit,
         ) {
             alert(resources.getString(title), content, onOk)
+        }
+    }
+
+    abstract class ImagePickerRequest(
+        private val imagePicker: ActivityResultLauncher<String>,
+        private val requestHolder: RequestHolder
+    ) {
+        var afterImagePick: (MultipartBody.Part) -> Unit = { i: MultipartBody.Part -> }
+
+        fun forUser() {
+            afterImagePick = { imageBodyPart ->
+                requestHolder.apiViewModel.picCreate(imageBodyPart) {
+                    requestHolder.apiViewModel.picList()
+                }
+            }
+            imagePicker.launch("image/*")
+        }
+
+        fun forSociety() {
+            afterImagePick = { imageBodyPart ->
+                requestHolder.apiViewModel.societyPictureCreate(
+                    imageBodyPart,
+                    requestHolder.trans.society.id
+                ) {
+                    if (requestHolder.operatePlatform.currentRoute == GlobalNavPage.SocietyPictureListPage.route) {
+                        requestHolder.operatePlatform.currentOperate.invoke()
+                    }
+                }
+            }
+            imagePicker.launch("image/*")
+        }
+
+    }
+
+    abstract class DataTrans {
+        var society: Society = Society()
+        var bbs: BBS = BBS()
+        var userInfo = UserInfo()
+        var postList = ReturnListData.blank<Post>()
+        var postReplyList = ReturnListData.blank<PostReply>()
+        var societyMemberRequestList = ReturnListData.blank<SocietyMemberRequest>()
+        var societyMember = SocietyMember()
+        var societyMemberList = ReturnListData.blank<SocietyMember>()
+        var societyActivity = SocietyActivity()
+        var postId = 0
+        var societyPictureList = ReturnListData.blank<SocietyPicture>()
+        var userMember = ReturnListData.blank<SocietyMember>()
+
+        fun clear() {
+            society = Society()
+            bbs = BBS()
+            userInfo = UserInfo()
+            postList = ReturnListData.blank()
+            postReplyList = ReturnListData.blank()
+            societyMemberRequestList = ReturnListData.blank()
+            societyMember = SocietyMember()
+            societyMemberList = ReturnListData.blank()
+            societyActivity = SocietyActivity()
+            postId = 0
+            societyPictureList = ReturnListData.blank()
+            userMember = ReturnListData.blank()
         }
     }
 

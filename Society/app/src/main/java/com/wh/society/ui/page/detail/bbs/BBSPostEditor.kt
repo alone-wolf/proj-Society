@@ -6,43 +6,46 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.wh.society.api.data.UserInfo
+import com.wh.society.api.data.ReturnObjectData
+import com.wh.society.api.data.society.bbs.Post
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.ui.componment.GlobalScaffold
 
-private var _title = ""
-private var _post = ""
-private var _level = 0
 
 @ExperimentalMaterialApi
 @Composable
 fun BBSPostEditor(requestHolder: RequestHolder) {
-    requestHolder.transPost?.let {
-        _title = it.title
-        _post = it.post
-        _level = it.level
+
+    var postData by remember {
+        mutableStateOf(ReturnObjectData.blank<Post>())
+    }
+
+    LaunchedEffect(Unit){
+        requestHolder.apiViewModel.societyBBSPostById(requestHolder.trans.postId){
+            postData = it
+        }
     }
 
     var title by remember {
-        mutableStateOf(_title)
+        mutableStateOf(postData.data!!.title)
     }
     var post by remember {
-        mutableStateOf(_post)
+        mutableStateOf(postData.data!!.post)
     }
     var level by remember {
-        mutableStateOf(_level)
+        mutableStateOf(postData.data!!.level)
     }
 
     GlobalScaffold(page = GlobalNavPage.DetailPostEditor, requestHolder = requestHolder, actions = {
         IconButton(onClick = {
             val userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id
-            val societyId = requestHolder.transBBS.id
+            val societyId = requestHolder.trans.bbs.id
             requestHolder.apiViewModel.societyBBSPostCreate(
                 societyId = societyId,
                 userId = userId,
@@ -82,7 +85,6 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
                         .fillMaxSize()
                         .padding(16.dp)
                 )
-
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.wh.society.api.data
+package com.wh.society.api.data.society.bbs
 
 class BBSInfo {
     var postCount:Int = 0
