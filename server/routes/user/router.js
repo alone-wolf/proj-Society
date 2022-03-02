@@ -8,7 +8,7 @@ const authMiddleware = require("../../middleware/auth");
 const STATUS = require("../../utils/return_data");
 const Post = require("../../model/post");
 const PostReply = require("../../model/post_reply");
-const SocietyJoinRequest = require("../../model/society_join_request");
+const SocietyJoinRequest = require("../../model/society_member_request");
 const BBSUserWatch = require("../../model/bbs_user_watch");
 
 // the feature of login is done
@@ -44,7 +44,7 @@ apiRouter.post("/info/simple", (req, res, next) => {
 });
 
 apiRouter.post("/info/update", (req, res, next) => {
-  let id = req.body.userId;
+  let userId = req.body.userId;
   let username = req.body.username;
   let email = req.body.email;
   let studentNumber = req.body.studentNumber;
@@ -52,10 +52,52 @@ apiRouter.post("/info/update", (req, res, next) => {
   let phone = req.body.phone;
   let name = req.body.name;
   let college = req.body.college;
+  let password = req.body.password;
+
+  let m = { username, email, studentNumber, iconUrl, phone, name, college, password };
+
+  User.findOne({ where: { id: userId } }).then(userData => {
+    if (!userData) {
+      res.status(404).json(STATUS.STATUS_404);
+      return;
+    }
+
+    userData.update(m).then(newUserData => {
+
+      Post.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
+      PostReply.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
+      SocietyActivityRequest.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
+      SocietyInnerChat.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
+      UserChatPrivate.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
+      SocietyJoinRequest.update({ username }, { where: { userId } }).catch(e => { console.log(e); })
+      SocietyMember.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
+      SocietyNotice.update({ postUsername: username }, { where: { postUserId: userId } }).catch(e => { console.log(e); })
+
+      res.json(STATUS.STATUS_200(newUserData));
+
+    }).catch((e) => {
+      console.log(e);
+      res.status(500).json(STATUS.STATUS_500);
+    });
+
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).json(STATUS.STATUS_500);
+  });
+});
+
+apiRouter.post("/info/update/password", (req, res, next) => {
+  let name = req.body.name;
+  let username = req.body.username;
+  let studentNumber = req.body.studentNumber;
+  let phone = req.body.phone;
+  let email = req.body.email;
+
+  let password = req.body.password;
 
   User.update(
-    { username, email, studentNumber, iconUrl, phone, name, college },
-    { where: { id } }
+    { password },
+    { where: { name, username, studentNumber, phone, email } }
   ).then(d => {
     res.json(STATUS.STATUS_200(d));
   }).catch((e) => {
@@ -82,17 +124,12 @@ apiRouter.post("/login", (req, res, next) => {
   let phoneStudentIdEmail = req.body.phoneStudentIdEmail;
   let password = req.body.password;
 
-  User.findOne({
-    where: {
-      // $or: [
-      // { phone: phoneStudentIdEmail },
-      // { studentNumber: phoneStudentIdEmail },
-      // { email: phoneStudentIdEmail }
-      // ],
-      password
-    }
-  }).then(data => {
+  User.findOne({ where: { password } }).then(data => {
     if (!data) {
+      res.status(404).json(STATUS.STATUS_404);
+      return;
+    }
+    if (!(data.phone == phoneStudentIdEmail || data.email == phoneStudentIdEmail)) {
       res.status(404).json(STATUS.STATUS_404);
       return;
     }
@@ -146,65 +183,66 @@ apiRouter.post("/create", authMiddleware.checkAdminToken, (req, res, next) => {
 
 // update userInfo
 // and update some other model
-apiRouter.post("/update", (req, res, next) => {
-  let userId = req.body.userId;
-  let name = req.body.name;
-  let username = req.body.username;
-  let phone = req.body.phone;
-  let email = req.body.email;
-  let studentNumber = req.body.studentNumber;
-  let password = req.body.password;
-  let describe = req.body.describe;
-  let iconUrl = req.body.iconUrl;
-  let m = {
-    name, username, phone, email,
-    studentNumber, password, describe, iconUrl
-  };
+// apiRouter.post("/update", (req, res, next) => {
+//   let userId = req.body.userId;
+//   let name = req.body.name;
+//   let username = req.body.username;
+//   let phone = req.body.phone;
+//   let email = req.body.email;
+//   let studentNumber = req.body.studentNumber;
+//   let password = req.body.password;
+//   let describe = req.body.describe;
+//   let iconUrl = req.body.iconUrl;
+//   console.log(req.body);
+//   let m = {
+//     name, username, phone, email,
+//     studentNumber, password, describe, iconUrl
+//   };
 
 
-  User.findOne({ where: { id: userId } }).then((data) => {
-    if (!data) {
-      res.status(404).json(STATUS.STATUS_404);
-      return;
-    }
+//   User.findOne({ where: { id: userId } }).then((data) => {
+//     if (!data) {
+//       res.status(404).json(STATUS.STATUS_404);
+//       return;
+//     }
 
-    if (username) {
-      SocietyJoinRequest.update(
-        { username },
-        { where: { userId } }
-      );
+//     if (username) {
+//       SocietyJoinRequest.update(
+//         { username },
+//         { where: { userId } }
+//       );
 
-      SocietyJoinRequest.update(
-        { username },
-        { where: { userId } }
-      );
-      if (iconUrl) {
-        SocietyMember.update(
-          { username, userIconUrl: iconUrl },
-          { where: { userId } }
-        );
-        PostReply.update(
-          { username, userIconUrl: iconUrl },
-          { where: { userId } }
-        );
-        Post.update(
-          { username, userIconUrl: iconUrl },
-          { where: { userId } }
-        );
-      }
-    }
+//       SocietyJoinRequest.update(
+//         { username },
+//         { where: { userId } }
+//       );
+//       if (iconUrl) {
+//         SocietyMember.update(
+//           { username, userIconUrl: iconUrl },
+//           { where: { userId } }
+//         );
+//         PostReply.update(
+//           { username, userIconUrl: iconUrl },
+//           { where: { userId } }
+//         );
+//         Post.update(
+//           { username, userIconUrl: iconUrl },
+//           { where: { userId } }
+//         );
+//       }
+//     }
 
-    data
-      .update(m)
-      .then((data) => {
-        res.json(STATUS.STATUS_200(data));
-      })
-      .catch((e) => {
-        console.log(e);
-        res.status(500).json(STATUS.STATUS_500);
-      });
-  });
-});
+//     data
+//       .update(m)
+//       .then((data) => {
+//         res.json(STATUS.STATUS_200(data));
+//       })
+//       .catch((e) => {
+//         console.log(e);
+//         res.status(500).json(STATUS.STATUS_500);
+//       });
+//   });
+// });
 
 apiRouter.post("/delete", authMiddleware.checkAdminToken, (req, res, next) => {
   let userId = req.body.userId;
@@ -314,6 +352,9 @@ apiRouter.post("/room/info", (req, res, next) => {
 
 const userChatRouter = require("./chat/router");
 const UserChatPrivate = require("../../model/user_chat_private");
+const SocietyActivityRequest = require("../../model/society_activity_request");
+const SocietyInnerChat = require("../../model/society_inner_chat");
+const SocietyNotice = require("../../model/society_notice");
 apiRouter.use("/chat", userChatRouter.apiRouter);
 
 module.exports = { apiRouter };

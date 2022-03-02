@@ -8,10 +8,23 @@ SocietyActivityRequest.init(
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         societyId: DataTypes.INTEGER,
         societyName: DataTypes.STRING,
+
         userId: DataTypes.INTEGER,
         username: DataTypes.STRING,
         userIconUrl: DataTypes.STRING,
-        deviceName: DataTypes.STRING
+        isJoin: { // isJoin or isLeave
+            defaultValue: true,
+            type: DataTypes.BOOLEAN
+        },
+        request: DataTypes.STRING,
+        isDealDone: {
+            defaultValue: false,
+            type: DataTypes.BOOLEAN
+        },
+        isAgreed: {
+            defaultValue: false,
+            type: DataTypes.BOOLEAN
+        }
     },
     {
         sequelize,

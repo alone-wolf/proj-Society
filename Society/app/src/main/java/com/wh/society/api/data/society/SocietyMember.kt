@@ -1,4 +1,4 @@
-package com.wh.society.api.data
+package com.wh.society.api.data.society
 
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.RealIconUrl
@@ -21,10 +21,11 @@ class SocietyJoint :RealIconUrl{
             ServerApi.picUrl(userIconUrl)
 
     fun levelToString(): String {
-        return when(permissionLevel){
-            10->"Member"
-            100->"Admin"
-            else->"Guest"
+        return when{
+            permissionLevel>100->"Admin"
+            permissionLevel>10->"Member"
+            permissionLevel>0->"Guest"
+            else -> "Unknown"
         }
     }
 

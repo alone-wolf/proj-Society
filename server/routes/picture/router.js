@@ -35,22 +35,6 @@ apiRouter.get("/list", (req, res, next) => {
     });
 });
 
-// apiRouter.get("/:userId", (req, res, next) => {
-//   let userId = req.params.userId;
-//   if (!userId) {
-//     res.status(400).json(STATUS.STATUS_400);
-//     return;
-//   }
-//   Picture.findAll({ where: { userId } })
-//     .then((data) => {
-//       res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
-//     })
-//     .catch((e) => {
-//       res.status(500).json(STATUS.STATUS_500);
-//       console.log(e);
-//     }); 0
-// });
-
 // for universal usage
 apiRouter.get("/:token", (req, res, next) => {
   let newFilename = req.params.token;
@@ -129,29 +113,5 @@ apiRouter.post("/delete", (req, res, next) => {
     res.status(500).json(STATUS.STATUS_500)
   });
 })
-
-
-// method deleted
-// apiRouter.delete("/:token", (req, res, next) => {
-//   let newFilename = req.params.token;
-//   Picture.findOne({ where: { newFilename } })
-//     .then((data) => {
-//       if (data) {
-//         data
-//           .destroy()
-//           .then(() => {
-//             res.json(STATUS.STATUS_200());
-//           })
-//           .catch((e) => {
-//             res.status(500).json(STATUS.STATUS_500);
-//           });
-//       } else {
-//         res.json(STATUS.STATUS_200());
-//       }
-//     })
-//     .catch((e) => {
-//       res.status(500).json(STATUS.STATUS_500);
-//     });
-// });
 
 module.exports = { apiRouter };

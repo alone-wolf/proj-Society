@@ -2,17 +2,19 @@ package com.wh.society.api.data
 
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.shadow.UserInfoShadow
 import com.wh.society.impl.IContain
 
-class UserInfo : IContain,RealIconUrl {
+open class UserInfo : IContain,RealIconUrl {
     var id: Int = 0
-    var username: String = ""
-    var email: String = ""
-    var studentNumber: String = ""
-    var iconUrl: String = ""
-    var phone: String = ""
-    var name: String = ""
-    var college: String = ""
+    open var username: String = ""
+    open var email: String = ""
+    open var studentNumber: String = ""
+    open var iconUrl: String = ""
+    open var phone: String = ""
+    open var name: String = ""
+    open var college: String = ""
+    open var password:String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
 
@@ -26,9 +28,14 @@ class UserInfo : IContain,RealIconUrl {
             this.phone = this@UserInfo.phone
             this.name = this@UserInfo.name
             this.college = this@UserInfo.college
+            this.password = this@UserInfo.password
             this.createTimestamp = this@UserInfo.createTimestamp
             this.updateTimestamp = this@UserInfo.updateTimestamp
         }
+    }
+
+    fun shadow(): UserInfoShadow {
+        return UserInfoShadow.fromUserInfo(this)
     }
 
     override val realIconUrl: String
@@ -55,6 +62,7 @@ class UserInfo : IContain,RealIconUrl {
         if (phone != other.phone) return false
         if (name != other.name) return false
         if (college != other.college) return false
+        if (password != other.password) return false
         if (createTimestamp != other.createTimestamp) return false
         if (updateTimestamp != other.updateTimestamp) return false
 
@@ -70,13 +78,14 @@ class UserInfo : IContain,RealIconUrl {
         result = 31 * result + phone.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + college.hashCode()
+        result = 31 * result + password.hashCode()
         result = 31 * result + createTimestamp.hashCode()
         result = 31 * result + updateTimestamp.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "UserInfo(id=$id, username='$username', email='$email', studentNumber='$studentNumber', iconUrl='$iconUrl', phone='$phone', name='$name', college='$college', createTimestamp='$createTimestamp', updateTimestamp='$updateTimestamp')"
+        return "UserInfo(id=$id, username='$username', email='$email', studentNumber='$studentNumber', iconUrl='$iconUrl', phone='$phone', name='$name', college='$college', password='$password', createTimestamp='$createTimestamp', updateTimestamp='$updateTimestamp')"
     }
 
 

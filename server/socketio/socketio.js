@@ -60,6 +60,14 @@ const brdNewMemberRequest = (societyId, societyName, userId, username) => {
     )
 };
 
+const brdNewActivityRequest = (societyId, societyName, userId, username) => {
+    emitPushBrd(
+        `society-admin-${societyId}`,
+        "society-new-activity-request",
+        { societyId, societyName, userId, username }
+    )
+}
+
 const brdMemberChanged = (societyId, societyName) => {
     emitPushBrd(
         `society-member-${societyId}`,
@@ -117,6 +125,7 @@ module.exports = {
     brdNewPost,
     brdMemberChanged,
     brdNewMemberRequest,
+    brdNewActivityRequest,
     brdNewNoticeMember,
     brdNewNoticeWatcher,
     srdNewPostReply,

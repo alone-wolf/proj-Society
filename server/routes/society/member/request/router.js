@@ -4,11 +4,12 @@ const Society = require("../../../../model/society");
 const UserSocietyJoint = require("../../../../model/society_member");
 
 const STATUS = require("../../../../utils/return_data");
-const SocietyJoinRequest = require("../../../../model/society_join_request");
+const SocietyJoinRequest = require("../../../../model/society_member_request");
 const User = require("../../../../model/user");
 const { brdNewMemberRequest, srdMemberRequestReply, brdMemberChanged } = require("../../../../socketio/socketio");
 
-apiRouter.post("/member/request/create", (req, res, next) => {
+apiRouter.post("/create", (req, res, next) => {
+    console.log(req.body);
     let societyId = req.body.societyId;
     let userId = req.body.userId;
     let request = req.body.request;
@@ -42,7 +43,7 @@ apiRouter.post("/member/request/create", (req, res, next) => {
     });
 });
 
-apiRouter.post("/member/request/list", (req, res, next) => {
+apiRouter.post("/list", (req, res, next) => {
     let societyId = req.body.societyId;
     SocietyJoinRequest.findAll({ where: { societyId } }).then(d => {
         res.json(STATUS.STATUS_200(d));
@@ -52,7 +53,7 @@ apiRouter.post("/member/request/list", (req, res, next) => {
     });
 });
 
-apiRouter.post("/member/request/deal", (req, res, next) => {
+apiRouter.post("/deal", (req, res, next) => {
     let requestId = req.body.requestId;
     let isAgreed = req.body.isAgreed || true;
     let permissionLevel = req.body.permissionLevel || 11;

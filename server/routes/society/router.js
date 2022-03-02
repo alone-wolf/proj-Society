@@ -1,12 +1,11 @@
 const express = require("express");
 const apiRouter = express.Router();
-const logicRouter = express.Router();
 const Society = require("../../model/society");
 const UserSocietyJoint = require("../../model/society_member");
 const authMiddleware = require("../../middleware/auth");
 
 const STATUS = require("../../utils/return_data");
-const SocietyJoinRequest = require("../../model/society_join_request");
+const SocietyJoinRequest = require("../../model/society_member_request");
 const Post = require("../../model/post");
 const PostReply = require("../../model/post_reply");
 const User = require("../../model/user");
@@ -208,5 +207,9 @@ const societyMemberRouter = require("./member/router");
 apiRouter.use("/member", societyMemberRouter.apiRouter);
 const societyNoticeRouter = require("./notice/router");
 apiRouter.use("/notice", societyNoticeRouter.apiRouter);
+const societyActivity = require("./activity/router");
+apiRouter.use("/activity", societyActivity.apiRouter);
+const societyPicture = require("./picture/router");
+apiRouter.use("/picture", societyPicture.apiRouter);
 
 module.exports = { apiRouter };

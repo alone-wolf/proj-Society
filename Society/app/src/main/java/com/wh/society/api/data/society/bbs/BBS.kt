@@ -1,5 +1,6 @@
 package com.wh.society.api.data
 
+import com.wh.society.api.data.society.Society
 import com.wh.society.impl.IContain
 
 
@@ -15,7 +16,7 @@ class BBS:IContain {
         get() = arrayOf(name,describe)
 
     companion object{
-        fun fromSociety(s:Society): BBS {
+        fun fromSociety(s: Society): BBS {
             return BBS().apply {
                 this.id = s.id
                 this.name = s.bbsName

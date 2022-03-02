@@ -21,6 +21,20 @@ apiRouter.post("/list", (req, res, next) => {
         res.status(500).json(STATUS.STATUS_500)
     });
 });
+
+apiRouter.post("/by/id", (req, res, next) => {
+    let postId = req.body.postId;
+    Post.findOne({ where: { id: postId } }).then(d => {
+        if (d) {
+            res.json(STATUS.STATUS_200(d));
+        } else {
+            res.status(404).json(STATUS.STATUS_404);
+        }
+    }).catch((e) => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500)
+    });
+})
 apiRouter.post("/create", (req, res, next) => {
     let userId = req.body.userId;
     let societyId = req.body.societyId;

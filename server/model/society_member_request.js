@@ -1,9 +1,9 @@
 const sequelize = require("../sequelize/sequelize");
 const { DataTypes, Model, Sequelize } = require("sequelize");
 
-class SocietyJoinRequest extends Model { }
+class SocietyMemberRequest extends Model { }
 
-SocietyJoinRequest.init(
+SocietyMemberRequest.init(
     {
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         societyId: DataTypes.INTEGER,
@@ -33,4 +33,4 @@ SocietyJoinRequest.init(
     }
 );
 
-module.exports = SocietyJoinRequest;
+module.exports = SocietyMemberRequest;

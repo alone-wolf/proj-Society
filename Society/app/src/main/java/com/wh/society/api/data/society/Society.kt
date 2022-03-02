@@ -1,8 +1,10 @@
 package com.wh.society.api.data
 
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.impl.IContain
 
-class Society:IContain {
+class Society:IContain,RealIconUrl {
     var id: Int = 0
     var name: String = ""
     var openTimestamp: String = ""
@@ -25,6 +27,12 @@ class Society:IContain {
             this.openTimestamp = this@Society.openTimestamp
         }
     }
+
+    override val realIconUrl: String
+        get() = if (iconUrl.startsWith("http://") || iconUrl.startsWith("https://") || iconUrl.isBlank())
+            iconUrl
+        else
+            ServerApi.picUrl(iconUrl)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
