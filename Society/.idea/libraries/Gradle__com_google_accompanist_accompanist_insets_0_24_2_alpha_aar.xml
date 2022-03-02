@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.accompanist:accompanist-insets:0.24.2-alpha@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/9560d827150753d0971b0863ae4815c4/transformed/jetified-accompanist-insets-0.24.2-alpha/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9560d827150753d0971b0863ae4815c4/transformed/jetified-accompanist-insets-0.24.2-alpha/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9560d827150753d0971b0863ae4815c4/transformed/jetified-accompanist-insets-0.24.2-alpha/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/044a52b74c9071dc0972e5d996a505b2/transformed/jetified-accompanist-insets-0.24.2-alpha/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/044a52b74c9071dc0972e5d996a505b2/transformed/jetified-accompanist-insets-0.24.2-alpha/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/044a52b74c9071dc0972e5d996a505b2/transformed/jetified-accompanist-insets-0.24.2-alpha/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.accompanist/accompanist-insets/0.24.2-alpha/176f64b24a4bda1602d552761dd70bd574348ebb/accompanist-insets-0.24.2-alpha-javadoc.jar!/" />

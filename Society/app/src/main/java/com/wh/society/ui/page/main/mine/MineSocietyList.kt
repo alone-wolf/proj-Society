@@ -1,5 +1,6 @@
 package com.wh.society.ui.page.main.mine
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -11,6 +12,7 @@ import com.wh.society.typeExt.empty
 import com.wh.society.ui.componment.GlobalScaffold
 import com.wh.society.ui.componment.SocietyItem
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun MineSocietyList(requestHolder: RequestHolder) {

@@ -1,12 +1,10 @@
 package com.wh.society.ui.page.login
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,10 +13,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.wh.society.componment.RequestHolder
+import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.ui.componment.RoundedTextFiled
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
 @Composable
 fun LoginPage(requestHolder: RequestHolder) {
     var phoneStudentIdEmail by remember {
@@ -74,11 +75,11 @@ fun LoginPage(requestHolder: RequestHolder) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "找回密码", fontSize = 14.sp, modifier = Modifier.clickable {
-                requestHolder.globalNav.gotoFindPassword()
+                requestHolder.globalNav.goto(GlobalNavPage.FindPasswordPage)
             })
             Text(text = " | ")
             Text(text = "注册用户", fontSize = 14.sp, modifier = Modifier.clickable {
-                requestHolder.globalNav.gotoRegister()
+                requestHolder.globalNav.goto(GlobalNavPage.RegisterPage)
             })
         }
     }

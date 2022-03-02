@@ -229,7 +229,8 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
             val a = apiRepository.societyBBSInfo(
                 societyId = societyId,
                 cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                authUserId = userInfo.data!!.id,
+//                authUserId = 1
             )
             onReturn(a)
         }

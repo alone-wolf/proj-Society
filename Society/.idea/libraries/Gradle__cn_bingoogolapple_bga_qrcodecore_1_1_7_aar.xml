@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: cn.bingoogolapple:bga-qrcodecore:1.1.7@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a5f842979a606f6946f9523aaf623cea/transformed/jetified-bga-qrcodecore-1.1.7/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a5f842979a606f6946f9523aaf623cea/transformed/jetified-bga-qrcodecore-1.1.7/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/a5f842979a606f6946f9523aaf623cea/transformed/jetified-bga-qrcodecore-1.1.7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/58ac37c7a847aae9d4841cde532a8d70/transformed/jetified-bga-qrcodecore-1.1.7/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/58ac37c7a847aae9d4841cde532a8d70/transformed/jetified-bga-qrcodecore-1.1.7/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/58ac37c7a847aae9d4841cde532a8d70/transformed/jetified-bga-qrcodecore-1.1.7/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

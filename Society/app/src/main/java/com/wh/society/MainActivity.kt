@@ -4,7 +4,6 @@ import android.content.*
 import android.os.Bundle
 import android.text.util.Linkify
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -12,12 +11,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -30,16 +24,9 @@ import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.service.SocketIOService
 import com.wh.society.store.SettingStore
 import com.wh.society.ui.componment.MyAlertDialog
+import com.wh.society.ui.componment.NavHost
 import com.wh.society.ui.page.detail.*
-import com.wh.society.ui.page.detail.bbs.BBSDetailPage
-import com.wh.society.ui.page.detail.bbs.BBSPostDetail
-import com.wh.society.ui.page.detail.bbs.BBSPostEditor
-import com.wh.society.ui.page.login.FindPasswordPage
-import com.wh.society.ui.page.login.LoginPage
-import com.wh.society.ui.page.login.RegisterPage
-import com.wh.society.ui.page.main.MainPage
 import com.wh.society.ui.page.main.mine.*
-import com.wh.society.ui.page.setting.SettingPage
 import com.wh.society.ui.theme.SocietyTheme
 import com.wh.society.util.ActivityOpener
 import com.wh.society.util.SystemUtil
@@ -58,7 +45,7 @@ class MainActivity : AppCompatActivity(), RequestHolder {
     override val apiViewModel: ApiViewModel by viewModels { viewModelFactory }
     override val notifyViewModel: NotifyViewModel by viewModels { viewModelFactory }
     override lateinit var coroutineScope: CoroutineScope
-    lateinit var globalNavController: NavController
+    lateinit var globalNavController: NavHostController
     override val globalNav: RequestHolder.GlobalNavRequest by lazy {
         object : RequestHolder.GlobalNavRequest(globalNavController, this) {}
     }
@@ -146,10 +133,10 @@ class MainActivity : AppCompatActivity(), RequestHolder {
 
         deviceName = SystemUtil.getDeviceModel()
 
-
         setContent {
             coroutineScope = rememberCoroutineScope()
             globalNavController = rememberNavController()
+
             LaunchedEffect(Unit) {
                 if (settingStore.autoLogin) {
                     loginLogic()
@@ -161,112 +148,18 @@ class MainActivity : AppCompatActivity(), RequestHolder {
 
                     // A surface container using the 'background' color from the theme
                     Surface(color = MaterialTheme.colors.background) {
-                        NavHost(
-                            navController = globalNavController as NavHostController,
-                            startDestination = GlobalNavPage.LoginPage.route
-                        ) {
-                            // login block
-                            composable(GlobalNavPage.LoginPage) {
-                                LoginPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.RegisterPage) {
-                                RegisterPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.FindPasswordPage) {
-                                FindPasswordPage(requestHolder = this@MainActivity)
-                            }
-
-                            composable(GlobalNavPage.Setting) {
-                                SettingPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.DetailUserInfo) {
-                                UserDetailPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.UserChatPrivate) {
-                                UserChatPrivatePage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.DetailSociety) {
-                                SocietyDetailPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.DetailBBS) {
-                                BBSDetailPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.DetailPost) {
-                                BBSPostDetail(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.DetailPostEditor) {
-                                BBSPostEditor(requestHolder = this@MainActivity)
-                            }
-
-                            composable(GlobalNavPage.Main) {
-                                MainPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.MainMineSocietyListPage) {
-                                MineSocietyList(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.MainMineSocietyRequestListPage) {
-                                MineSocietyRequestListPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.MainMinePostListPage) {
-                                MinePostListPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.MainMinePostReplyListPage) {
-                                MinePostReplyListPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.MainMineInfoEditorPage) {
-                                MineInfoEditor(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.MainMinePicListPage) {
-                                MinePicList(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.MainMineNotifyListPage) {
-                                MineNotifyListPage(requestHolder = this@MainActivity)
-                            }
-
-                            composable(GlobalNavPage.SocietyChatInnerPage) {
-                                SocietyChatInnerPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.SocietyMemberListPage) {
-                                SocietyMemberListPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.SocietyMemberDetailPage) {
-                                SocietyMemberDetailPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.SocietyActivityListPage) {
-                                SocietyActivityListPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.SocietyActivityRequestListPage) {
-                                SocietyActivityRequestListPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.SocietyActivityDetailPage) {
-                                SocietyActivityDetailPage(requestHolder = this@MainActivity)
-                            }
-                            composable(GlobalNavPage.SocietyPictureListPage) {
-                                SocietyPictureListPage(requestHolder = this@MainActivity)
-                            }
-
-                            composable(GlobalNavPage.SocietyInfoEditorPage){
-                                SocietyInfoEditor(requestHolder = this@MainActivity)
-                            }
-                        }
+                            NavHost(
+                                navController = globalNavController,
+                                pageArray = GlobalNavPage.a(),
+                                startPage = GlobalNavPage.LoginPage,
+                                requestHolder = this
+                            )
 
                         MyAlertDialog(alertRequest)
                     }
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        unregisterReceiver(onSIOServiceEventReceiver)
-    }
-
-    private fun NavGraphBuilder.composable(
-        globalNavPage: GlobalNavPage,
-        content: @Composable (NavBackStackEntry) -> Unit
-    ) {
-        composable(globalNavPage.route, content = content)
     }
 }
 

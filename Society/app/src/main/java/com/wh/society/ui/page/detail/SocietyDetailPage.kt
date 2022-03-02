@@ -1,5 +1,6 @@
 package com.wh.society.ui.page.detail
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,6 +40,7 @@ import com.wh.society.typeExt.smallListTitle
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.SocietyDetailTopInfoPart
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun SocietyDetailPage(requestHolder: RequestHolder) {
@@ -94,7 +96,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 actions = if (isAdmin) {
                     {
                         IconButton(onClick = {
-                            requestHolder.globalNav.gotoSocietyInfoEditorPage()
+                            requestHolder.globalNav.goto(GlobalNavPage.SocietyInfoEditorPage)
                         }) {
                             Icon(imageVector = Icons.Default.Edit, contentDescription = "")
                         }
@@ -230,7 +232,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     n = activityRequestList.data.size,
                     show = isAdmin,
                     onClick = {
-                        requestHolder.globalNav.gotoSocietyActivityRequestList()
+                        requestHolder.globalNav.goto(GlobalNavPage.SocietyActivityRequestListPage)
                     }
                 )
                 itemsOnCondition(
@@ -257,7 +259,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     title = "社团活动",
                     n = activityList.data.size,
                     onClick = {
-                        requestHolder.globalNav.gotoSocietyActivityList()
+                        requestHolder.globalNav.goto(GlobalNavPage.SocietyActivityListPage)
                     }
                 )
                 items(

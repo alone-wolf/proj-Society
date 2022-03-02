@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.compose.material:material:1.2.0-alpha03@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/39a89f7a0f3825ab92db505ccbd9de72/transformed/jetified-material-1.2.0-alpha03/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/39a89f7a0f3825ab92db505ccbd9de72/transformed/jetified-material-1.2.0-alpha03/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/39a89f7a0f3825ab92db505ccbd9de72/transformed/jetified-material-1.2.0-alpha03/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3c2459de8dfce53a5b24e21bac80ca0d/transformed/jetified-material-1.2.0-alpha03/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3c2459de8dfce53a5b24e21bac80ca0d/transformed/jetified-material-1.2.0-alpha03/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3c2459de8dfce53a5b24e21bac80ca0d/transformed/jetified-material-1.2.0-alpha03/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

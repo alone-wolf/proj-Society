@@ -2,8 +2,11 @@ package com.wh.society.componment
 
 import android.content.ContentResolver
 import android.content.res.Resources
+import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StringRes
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
@@ -55,6 +58,8 @@ interface RequestHolder {
     val myContentResolver: ContentResolver
     val activity: MainActivity
 
+    @ExperimentalAnimationApi
+    @ExperimentalMaterialApi
     fun loginLogic() {
         if (settingStore.phoneStudentIdEmail.isNotBlank() && settingStore.password.isNotBlank()) {
             apiViewModel.userLogin(
@@ -70,7 +75,7 @@ interface RequestHolder {
 
                     coroutineScope.launch {
                         delay(500)
-                        globalNav.gotoMain()
+                        globalNav.goto(GlobalNavPage.Main)
                     }
 
                 }
@@ -80,6 +85,8 @@ interface RequestHolder {
         }
     }
 
+    @ExperimentalAnimationApi
+    @ExperimentalMaterialApi
     fun logoutLogic() {
 
         stopSocketIOService()
@@ -87,7 +94,7 @@ interface RequestHolder {
         apiViewModel.userLogout {
             settingStore.autoLogin = false
 
-            globalNav.goBackLoginPage()
+            globalNav.gotoWithBack(GlobalNavPage.LoginPage)
             apiViewModel.userInfo = ReturnObjectData.blank()
             apiViewModel.societyList = ReturnListData.blank()
             apiViewModel.bbsList = emptyList()
@@ -111,131 +118,103 @@ interface RequestHolder {
             navController.popBackStack()
         }
 
-        fun gotoMain() {
-            navController.navigate(GlobalNavPage.Main.route) {
+        fun goto(page:GlobalNavPage){
+            navController.navigate(page.route)
+        }
+
+        fun <T>goto(page: GlobalNavPage,a:Any){
+            page.navExtraOperation(requestHolder, (a as T)!!)
+            navController.navigate(page.route)
+        }
+
+        fun gotoWithBack(page: GlobalNavPage){
+            navController.navigate(page.route){
                 navController.popBackStack()
             }
         }
 
-        fun goBackLoginPage() {
-            navController.navigate(GlobalNavPage.LoginPage.route) {
-                navController.popBackStack()
-            }
-        }
-
-        fun gotoRegister() {
-            navController.navigate(GlobalNavPage.RegisterPage.route)
-        }
-
-        fun gotoFindPassword() {
-            navController.navigate(GlobalNavPage.FindPasswordPage.route)
-        }
-
-        fun gotoSetting() {
-            navController.navigate(GlobalNavPage.Setting.route)
-        }
-
+        @ExperimentalMaterialApi
         fun gotoUserInfo(userInfo: UserInfo) {
             requestHolder.trans.userInfo = userInfo
             navController.navigate(GlobalNavPage.DetailUserInfo.route)
         }
 
-        fun gotoUserPrivateChat() {
-            navController.navigate(GlobalNavPage.UserChatPrivate.route)
-        }
 
-        fun gotoMainMineInfoEditor() {
-            navController.navigate(GlobalNavPage.MainMineInfoEditorPage.route)
-        }
-
+        @ExperimentalAnimationApi
+        @ExperimentalMaterialApi
         fun gotoMainMineSocietyList(userMemberList: ReturnListData<SocietyMember>) {
             requestHolder.trans.userMember = userMemberList
             navController.navigate(GlobalNavPage.MainMineSocietyListPage.route)
         }
 
+        @ExperimentalMaterialApi
         fun gotoMainMineSocietyRequestList(societyMemberRequestList: ReturnListData<SocietyMemberRequest>) {
             requestHolder.trans.societyMemberRequestList = societyMemberRequestList
             navController.navigate(GlobalNavPage.MainMineSocietyRequestListPage.route)
         }
 
+        @ExperimentalMaterialApi
         fun gotoMainMinePostList(postList: ReturnListData<Post>) {
             requestHolder.trans.postList = postList
             navController.navigate(GlobalNavPage.MainMinePostListPage.route)
         }
 
+        @ExperimentalMaterialApi
         fun gotoMainMinePostReplyList(postReplyList: ReturnListData<PostReply>) {
             requestHolder.trans.postReplyList = postReplyList
             navController.navigate(GlobalNavPage.MainMinePostReplyListPage.route)
         }
 
-        fun gotoMainMinePicList() {
-            navController.navigate(GlobalNavPage.MainMinePicListPage.route)
-        }
-
-        fun gotoMainMineNotifyList() {
-            navController.navigate(GlobalNavPage.MainMineNotifyListPage.route)
-        }
-
-        fun gotoDetailSociety(society: Society, addBack: Boolean = false) {
+        @ExperimentalAnimationApi
+        @ExperimentalMaterialApi
+        fun gotoDetailSociety(society: Society) {
             requestHolder.trans.society = society
-            navController.navigate(GlobalNavPage.DetailSociety.route) {
-                if (addBack) {
-                    navController.popBackStack()
-                }
-            }
+            navController.navigate(GlobalNavPage.DetailSociety.route)
         }
 
+        @ExperimentalAnimationApi
+        @ExperimentalMaterialApi
         fun gotoDetailBBS(bbs: BBS) {
             requestHolder.trans.bbs = bbs
             navController.navigate(GlobalNavPage.DetailBBS.route) {
             }
         }
 
+        @ExperimentalMaterialApi
         fun gotoBBSPostDetail(postId: Int) {
             requestHolder.trans.postId = postId
             navController.navigate(GlobalNavPage.DetailPost.route)
         }
 
-        fun gotoBBSPostEditor(post: Post? = null) {
-//            requestHolder.trans.post = post
-            navController.navigate(GlobalNavPage.DetailPostEditor.route)
-        }
-
+        @ExperimentalAnimationApi
+        @ExperimentalMaterialApi
         fun gotoSocietyChatInner(society: Society) {
             requestHolder.trans.society = society
             navController.navigate(GlobalNavPage.SocietyChatInnerPage.route)
         }
 
+        @ExperimentalMaterialApi
         fun gotoSocietyMemberList(societyMember: ReturnListData<SocietyMember>) {
             requestHolder.trans.societyMemberList = societyMember
             navController.navigate(GlobalNavPage.SocietyMemberListPage.route)
         }
 
+        @ExperimentalMaterialApi
         fun gotoSocietyMemberDetail(societyMember: SocietyMember) {
             requestHolder.trans.societyMember = societyMember
             navController.navigate(GlobalNavPage.SocietyMemberDetailPage.route)
         }
 
-        fun gotoSocietyActivityList() {
-            navController.navigate(GlobalNavPage.SocietyActivityListPage.route)
-        }
-
-        fun gotoSocietyActivityRequestList() {
-            navController.navigate(GlobalNavPage.SocietyActivityRequestListPage.route)
-        }
-
+        @ExperimentalMaterialApi
         fun gotoSocietyActivityDetail(societyActivity: SocietyActivity) {
             requestHolder.trans.societyActivity = societyActivity
             navController.navigate(GlobalNavPage.SocietyActivityDetailPage.route)
         }
 
+        @ExperimentalMaterialApi
         fun gotoSocietyPictureListPage(societyPictureList: ReturnListData<SocietyPicture>) {
             requestHolder.trans.societyPictureList = societyPictureList
             navController.navigate(GlobalNavPage.SocietyPictureListPage.route)
-        }
-
-        fun gotoSocietyInfoEditorPage() {
-            navController.navigate(GlobalNavPage.SocietyInfoEditorPage.route)
         }
     }
 
@@ -387,6 +366,7 @@ interface RequestHolder {
             imagePicker.launch("image/*")
         }
 
+        @ExperimentalMaterialApi
         fun forSociety() {
             afterImagePick = { imageBodyPart ->
                 requestHolder.apiViewModel.societyPictureCreate(

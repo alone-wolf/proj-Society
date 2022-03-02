@@ -55,7 +55,7 @@ fun BBSDetailPage(requestHolder: RequestHolder) {
                 exit = fadeOut() + slideOutHorizontally(targetOffsetX = { it / 2 })
             ) {
                 FloatingActionButton(onClick = {
-                    requestHolder.globalNav.gotoBBSPostEditor()
+                    requestHolder.globalNav.goto(GlobalNavPage.DetailPostEditor)
                 }) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "")
                 }

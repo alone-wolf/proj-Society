@@ -10,6 +10,8 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import com.wh.society.App
 import com.wh.society.R
 import com.wh.society.api.ServerApi
@@ -110,6 +112,8 @@ class SocketIOService : Service() {
         }
     }
 
+    @ExperimentalAnimationApi
+    @ExperimentalMaterialApi
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand: ")
 

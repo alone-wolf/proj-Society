@@ -1,12 +1,13 @@
 <component name="libraryTable">
   <library name="Gradle: io.noties.markwon:linkify:4.6.2@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/90768ae0cff0d48d8b3aebc066708893/transformed/jetified-linkify-4.6.2/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/150076ac0c92b12d252d24f0f9dc446f/transformed/jetified-linkify-4.6.2/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/90768ae0cff0d48d8b3aebc066708893/transformed/jetified-linkify-4.6.2/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/90768ae0cff0d48d8b3aebc066708893/transformed/jetified-linkify-4.6.2/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/90768ae0cff0d48d8b3aebc066708893/transformed/jetified-linkify-4.6.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/150076ac0c92b12d252d24f0f9dc446f/transformed/jetified-linkify-4.6.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/150076ac0c92b12d252d24f0f9dc446f/transformed/jetified-linkify-4.6.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/150076ac0c92b12d252d24f0f9dc446f/transformed/jetified-linkify-4.6.2/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.noties.markwon/linkify/4.6.2/f7e1cb1e6b1ea5fa53ff4d870c0cd49816df7de9/linkify-4.6.2-javadoc.jar!/" />

@@ -24,6 +24,7 @@ import com.wh.society.api.data.society.bbs.Post
 import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
+import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.smallListTitle
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.*
@@ -187,7 +188,7 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "上传的照片",
             n = requestHolder.apiViewModel.picDataList.data.size,
             onClick = {
-                requestHolder.globalNav.gotoMainMinePicList()
+                requestHolder.globalNav.goto(GlobalNavPage.MainMinePicListPage)
             }
         )
 

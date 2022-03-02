@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.wh.society.componment.RequestHolder
+import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.navigation.MainNavPage
 
 private var _currentPageLabel = "Mine"
@@ -45,7 +46,7 @@ fun MainPage(requestHolder: RequestHolder) {
                     ) {
                         Row {
                             IconButton(onClick = {
-                                requestHolder.globalNav.gotoMainMineNotifyList()
+                                requestHolder.globalNav.goto(GlobalNavPage.MainMineNotifyListPage)
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Notifications,
@@ -53,7 +54,7 @@ fun MainPage(requestHolder: RequestHolder) {
                                 )
                             }
                             IconButton(onClick = {
-                                requestHolder.globalNav.gotoMainMineInfoEditor()
+                                requestHolder.globalNav.goto(GlobalNavPage.MainMineInfoEditorPage)
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
@@ -61,7 +62,7 @@ fun MainPage(requestHolder: RequestHolder) {
                                 )
                             }
                             IconButton(onClick = {
-                                requestHolder.globalNav.gotoSetting()
+                                requestHolder.globalNav.goto(GlobalNavPage.Setting)
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Settings,

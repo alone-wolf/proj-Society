@@ -3,8 +3,9 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6137f8170ed17a1415c07fa2212e96f1/transformed/jetified-bga-zxing-1.1.7/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/03c99fd0928cf4b1d0b7d64aa7e51a8e/transformed/jetified-bga-zxing-1.1.7/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/03c99fd0928cf4b1d0b7d64aa7e51a8e/transformed/jetified-bga-zxing-1.1.7/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/03c99fd0928cf4b1d0b7d64aa7e51a8e/transformed/jetified-bga-zxing-1.1.7/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b3e0070e246cfcc6b4cb74aaff9445f4/transformed/jetified-bga-zxing-1.1.7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b3e0070e246cfcc6b4cb74aaff9445f4/transformed/jetified-bga-zxing-1.1.7/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b3e0070e246cfcc6b4cb74aaff9445f4/transformed/jetified-bga-zxing-1.1.7/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

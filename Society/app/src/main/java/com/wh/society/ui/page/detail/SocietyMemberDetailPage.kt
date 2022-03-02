@@ -88,7 +88,7 @@ fun SocietyMemberDetailPage(requestHolder: RequestHolder) {
                 item {
                     Button(
                         onClick = {
-                            requestHolder.globalNav.gotoUserInfo(memberUserInfo)
+                            requestHolder.globalNav.goto<UserInfo>(GlobalNavPage.DetailUserInfo,memberUserInfo)
                         },
                         modifier = Modifier
                             .fillMaxWidth()

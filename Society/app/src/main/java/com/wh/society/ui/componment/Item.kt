@@ -1,6 +1,7 @@
 package com.wh.society.ui.componment
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -63,6 +64,7 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
     )
 }
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun SocietyItem(requestHolder: RequestHolder, society: Society, modifier: Modifier = Modifier) {
@@ -96,6 +98,7 @@ fun SocietyItem(requestHolder: RequestHolder, society: Society, modifier: Modifi
     )
 }
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun BBSItem(requestHolder: RequestHolder, bbs: BBS) {

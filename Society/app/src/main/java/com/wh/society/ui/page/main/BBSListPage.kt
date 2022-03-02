@@ -1,5 +1,6 @@
 package com.wh.society.ui.page.main
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import com.wh.society.typeExt.empty
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.BBSItem
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun BBSListPage(requestHolder: RequestHolder) {

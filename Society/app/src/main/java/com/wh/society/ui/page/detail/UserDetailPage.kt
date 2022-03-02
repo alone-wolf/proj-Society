@@ -85,7 +85,7 @@ fun UserDetailPage(requestHolder: RequestHolder) {
                     content = {
                         Button(
                             onClick = {
-                                requestHolder.globalNav.gotoUserPrivateChat()
+                                requestHolder.globalNav.goto(GlobalNavPage.UserChatPrivate)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()

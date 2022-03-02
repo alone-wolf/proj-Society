@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.accompanist:accompanist-insets-ui:0.24.2-alpha@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/03ba352b314b687517dd582e9b63d094/transformed/jetified-accompanist-insets-ui-0.24.2-alpha/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/03ba352b314b687517dd582e9b63d094/transformed/jetified-accompanist-insets-ui-0.24.2-alpha/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/03ba352b314b687517dd582e9b63d094/transformed/jetified-accompanist-insets-ui-0.24.2-alpha/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4d67749be9e68cd7d00707142abd9487/transformed/jetified-accompanist-insets-ui-0.24.2-alpha/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4d67749be9e68cd7d00707142abd9487/transformed/jetified-accompanist-insets-ui-0.24.2-alpha/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4d67749be9e68cd7d00707142abd9487/transformed/jetified-accompanist-insets-ui-0.24.2-alpha/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.accompanist/accompanist-insets-ui/0.24.2-alpha/8e448a332ed151b0b82e024cd1c70e8b704f684e/accompanist-insets-ui-0.24.2-alpha-javadoc.jar!/" />
