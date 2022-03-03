@@ -1,4 +1,4 @@
-package com.wh.society.ui.page.detail
+package com.wh.society.ui.page.detail.society
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image

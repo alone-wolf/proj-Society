@@ -1,4 +1,4 @@
-package com.wh.society.ui.page.detail
+package com.wh.society.ui.page.detail.society.member
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

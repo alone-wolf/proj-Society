@@ -1,6 +1,5 @@
 package com.wh.society.navigation
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -19,6 +18,15 @@ import com.wh.society.ui.page.detail.*
 import com.wh.society.ui.page.detail.bbs.BBSDetailPage
 import com.wh.society.ui.page.detail.bbs.BBSPostDetail
 import com.wh.society.ui.page.detail.bbs.BBSPostEditor
+import com.wh.society.ui.page.detail.society.SocietyDetailPage
+import com.wh.society.ui.page.detail.society.SocietyInfoEditor
+import com.wh.society.ui.page.detail.society.activity.SocietyActivityDetailPage
+import com.wh.society.ui.page.detail.society.activity.SocietyActivityListPage
+import com.wh.society.ui.page.detail.society.activity.SocietyActivityRequestListPage
+import com.wh.society.ui.page.detail.society.chat.SocietyChatInnerPage
+import com.wh.society.ui.page.detail.society.member.SocietyMemberDetailPage
+import com.wh.society.ui.page.detail.society.member.SocietyMemberListPage
+import com.wh.society.ui.page.detail.society.picture.SocietyPictureListPage
 import com.wh.society.ui.page.login.FindPasswordPage
 import com.wh.society.ui.page.login.LoginPage
 import com.wh.society.ui.page.login.RegisterPage

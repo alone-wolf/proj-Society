@@ -1,4 +1,4 @@
-package com.wh.society.ui.page.detail
+package com.wh.society.ui.page.detail.society
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
