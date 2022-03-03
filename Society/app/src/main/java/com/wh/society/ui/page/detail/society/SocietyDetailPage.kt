@@ -1,5 +1,6 @@
 package com.wh.society.ui.page.detail.society
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,6 +46,7 @@ private var memberRequestList by mutableStateOf(ReturnListData.blank<SocietyMemb
 private var activityList by mutableStateOf(ReturnListData.blank<SocietyActivity>())
 private var activityRequestList by mutableStateOf(ReturnListData.blank<SocietyActivityRequest>())
 private var societyPictureList by mutableStateOf(ReturnListData.blank<SocietyPicture>())
+private var societyNoticeList by mutableStateOf(ReturnListData.blank<SocietyNotice>())
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -52,11 +54,13 @@ private var societyPictureList by mutableStateOf(ReturnListData.blank<SocietyPic
 fun SocietyDetailPage(requestHolder: RequestHolder) {
 
     val myJoint = thisSocietyJointList.data.find {
-        it.userId == requestHolder.apiViewModel.userInfo.notNullOrBlank(
-            UserInfo()
-        ).id
+        it.userId == requestHolder.apiViewModel
+            .userInfo
+            .notNullOrBlank(UserInfo())
+            .id
     }
     val isJoint: Boolean = myJoint != null
+    requestHolder.trans.isJoint = isJoint
 
 
     LaunchedEffect(myJoint) {
@@ -66,16 +70,19 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
         requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { s ->
             activityList = s
         }
+        requestHolder.apiViewModel.societyNoticeList(requestHolder.trans.society.id) { it ->
+            societyNoticeList = it
+        }
 
         myJoint?.let {
             if (it.permissionLevel == 111) {
                 requestHolder.apiViewModel.societyMemberRequestList(requestHolder.trans.society.id) { it ->
                     memberRequestList = it
                 }
-                requestHolder.apiViewModel.societyActivityRequestList(requestHolder.trans.society.id) {
+                requestHolder.apiViewModel.societyActivityRequestList(requestHolder.trans.society.id) { it ->
                     activityRequestList = it
                 }
-                requestHolder.apiViewModel.societyPictureList(requestHolder.trans.society.id) {
+                requestHolder.apiViewModel.societyPictureList(requestHolder.trans.society.id) { it ->
                     societyPictureList = it
                 }
             }
@@ -83,6 +90,8 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
     }
 
     val isAdmin = isJoint && myJoint!!.permissionLevel == 111
+    requestHolder.trans.isAdmin = isAdmin
+    Log.d("WH_", "SocietyDetailPage: ${requestHolder.trans.isAdmin}")
 
     GlobalScaffold(
         page = GlobalNavPage.DetailSociety,
@@ -195,12 +204,28 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 )
             }
 
+            smallListTitle(
+                title = "社团公告",
+                n = societyNoticeList.data.size,
+                onClick = {
+                    requestHolder.globalNav.goto(
+                        page = GlobalNavPage.SocietyNoticeListPage,
+                        a = societyNoticeList
+                    )
+                }
+            )
+
             // member request list for admin
             smallListTitle(
                 title = "成员申请",
                 n = memberRequestList.data.size,
                 show = isAdmin,
-                onClick = {}
+                onClick = {
+                    requestHolder.globalNav.goto(
+                        page = GlobalNavPage.SocietyMemberRequestListPage,
+                        a = memberRequestList
+                    )
+                }
             )
 
             // activity request for admin

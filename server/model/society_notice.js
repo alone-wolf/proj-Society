@@ -8,12 +8,15 @@ SocietyNotice.init(
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         societyId: DataTypes.INTEGER,
         societyName: DataTypes.STRING,
+
         postUserId: DataTypes.INTEGER,
         postUsername: DataTypes.STRING,
+        
         permissionLevel: {
             defaultValue: 10,
             type: DataTypes.INTEGER
         },
+        
         title: DataTypes.STRING,
         notice: DataTypes.STRING
     },

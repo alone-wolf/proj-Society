@@ -4,14 +4,14 @@ const Society = require("../../../model/society");
 const UserSocietyJoint = require("../../../model/society_member");
 
 const STATUS = require("../../../utils/return_data");
-const { brdNewNoticeWatcher, brdNewNoticeMember } = require("../../../socketio/socketio");
+const { brdNewNoticeWatcher, brdNewNoticeMember, brdNewNoticeAdmin } = require("../../../socketio/socketio");
 const SocietyNotice = require("../../../model/society_notice");
 
 
 apiRouter.post("/list", (req, res, next) => {
     let societyId = req.body.societyId;
     SocietyNotice.findAll({ where: { societyId } }).then(data => {
-        res.json(data);
+        res.json(STATUS.STATUS_200(data));
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -52,6 +52,9 @@ apiRouter.post("/create", (req, res, next) => {
                     }
                     case 10: {
                         brdNewNoticeMember(societyId, societyName, postUserId, postUsername, title)
+                    }
+                    case 100: {
+                        brdNewNoticeAdmin(societyId, societyName, postUserId, postUsername, title)
                     }
                 }
 

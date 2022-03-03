@@ -29,6 +29,16 @@ fun LoginPage(requestHolder: RequestHolder) {
         mutableStateOf(requestHolder.settingStore.password)
     }
 
+    var userRegisterAllow by remember {
+        mutableStateOf(true)
+    }
+
+    LaunchedEffect(Unit) {
+        requestHolder.apiViewModel.adminUserRegisterAllow {
+            userRegisterAllow = it
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(alignment = Alignment.Center)) {
             Text(
@@ -77,10 +87,12 @@ fun LoginPage(requestHolder: RequestHolder) {
             Text(text = "找回密码", fontSize = 14.sp, modifier = Modifier.clickable {
                 requestHolder.globalNav.goto(GlobalNavPage.FindPasswordPage)
             })
-            Text(text = " | ")
-            Text(text = "注册用户", fontSize = 14.sp, modifier = Modifier.clickable {
-                requestHolder.globalNav.goto(GlobalNavPage.RegisterPage)
-            })
+            if (userRegisterAllow) {
+                Text(text = " | ")
+                Text(text = "注册用户", fontSize = 14.sp, modifier = Modifier.clickable {
+                    requestHolder.globalNav.goto(GlobalNavPage.RegisterPage)
+                })
+            }
         }
     }
 }

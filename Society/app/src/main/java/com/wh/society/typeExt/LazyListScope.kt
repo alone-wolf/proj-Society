@@ -101,42 +101,23 @@ fun <T> LazyListScope.everyNForRow(
 }
 
 fun <T> LazyListScope.empty(items: ReturnListData<T>) {
-    if (items.data.isEmpty()) {
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Empty")
-            }
-        }
-    }
+    empty(items.data.isEmpty())
 }
 
 fun <T> LazyListScope.empty(items: List<T>) {
-    if (items.isEmpty()) {
-        item {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Empty")
-            }
-        }
-    }
+    empty(items.isEmpty())
 }
 
 fun LazyListScope.empty(isEmpty: Boolean) {
     if (isEmpty) {
         item {
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.5F),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Empty")
+                Text(text = "Empty", modifier = Modifier.align(alignment = Alignment.Bottom))
             }
         }
     }

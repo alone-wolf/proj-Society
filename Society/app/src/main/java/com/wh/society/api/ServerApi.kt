@@ -1,6 +1,7 @@
 package com.wh.society.api
 
 import com.wh.society.api.data.*
+import com.wh.society.api.data.admin.UserRegisterAllow
 import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBSInfo
 import com.wh.society.api.data.society.bbs.Post
@@ -9,6 +10,7 @@ import com.wh.society.api.data.user.UserChatPrivate
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.api.data.user.UserPicture
 import okhttp3.MultipartBody
+import okio.FileNotFoundException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -16,6 +18,7 @@ import retrofit2.http.*
 
 interface ServerApi {
     companion object {
+        //        private const val host = "39.103.143.157"
         private const val host = "192.168.50.115"
         private const val ssl = false
         private const val port = 5100
@@ -250,6 +253,26 @@ interface ServerApi {
         @Header("authUserId") authUserId: Int
     ): String
 
+    @FormUrlEncoded
+    @POST("/society/notice/list")
+    suspend fun societyNoticeList(
+        @Field("societyId") societyId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ):ReturnListData<SocietyNotice>
+
+    @FormUrlEncoded
+    @POST("/society/notice/create")
+    suspend fun societyNoticeCreate(
+        @Field("societyId") societyId: Int,
+        @Field("postUserid") postUserId: Int,
+        @Field("title") title: String,
+        @Field("notice") notice: String,
+        @Field("permissionLevel") permissionLevel: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
+    ):String
+
     // /user
 
     @FormUrlEncoded
@@ -407,4 +430,8 @@ interface ServerApi {
 
     @POST("/college/list")
     suspend fun collegeList(): ReturnListData<College>
+
+
+    @POST("/admin/user/register/allow")
+    suspend fun adminUserRegisterAllow():ReturnObjectData<UserRegisterAllow>
 }

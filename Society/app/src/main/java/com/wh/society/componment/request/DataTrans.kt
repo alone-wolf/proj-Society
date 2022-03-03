@@ -17,6 +17,9 @@ class DataTrans {
     var societyMember = SocietyMember()
     var societyMemberList = ReturnListData.blank<SocietyMember>()
     var societyActivity = SocietyActivity()
+    var societyNoticeList = ReturnListData.blank<SocietyNotice>()
+    var isJoint = false
+    var isAdmin = false
     var postId = 0
     var societyPictureList = ReturnListData.blank<SocietyPicture>()
     var userMember = ReturnListData.blank<SocietyMember>()
@@ -31,6 +34,9 @@ class DataTrans {
         societyMember = SocietyMember()
         societyMemberList = ReturnListData.blank()
         societyActivity = SocietyActivity()
+        societyNoticeList = ReturnListData.blank()
+        isJoint = false
+        isAdmin = false
         postId = 0
         societyPictureList = ReturnListData.blank()
         userMember = ReturnListData.blank()

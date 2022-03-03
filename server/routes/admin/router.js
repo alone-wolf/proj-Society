@@ -34,5 +34,10 @@ apiRouter.post("/pic/list", (req, res, next) => {
     });
 });
 
+let userRegisterAllow = require("../../config.json").userRegisterAllow
+apiRouter.post("/user/register/allow", (req, res, next) => {
+    res.json(STATUS.STATUS_200({ userRegisterAllow }));
+});
+
 
 module.exports = { apiRouter };

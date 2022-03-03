@@ -27,6 +27,8 @@ import com.wh.society.ui.page.detail.society.activity.SocietyActivityRequestList
 import com.wh.society.ui.page.detail.society.chat.SocietyChatInnerPage
 import com.wh.society.ui.page.detail.society.member.SocietyMemberDetailPage
 import com.wh.society.ui.page.detail.society.member.SocietyMemberListPage
+import com.wh.society.ui.page.detail.society.member.request.SocietyMemberRequestListPage
+import com.wh.society.ui.page.detail.society.notice.SocietyNoticeListPage
 import com.wh.society.ui.page.detail.society.picture.SocietyPictureListPage
 import com.wh.society.ui.page.detail.user.UserChatPrivatePage
 import com.wh.society.ui.page.login.FindPasswordPage
@@ -270,6 +272,22 @@ sealed class GlobalNavPage(
         "Society Info Editor",
         "detail/society/info/editor",
         { SocietyInfoEditor(requestHolder = it) }
+    )
+
+    @ExperimentalMaterialApi
+    object SocietyNoticeListPage : GlobalNavPage(
+        "Society Notice List",
+        "detail/society/notice/list",
+        { SocietyNoticeListPage(requestHolder = it) },
+        { r, a -> r.trans.societyNoticeList = a as ReturnListData<SocietyNotice> }
+    )
+
+    @ExperimentalMaterialApi
+    object SocietyMemberRequestListPage : GlobalNavPage(
+        "Society Member Request List",
+        "detail/society/member/request/list",
+        { SocietyMemberRequestListPage(requestHolder = it) },
+        { r, a -> r.trans.societyMemberRequestList = a as ReturnListData<SocietyMemberRequest> }
     )
 
 

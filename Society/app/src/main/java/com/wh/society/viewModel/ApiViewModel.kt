@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wh.society.api.data.*
+import com.wh.society.api.data.admin.UserRegisterAllow
 import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.api.data.society.bbs.BBSInfo
@@ -34,8 +35,6 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     var collegeList by mutableStateOf(ReturnListData.blank<College>())
 
     val TAG = "WH_"
-
-    fun login() {}
 
     fun societyList() {
         viewModelScope.launch {
@@ -517,6 +516,42 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         }
     }
 
+    fun societyNoticeList(
+        societyId: Int,
+        onReturn: CoroutineScope.(ReturnListData<SocietyNotice>) -> Unit
+    ) {
+        viewModelScope.launch {
+            val a = apiRepository.societyNoticeList(
+                societyId = societyId,
+                cookieToken = loginToken.data!!.cookieToken,
+                authUserId = userInfo.data!!.id
+            )
+            onReturn(a)
+        }
+    }
+
+    fun societyNoticeCreate(
+        societyId: Int,
+        postUserId: Int,
+        title: String,
+        notice: String,
+        permissionLevel: Int,
+        onReturn: CoroutineScope.() -> Unit
+    ) {
+        viewModelScope.launch {
+            val a = apiRepository.societyNoticeCreate(
+                societyId = societyId,
+                postUserId = postUserId,
+                title = title,
+                notice = notice,
+                permissionLevel = permissionLevel,
+                cookieToken = loginToken.data!!.cookieToken,
+                authUserId = userInfo.data!!.id
+            )
+            onReturn()
+        }
+    }
+
     fun userRegister(
         username: String,
         phone: String,
@@ -690,6 +725,13 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     fun collegeList() {
         viewModelScope.launch {
             collegeList = apiRepository.collegeList()
+        }
+    }
+
+    fun adminUserRegisterAllow(onReturn: CoroutineScope.(Boolean) -> Unit) {
+        viewModelScope.launch {
+            val a = apiRepository.adminUserRegisterAllow()
+            onReturn(a.notNullOrBlank(UserRegisterAllow()).userRegisterAllow)
         }
     }
 

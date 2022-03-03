@@ -3,6 +3,7 @@ package com.wh.society.api.repository
 import android.util.Log
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.*
+import com.wh.society.api.data.admin.UserRegisterAllow
 import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBSInfo
 import com.wh.society.api.data.society.bbs.Post
@@ -499,6 +500,48 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         return "failed"
     }
 
+    suspend fun societyNoticeList(
+        societyId: Int,
+        cookieToken: String,
+        authUserId: Int
+    ): ReturnListData<SocietyNotice> {
+        try {
+            return serverApi.societyNoticeList(
+                societyId = societyId,
+                cookieToken = cookieToken,
+                authUserId = authUserId
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "societyNoticeList: ${e.localizedMessage}")
+        }
+        return ReturnListData.blank()
+    }
+
+    suspend fun societyNoticeCreate(
+        societyId: Int,
+        postUserId: Int,
+        title: String,
+        notice: String,
+        permissionLevel: Int,
+        cookieToken: String,
+        authUserId: Int
+    ): String {
+        try {
+            return serverApi.societyNoticeCreate(
+                societyId = societyId,
+                postUserId = postUserId,
+                title = title,
+                notice = notice,
+                permissionLevel = permissionLevel,
+                cookieToken = cookieToken,
+                authUserId = authUserId
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "societyNoticeList: ${e.localizedMessage}")
+        }
+        return "failed"
+    }
+
     suspend fun userRegister(
         username: String,
         phone: String,
@@ -658,5 +701,14 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
             Log.e(TAG, "collegeList: ${e.localizedMessage}")
         }
         return ReturnListData.blank()
+    }
+
+    suspend fun adminUserRegisterAllow(): ReturnObjectData<UserRegisterAllow> {
+        try {
+            return serverApi.adminUserRegisterAllow()
+        } catch (e: Exception) {
+            Log.e(TAG, "adminUserRegisterAllow: ${e.localizedMessage}")
+        }
+        return ReturnObjectData.blank(UserRegisterAllow())
     }
 }
