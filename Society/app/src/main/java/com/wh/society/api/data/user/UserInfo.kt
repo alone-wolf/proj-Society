@@ -3,7 +3,7 @@ package com.wh.society.api.data.user
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.api.data.shadow.UserInfoShadow
-import com.wh.society.impl.IContain
+import com.wh.society.api.data.impl.IContain
 
 open class UserInfo : IContain,RealIconUrl {
     var id: Int = 0

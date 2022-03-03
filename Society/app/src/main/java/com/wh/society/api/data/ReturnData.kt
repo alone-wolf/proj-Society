@@ -7,9 +7,15 @@ class ReturnObjectData<T> {
     var message: String = ""
     var data: T? = null
 
+    constructor()
+
+    constructor(t:T?){
+        data = t
+    }
+
     companion object{
-        fun <T>blank(): ReturnObjectData<T> {
-            return ReturnObjectData()
+        fun <T>blank(t:T?=null): ReturnObjectData<T> {
+            return ReturnObjectData(t)
         }
     }
 

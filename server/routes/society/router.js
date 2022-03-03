@@ -72,40 +72,42 @@ apiRouter.post("/create", (req, res, next) => {
 //     });
 // });
 
-// apiRouter.post("/update", (req, res, next) => {
-//   let societyId = req.body.societyId;
-//   if (!societyId) {
-//     res.status(400).json(STATUS.STATUS_400);
-//     return;
-//   }
-//   let name = req.body.name;
-//   let openTimeStamp = req.body.openTimeStamp;
-//   let photos = req.body.photos;
-//   let describe = req.body.describe;
-//   let bbsName = req.body.bbsName;
-//   let bbsDescribe = req.body.bbsDescribe;
-//   let m = { name, openTimeStamp, photos, describe, bbsName, bbsDescribe };
-//   Society.findOne({ where: { id: societyId } })
-//     .then((data) => {
-//       if (data) {
-//         data
-//           .update(m)
-//           .then((data) => {
-//             res.json(STATUS.STATUS_200());
-//           })
-//           .catch((e) => {
-//             console.log(e);
-//             res.status(500).json(STATUS.STATUS_500);
-//           });
-//       } else {
-//         res.status(404).json(STATUS.STATUS_404);
-//       }
-//     })
-//     .catch((e) => {
-//       console.log(e);
-//       res.status(500).json(STATUS.STATUS_500);
-//     });
-// });
+apiRouter.post("/update", (req, res, next) => {
+  let societyId = req.body.societyId;
+
+  let name = req.body.name;
+  let openTimestamp = req.body.openTimestamp;
+  let describe = req.body.describe;
+  let college = req.body.college;
+  let bbsName = req.body.bbsName;
+  let bbsDescribe = req.body.bbsDescribe;
+  let iconUrl = req.body.iconUrl;
+  let m = { name, openTimestamp, describe, college, bbsName, bbsDescribe, iconUrl };
+
+  console.log(req.body);
+
+  Society.update(m, { where: { id: societyId } }).then(d => {
+    res.json(STATUS.STATUS_200(d[0]));
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).json(STATUS.STATUS_500);
+  });
+});
+
+apiRouter.post("/info", (req, res, next) => {
+  let societyId = req.body.societyId;
+
+  Society.findOne({ where: { id: societyId } }).then(d => {
+    if (d) {
+      res.json(STATUS.STATUS_200(d));
+    } else {
+      res.status(404).json(STATUS.STATUS_404);
+    }
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).json(STATUS.STATUS_500);
+  });
+});
 
 // delete one society only
 // post with admin token

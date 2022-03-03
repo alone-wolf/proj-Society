@@ -25,6 +25,50 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         return ReturnListData.blank()
     }
 
+    suspend fun societyUpdate(
+        societyId: Int,
+        name: String,
+        openTimestamp: String,
+        describe: String,
+        college: String,
+        bbsName: String,
+        bbsDescribe: String,
+        iconUrl: String,
+        cookieToken: String,
+        authUserId: Int
+    ): String {
+        try {
+            return serverApi.societyUpdate(
+                societyId = societyId,
+                name = name,
+                openTimestamp = openTimestamp,
+                describe = describe,
+                college = college,
+                bbsName = bbsName,
+                bbsDescribe = bbsDescribe,
+                iconUrl = iconUrl,
+                cookieToken = cookieToken,
+                authUserId = authUserId
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "societyUpdate: ${e.localizedMessage}")
+        }
+        return "failed"
+    }
+
+    suspend fun societyInfo(
+        societyId: Int,
+        cookieToken: String,
+        authUserId: Int
+    ): ReturnObjectData<Society> {
+        try {
+            return serverApi.societyInfo(societyId, cookieToken, authUserId)
+        } catch (e: Exception) {
+            Log.e(TAG, "societyInfo: ${e.localizedMessage}")
+        }
+        return ReturnObjectData.blank(Society())
+    }
+
     suspend fun userInfo(
         userId: Int,
         cookieToken: String,

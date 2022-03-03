@@ -1,4 +1,4 @@
-package com.wh.society.ui.page.detail.bbs
+package com.wh.society.ui.page.detail.society.bbs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,23 +23,23 @@ import com.wh.society.ui.componment.GlobalScaffold
 fun BBSPostEditor(requestHolder: RequestHolder) {
 
     var postData by remember {
-        mutableStateOf(ReturnObjectData.blank<Post>())
+        mutableStateOf(Post())
     }
 
     LaunchedEffect(Unit){
         requestHolder.apiViewModel.societyBBSPostById(requestHolder.trans.postId){
-            postData = it
+            postData = it.notNullOrBlank(Post())
         }
     }
 
     var title by remember {
-        mutableStateOf(postData.data!!.title)
+        mutableStateOf(postData.title)
     }
     var post by remember {
-        mutableStateOf(postData.data!!.post)
+        mutableStateOf(postData.post)
     }
     var level by remember {
-        mutableStateOf(postData.data!!.level)
+        mutableStateOf(postData.level)
     }
 
     GlobalScaffold(page = GlobalNavPage.DetailPostEditor, requestHolder = requestHolder, actions = {

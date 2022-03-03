@@ -1,10 +1,10 @@
 package com.wh.society.api.data.society.bbs
 
 import com.wh.society.api.data.society.Society
-import com.wh.society.impl.IContain
+import com.wh.society.api.data.impl.IContain
 
 
-class BBS:IContain {
+class BBS: IContain {
     var id: Int = 0
     var name: String = ""
     var openTimestamp: String = ""

@@ -3,19 +3,24 @@ package com.wh.society.api.data.society
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.api.data.impl.RealIconUrl
-import com.wh.society.impl.IContain
+import com.wh.society.api.data.shadow.SocietyShadow
+import com.wh.society.api.data.impl.IContain
 
-class Society:IContain,RealIconUrl {
+open class Society: IContain,RealIconUrl {
     var id: Int = 0
-    var name: String = ""
-    var openTimestamp: String = ""
-    var describe: String = ""
-    var college: String = ""
-    var bbsName: String = ""
-    var bbsDescribe: String = ""
+    open var name: String = ""
+    open var openTimestamp: String = ""
+    open var describe: String = ""
+    open var college: String = ""
+    open var bbsName: String = ""
+    open var bbsDescribe: String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
-    var iconUrl:String =""
+    open var iconUrl:String =""
+
+    fun shadow(): SocietyShadow {
+        return SocietyShadow.fromSociety(this)
+    }
 
     override val checkArray: Array<String>
         get() = arrayOf(name,describe,college)
@@ -33,7 +38,7 @@ class Society:IContain,RealIconUrl {
         get() = if (iconUrl.startsWith("http://") || iconUrl.startsWith("https://") || iconUrl.isBlank())
             iconUrl
         else
-            ServerApi.userPicUrl(iconUrl)
+            ServerApi.societyPicUrl(iconUrl)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

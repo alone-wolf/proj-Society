@@ -18,8 +18,8 @@ interface ServerApi {
     companion object {
         private const val host = "192.168.50.115"
         private const val ssl = false
-        private const val port = 5001
-        private const val sioPort = 5002
+        private const val port = 5100
+        private const val sioPort = 5200
         val baseUrl: String
             get() = "${if (ssl) "https://" else "http://"}${host}:${port}"
         val sioUrl: String
@@ -51,6 +51,29 @@ interface ServerApi {
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
     ): ReturnListData<Society>
+
+    @FormUrlEncoded
+    @POST("/society/update")
+    suspend fun societyUpdate(
+        @Field("societyId") societyId: Int,
+        @Field("name") name: String,
+        @Field("openTimestamp") openTimestamp: String,
+        @Field("describe") describe: String,
+        @Field("college") college: String,
+        @Field("bbsName") bbsName: String,
+        @Field("bbsDescribe") bbsDescribe: String,
+        @Field("iconUrl") iconUrl: String,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int,
+    ): String
+
+    @FormUrlEncoded
+    @POST("/society/info")
+    suspend fun societyInfo(
+        @Field("societyId") societyId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int,
+    ): ReturnObjectData<Society>
 
     @FormUrlEncoded
     @POST("/society/member/request/create")
@@ -225,7 +248,7 @@ interface ServerApi {
         @Field("picToken") picToken: String,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int
-    ):String
+    ): String
 
     // /user
 

@@ -53,6 +53,46 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         }
     }
 
+    fun societyUpdate(
+        societyId: Int,
+        name: String,
+        openTimestamp: String,
+        describe: String,
+        college: String,
+        bbsName: String,
+        bbsDescribe: String,
+        iconUrl: String,
+        onReturn: CoroutineScope.() -> Unit
+    ) {
+        viewModelScope.launch {
+            val a = apiRepository.societyUpdate(
+                societyId = societyId,
+                name = name,
+                openTimestamp = openTimestamp,
+                describe = describe,
+                college = college,
+                bbsName = bbsName,
+                bbsDescribe = bbsDescribe,
+                iconUrl = iconUrl,
+                cookieToken = loginToken.data!!.cookieToken,
+                authUserId = loginToken.data!!.userId
+            )
+            Log.d(TAG, "societyUpdate: $a")
+            onReturn()
+        }
+    }
+
+    fun societyInfo(societyId: Int, onReturn: CoroutineScope.(ReturnObjectData<Society>) -> Unit) {
+        viewModelScope.launch {
+            val a = apiRepository.societyInfo(
+                societyId = societyId,
+                cookieToken = loginToken.data!!.cookieToken,
+                authUserId = loginToken.data!!.userId
+            )
+            onReturn(a)
+        }
+    }
+
     fun userInfo(onReturn: CoroutineScope.(UserInfo) -> Unit) {
         viewModelScope.launch {
             loginToken.data?.cookieToken?.let {

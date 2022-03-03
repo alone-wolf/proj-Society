@@ -1,4 +1,4 @@
-package com.wh.society.ui.page.detail.bbs
+package com.wh.society.ui.page.detail.society.bbs
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.lazy.LazyColumn

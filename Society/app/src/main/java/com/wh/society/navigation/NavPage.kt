@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import coil.decode.withInterruptibleSource
 import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBS
@@ -15,9 +16,9 @@ import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.ui.page.detail.*
-import com.wh.society.ui.page.detail.bbs.BBSDetailPage
-import com.wh.society.ui.page.detail.bbs.BBSPostDetail
-import com.wh.society.ui.page.detail.bbs.BBSPostEditor
+import com.wh.society.ui.page.detail.society.bbs.BBSDetailPage
+import com.wh.society.ui.page.detail.society.bbs.BBSPostDetail
+import com.wh.society.ui.page.detail.society.bbs.BBSPostEditor
 import com.wh.society.ui.page.detail.society.SocietyDetailPage
 import com.wh.society.ui.page.detail.society.SocietyInfoEditor
 import com.wh.society.ui.page.detail.society.activity.SocietyActivityDetailPage
@@ -68,14 +69,14 @@ sealed class GlobalNavPage(
     val label: String,
     val route: String,
     val content: @Composable (RequestHolder) -> Unit,
-    val navExtraOperation: (r: RequestHolder, a: Any) -> Unit = { _, _ -> }
+    val navExtraOperation: (r: RequestHolder, a: Any) -> Unit = { _, _ -> },
 ) {
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     object LoginPage : GlobalNavPage(
         "Login Page",
         "login/login-page",
-        { LoginPage(requestHolder = it) }
+        { LoginPage(requestHolder = it) },
     )
 
     @ExperimentalMaterialApi
@@ -120,7 +121,7 @@ sealed class GlobalNavPage(
         "Society Detail",
         "detail/society",
         { SocietyDetailPage(requestHolder = it) },
-        {r,a->r.trans.society = a as Society}
+        { r, a -> r.trans.society = a as Society }
     )
 
     @ExperimentalMaterialApi
@@ -129,7 +130,7 @@ sealed class GlobalNavPage(
         "BBS Detail",
         "detail/bbs",
         { BBSDetailPage(requestHolder = it) },
-        {r,a->r.trans.bbs = a as BBS}
+        { r, a -> r.trans.bbs = a as BBS }
     )
 
     @ExperimentalMaterialApi
@@ -137,7 +138,7 @@ sealed class GlobalNavPage(
         "Post Detail",
         "detail/bbs/post",
         { BBSPostDetail(requestHolder = it) },
-        {r,a->r.trans.postId = a as Int}
+        { r, a -> r.trans.postId = a as Int }
     )
 
     @ExperimentalMaterialApi
@@ -161,7 +162,7 @@ sealed class GlobalNavPage(
         "Society You Join",
         "main/mine/societyList",
         { MineSocietyList(requestHolder = it) },
-        {r,a-> r.trans.userMember = a as ReturnListData<SocietyMember>}
+        { r, a -> r.trans.userMember = a as ReturnListData<SocietyMember> }
     )
 
     @ExperimentalMaterialApi
@@ -169,7 +170,7 @@ sealed class GlobalNavPage(
         "Society Join Request",
         "main/mine/societyRequestList",
         { MineSocietyRequestListPage(requestHolder = it) },
-        {r,a-> r.trans.societyMemberRequestList = a as ReturnListData<SocietyMemberRequest>}
+        { r, a -> r.trans.societyMemberRequestList = a as ReturnListData<SocietyMemberRequest> }
     )
 
     @ExperimentalMaterialApi
@@ -177,7 +178,7 @@ sealed class GlobalNavPage(
         "Your Posts",
         "main/mine/postList",
         { MinePostListPage(requestHolder = it) },
-        {r,a-> r.trans.postList = a as ReturnListData<Post>}
+        { r, a -> r.trans.postList = a as ReturnListData<Post> }
     )
 
     @ExperimentalMaterialApi
@@ -185,7 +186,7 @@ sealed class GlobalNavPage(
         "Your Replies",
         "main/mine/postReplyList",
         { MinePostReplyListPage(requestHolder = it) },
-        {r,a-> r.trans.postReplyList = a as ReturnListData<PostReply>}
+        { r, a -> r.trans.postReplyList = a as ReturnListData<PostReply> }
     )
 
     @ExperimentalMaterialApi
@@ -215,7 +216,7 @@ sealed class GlobalNavPage(
         "Society Inner Chat",
         "detail/society/chat/inner",
         { SocietyChatInnerPage(requestHolder = it) },
-        {r,a-> r.trans.society = a as Society}
+        { r, a -> r.trans.society = a as Society }
     )
 
     @ExperimentalMaterialApi
@@ -223,7 +224,7 @@ sealed class GlobalNavPage(
         "Society Members",
         "detail/society/member/list",
         { SocietyMemberListPage(requestHolder = it) },
-        {r,a-> r.trans.societyMemberList = a as ReturnListData<SocietyMember>}
+        { r, a -> r.trans.societyMemberList = a as ReturnListData<SocietyMember> }
     )
 
     @ExperimentalMaterialApi
@@ -231,7 +232,7 @@ sealed class GlobalNavPage(
         "Society Member",
         "detail/society/member",
         { SocietyMemberDetailPage(requestHolder = it) },
-        {r,a-> r.trans.societyMember = a as SocietyMember}
+        { r, a -> r.trans.societyMember = a as SocietyMember }
     )
 
     @ExperimentalMaterialApi
@@ -253,7 +254,7 @@ sealed class GlobalNavPage(
         "Society Activity Detail",
         "detail/society/activity/detail",
         { SocietyActivityDetailPage(requestHolder = it) },
-        {r,a->r.trans.societyActivity = a as SocietyActivity}
+        { r, a -> r.trans.societyActivity = a as SocietyActivity }
     )
 
     @ExperimentalMaterialApi
@@ -261,7 +262,7 @@ sealed class GlobalNavPage(
         "Society Picture List",
         "detail/society/picture/list",
         { SocietyPictureListPage(requestHolder = it) },
-        {r,a->r.trans.societyPictureList = a as ReturnListData<SocietyPicture>}
+        { r, a -> r.trans.societyPictureList = a as ReturnListData<SocietyPicture> }
     )
 
     @ExperimentalMaterialApi

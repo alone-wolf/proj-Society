@@ -1,6 +1,6 @@
 {
-  "port": 5001,
+  "port": 5100,
   "cros": true,
   "compression": true,
-  "pusherUrl": "http://127.0.0.1:5002"
+  "pusherUrl": "http://127.0.0.1:5200"
 }
