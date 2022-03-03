@@ -58,7 +58,7 @@ fun RegisterPage(requestHolder: RequestHolder) {
                     email = ""
                     name = ""
                     password = ""
-                    requestHolder.alertRequest.alert("提示", "新用户已创建") {
+                    requestHolder.alert.alert("提示", "新用户已创建") {
                         requestHolder.globalNav.goBack()
                     }
                 }

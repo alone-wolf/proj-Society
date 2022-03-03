@@ -75,10 +75,6 @@ fun UserDetailPage(requestHolder: RequestHolder) {
                         }
                     }
                 }
-//                item {
-//                    Text(text = requestHolder.transUserInfo.toString())
-//
-//                }
 
                 itemOnCondition(
                     show = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id != requestHolder.trans.userInfo.id,

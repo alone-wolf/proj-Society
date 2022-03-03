@@ -61,9 +61,9 @@ fun MinePicList(requestHolder: RequestHolder) {
                             .padding(2.dp)
                             .shadow(elevation = 3.dp)
                             .clickable {
-                                requestHolder.alertRequest.alert("提示", "要删除这张图片吗？", onOk = {
+                                requestHolder.alert.alert("提示", "要删除这张图片吗？", onOk = {
                                     if (requestHolder.apiViewModel.userInfo.data!!.iconUrl == it.newFilename) {
-                                        requestHolder.alertRequest.alert(
+                                        requestHolder.alert.alert(
                                             "提示",
                                             "这张图片正在使用中，不可删除！",
                                             onOk = {})

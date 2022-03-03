@@ -78,7 +78,13 @@ fun MinePage(requestHolder: RequestHolder) {
                         data = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).realIconUrl,
                         builder = {
                             crossfade(true)
-                            transformations(BlurTransformation(requestHolder.activity,radius = 5F,sampling = 16F))
+                            transformations(
+                                BlurTransformation(
+                                    requestHolder.activity,
+                                    radius = 5F,
+                                    sampling = 16F
+                                )
+                            )
                         }),
                     contentDescription = "",
                     modifier = Modifier
@@ -118,7 +124,10 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "加入的社团",
             n = userJointList.data.size,
             onClick = {
-                requestHolder.globalNav.gotoMainMineSocietyList(userJointList)
+                requestHolder.globalNav.goto<ReturnListData<SocietyMember>>(
+                    page = GlobalNavPage.MainMineSocietyListPage,
+                    a = userJointList
+                )
             }
         )
         // 加入的社团列表
@@ -140,7 +149,10 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "我的社团申请",
             n = userJoinRequestList.data.size,
             onClick = {
-                requestHolder.globalNav.gotoMainMineSocietyRequestList(userJoinRequestList)
+                requestHolder.globalNav.goto<ReturnListData<SocietyMemberRequest>>(
+                    page = GlobalNavPage.MainMineSocietyRequestListPage,
+                    a = userJoinRequestList
+                )
             }
         )
         items(
@@ -156,7 +168,10 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "发布的帖子",
             n = userPostList.data.size,
             onClick = {
-                requestHolder.globalNav.gotoMainMinePostList(userPostList)
+                requestHolder.globalNav.goto<ReturnListData<Post>>(
+                    page = GlobalNavPage.MainMinePostListPage,
+                    a = userPostList
+                )
             }
         )
 
@@ -173,7 +188,10 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "发表的回复",
             n = userPostReplyList.data.size,
             onClick = {
-                requestHolder.globalNav.gotoMainMinePostReplyList(userPostReplyList)
+                requestHolder.globalNav.goto<ReturnListData<PostReply>>(
+                    page = GlobalNavPage.MainMinePostReplyListPage,
+                    a = userPostReplyList
+                )
             }
         )
         items(

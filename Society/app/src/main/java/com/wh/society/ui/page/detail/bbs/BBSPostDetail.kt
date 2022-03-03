@@ -48,7 +48,7 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
         requestHolder = requestHolder,
         fab = {
             FloatingActionButton(onClick = {
-                requestHolder.alertRequest.alertFor1TextFiled("reply post") {
+                requestHolder.alert.alertFor1TextFiled("reply post") {
                     requestHolder.apiViewModel.societyBBSPostReplyCreate(
                         societyId = requestHolder.trans.society.id,
                         postId = requestHolder.trans.postId,

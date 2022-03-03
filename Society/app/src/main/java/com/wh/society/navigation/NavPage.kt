@@ -8,6 +8,11 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.wh.society.api.data.ReturnListData
+import com.wh.society.api.data.society.*
+import com.wh.society.api.data.society.bbs.BBS
+import com.wh.society.api.data.society.bbs.Post
+import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.ui.page.detail.*
@@ -105,7 +110,8 @@ sealed class GlobalNavPage(
     object DetailSociety : GlobalNavPage(
         "Society Detail",
         "detail/society",
-        { SocietyDetailPage(requestHolder = it) }
+        { SocietyDetailPage(requestHolder = it) },
+        {r,a->r.trans.society = a as Society}
     )
 
     @ExperimentalMaterialApi
@@ -113,14 +119,16 @@ sealed class GlobalNavPage(
     object DetailBBS : GlobalNavPage(
         "BBS Detail",
         "detail/bbs",
-        { BBSDetailPage(requestHolder = it) }
+        { BBSDetailPage(requestHolder = it) },
+        {r,a->r.trans.bbs = a as BBS}
     )
 
     @ExperimentalMaterialApi
     object DetailPost : GlobalNavPage(
         "Post Detail",
         "detail/bbs/post",
-        { BBSPostDetail(requestHolder = it) }
+        { BBSPostDetail(requestHolder = it) },
+        {r,a->r.trans.postId = a as Int}
     )
 
     @ExperimentalMaterialApi
@@ -144,27 +152,31 @@ sealed class GlobalNavPage(
         "Society You Join",
         "main/mine/societyList",
         { MineSocietyList(requestHolder = it) },
+        {r,a-> r.trans.userMember = a as ReturnListData<SocietyMember>}
     )
 
     @ExperimentalMaterialApi
     object MainMineSocietyRequestListPage : GlobalNavPage(
         "Society Join Request",
         "main/mine/societyRequestList",
-        { MineSocietyRequestListPage(requestHolder = it) }
+        { MineSocietyRequestListPage(requestHolder = it) },
+        {r,a-> r.trans.societyMemberRequestList = a as ReturnListData<SocietyMemberRequest>}
     )
 
     @ExperimentalMaterialApi
     object MainMinePostListPage : GlobalNavPage(
         "Your Posts",
         "main/mine/postList",
-        { MinePostListPage(requestHolder = it) }
+        { MinePostListPage(requestHolder = it) },
+        {r,a-> r.trans.postList = a as ReturnListData<Post>}
     )
 
     @ExperimentalMaterialApi
     object MainMinePostReplyListPage : GlobalNavPage(
         "Your Replies",
         "main/mine/postReplyList",
-        { MinePostReplyListPage(requestHolder = it) }
+        { MinePostReplyListPage(requestHolder = it) },
+        {r,a-> r.trans.postReplyList = a as ReturnListData<PostReply>}
     )
 
     @ExperimentalMaterialApi
@@ -193,21 +205,24 @@ sealed class GlobalNavPage(
     object SocietyChatInnerPage : GlobalNavPage(
         "Society Inner Chat",
         "detail/society/chat/inner",
-        { SocietyChatInnerPage(requestHolder = it) }
+        { SocietyChatInnerPage(requestHolder = it) },
+        {r,a-> r.trans.society = a as Society}
     )
 
     @ExperimentalMaterialApi
     object SocietyMemberListPage : GlobalNavPage(
         "Society Members",
         "detail/society/member/list",
-        { SocietyMemberListPage(requestHolder = it) }
+        { SocietyMemberListPage(requestHolder = it) },
+        {r,a-> r.trans.societyMemberList = a as ReturnListData<SocietyMember>}
     )
 
     @ExperimentalMaterialApi
     object SocietyMemberDetailPage : GlobalNavPage(
         "Society Member",
         "detail/society/member",
-        { SocietyMemberDetailPage(requestHolder = it) }
+        { SocietyMemberDetailPage(requestHolder = it) },
+        {r,a-> r.trans.societyMember = a as SocietyMember}
     )
 
     @ExperimentalMaterialApi
@@ -228,14 +243,16 @@ sealed class GlobalNavPage(
     object SocietyActivityDetailPage : GlobalNavPage(
         "Society Activity Detail",
         "detail/society/activity/detail",
-        { SocietyActivityDetailPage(requestHolder = it) }
+        { SocietyActivityDetailPage(requestHolder = it) },
+        {r,a->r.trans.societyActivity = a as SocietyActivity}
     )
 
     @ExperimentalMaterialApi
     object SocietyPictureListPage : GlobalNavPage(
         "Society Picture List",
         "detail/society/picture/list",
-        { SocietyPictureListPage(requestHolder = it) }
+        { SocietyPictureListPage(requestHolder = it) },
+        {r,a->r.trans.societyPictureList = a as ReturnListData<SocietyPicture>}
     )
 
     @ExperimentalMaterialApi

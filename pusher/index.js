@@ -152,7 +152,7 @@ io.on("connection", (socket) => {
                 });
 
                 socket.on("push-brd", (d) => {
-                    console.log("push-brd", d);
+                    // console.log("push-brd", d);
                     let room = d.room;
                     let event = d.event;
                     let data = d.data; // self-designed data-struct
@@ -160,7 +160,7 @@ io.on("connection", (socket) => {
                 });
 
                 socket.on("push-srd", (d) => {
-                    console.log("push-srd", d);
+                    // console.log("push-srd", d);
                     let userId = d.userId;
                     let event = d.event;
                     let data = d.data; // self-designed data-struct

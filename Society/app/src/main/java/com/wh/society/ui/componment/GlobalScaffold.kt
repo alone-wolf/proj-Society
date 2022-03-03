@@ -1,5 +1,6 @@
 package com.wh.society.ui.componment
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
@@ -9,10 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
-
-
-//@Composable
-//fun Scaffold
 
 @ExperimentalMaterialApi
 @Composable
@@ -29,6 +26,7 @@ fun GlobalScaffold(
         requestHolder.operatePlatform.currentRoute = page.route
         requestHolder.operatePlatform.currentOperate = remoteOperate
     }
+
     Scaffold(
         topBar = {
             TopAppBar(

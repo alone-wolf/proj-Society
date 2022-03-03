@@ -101,7 +101,7 @@ fun FindPasswordPage(requestHolder: RequestHolder) {
                     email = email,
                     password = password
                 ) {
-                    requestHolder.alertRequest.alert(
+                    requestHolder.alert.alert(
                         "提示",
                         "密码已经重置"
                     ) { requestHolder.globalNav.goBack() }

@@ -7,9 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.wh.society.R
 import com.wh.society.componment.RequestHolder
+import com.wh.society.componment.request.AlertRequest
 
 @Composable
-fun MyAlertDialog(alertRequest: RequestHolder.AlertRequest) {
+fun MyAlertDialog(alertRequest: AlertRequest) {
     if (alertRequest.show2BtnDialog.value) {
         AlertDialog(
             onDismissRequest = { alertRequest.show2BtnDialog.value = false },

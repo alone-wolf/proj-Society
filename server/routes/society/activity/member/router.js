@@ -8,6 +8,7 @@ const { brdNewActivityRequest } = require("../../../../socketio/socketio");
 const SocietyActivityRequest = require("../../../../model/society_activity_request");
 const SocietyActivity = require("../../../../model/society_activity");
 const SocietyMember = require("../../../../model/society_member");
+const SocietyActivityMember = require("../../../../model/society_activity_member");
 
 apiRouter.post("/create", (req, res, next) => {
 
@@ -15,7 +16,7 @@ apiRouter.post("/create", (req, res, next) => {
     let societyId = req.body.societyId;
     let userId = req.body.userId;
 
-    SocietyMember.findOne({ where: { activityId, societyId, userId } }).then(d => {
+    SocietyActivityMember.findOne({ where: { activityId, societyId, userId } }).then(d => {
         if (d) {
             res.json(STATUS.STATUS_200())
         } else {
@@ -52,7 +53,7 @@ apiRouter.post("/create", (req, res, next) => {
 
 apiRouter.post("/list", (req, res, next) => {
     let activityId = req.body.activityId;
-    SocietyMember.findAll({ where: { activityId } })
+    SocietyActivityMember.findAll({ where: { activityId } })
         .then(d => {
             res.json(STATUS.STATUS_200(d));
         }).catch(e => {

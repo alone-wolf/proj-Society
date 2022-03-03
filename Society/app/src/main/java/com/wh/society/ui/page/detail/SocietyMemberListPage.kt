@@ -34,7 +34,7 @@ fun SocietyMemberListPage(requestHolder: RequestHolder) {
                     itemContent = { it ->
                         Card(
                             onClick = {
-                                requestHolder.globalNav.gotoSocietyMemberDetail(it)
+                                requestHolder.globalNav.goto(GlobalNavPage.SocietyMemberDetailPage,it)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()

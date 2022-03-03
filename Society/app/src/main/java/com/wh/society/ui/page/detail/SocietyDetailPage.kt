@@ -125,7 +125,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                         modifier = Modifier
                                             .width(50.dp)
                                             .clickable {
-                                                requestHolder.globalNav.gotoSocietyMemberDetail(item)
+                                                requestHolder.globalNav.goto(GlobalNavPage.SocietyMemberDetailPage,item)
                                             }
                                             .clip(RoundedCornerShape(6.dp))
                                             .background(if (item.permissionLevel == 111) Color.Gray else Color.Unspecified),
@@ -162,7 +162,8 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                     modifier = Modifier
                                         .width(50.dp)
                                         .clickable {
-                                            requestHolder.globalNav.gotoSocietyMemberList(
+                                            requestHolder.globalNav.goto(
+                                                GlobalNavPage.SocietyMemberListPage,
                                                 thisSocietyJointList
                                             )
                                         },
@@ -268,7 +269,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     itemContent = {
                         Card(
                             onClick = {
-                                requestHolder.globalNav.gotoSocietyActivityDetail(it)
+                                requestHolder.globalNav.goto(GlobalNavPage.SocietyActivityDetailPage,it)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -287,7 +288,10 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                     title = "社团图片",
                     n = societyPictureList.data.size,
                     onClick = {
-                        requestHolder.globalNav.gotoSocietyPictureListPage(societyPictureList)
+                        requestHolder.globalNav.goto(
+                            page = GlobalNavPage.SocietyPictureListPage,
+                            a = societyPictureList
+                        )
                     },
                 )
 
@@ -306,7 +310,8 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
 
                 Button(
                     onClick = {
-                        requestHolder.globalNav.gotoDetailBBS(
+                        requestHolder.globalNav.goto<BBS>(
+                            GlobalNavPage.DetailBBS,
                             BBS.fromSociety(requestHolder.trans.society)
                         )
                     },
@@ -322,7 +327,10 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
 
                     Button(
                         onClick = {
-                            requestHolder.globalNav.gotoSocietyChatInner(requestHolder.trans.society)
+                            requestHolder.globalNav.goto(
+                                GlobalNavPage.SocietyChatInnerPage,
+                                requestHolder.trans.society
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth()

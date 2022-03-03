@@ -33,6 +33,7 @@ import com.wh.society.api.data.society.bbs.Post
 import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
+import com.wh.society.navigation.GlobalNavPage
 
 @Composable
 fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
@@ -70,7 +71,7 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
 fun SocietyItem(requestHolder: RequestHolder, society: Society, modifier: Modifier = Modifier) {
     Card(
         onClick = {
-            requestHolder.globalNav.gotoDetailSociety(society)
+            requestHolder.globalNav.goto(GlobalNavPage.DetailSociety, society)
         },
         modifier = modifier
             .fillMaxWidth()
@@ -104,7 +105,7 @@ fun SocietyItem(requestHolder: RequestHolder, society: Society, modifier: Modifi
 fun BBSItem(requestHolder: RequestHolder, bbs: BBS) {
     Card(
         onClick = {
-            requestHolder.globalNav.gotoDetailBBS(bbs)
+            requestHolder.globalNav.goto<BBS>(GlobalNavPage.DetailBBS, bbs)
         },
         modifier = Modifier
             .fillMaxWidth()
@@ -173,7 +174,7 @@ fun MineUserPostItem(requestHolder: RequestHolder, post: Post, modifier: Modifie
         onClick = {
             requestHolder.trans.society = society
             requestHolder.trans.bbs = society.toBBS()
-            requestHolder.globalNav.gotoBBSPostDetail(post.id)
+            requestHolder.globalNav.goto(GlobalNavPage.DetailPost, post.id)
         },
         modifier = modifier
             .fillMaxWidth()
@@ -218,7 +219,7 @@ fun MineUserPostReplyItem(
 //    }
     Card(
         onClick = {
-            requestHolder.globalNav.gotoBBSPostDetail(postReply.postId)
+            requestHolder.globalNav.goto(GlobalNavPage.DetailPost, postReply.postId)
         },
         modifier = modifier
             .fillMaxWidth()
@@ -263,7 +264,7 @@ fun PostItem(
     Card(
         onClick = {
             if (!ignoreClick) {
-                requestHolder.globalNav.gotoBBSPostDetail(post.id)
+                requestHolder.globalNav.goto(GlobalNavPage.DetailPost, post.id)
             }
         },
         modifier = modifier
