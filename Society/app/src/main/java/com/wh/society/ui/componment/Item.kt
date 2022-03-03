@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.wh.society.api.data.impl.ChatMessage
 import com.wh.society.api.data.society.Society
 import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.api.data.society.bbs.Post
@@ -63,6 +64,43 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
             .background(Color.Green),
         contentScale = ContentScale.Crop
     )
+}
+
+@Composable
+fun ChatMessageItem(
+    meId: Int,
+    chatMessage: ChatMessage,
+    requestHolder: RequestHolder
+) {
+    val isMe = meId == chatMessage.userId
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = if (isMe) Arrangement.End else Arrangement.Start
+    ) {
+        if (isMe){
+            Column(horizontalAlignment = Alignment.End) {
+                Text(text = "${chatMessage.createTimestamp}·${chatMessage.username}")
+                Text(text = chatMessage.message, modifier = Modifier.height(40.dp))
+            }
+        }
+        Image(
+            painter = rememberImagePainter(
+                data = chatMessage.realIconUrl,
+                imageLoader = requestHolder.coilImageLoader
+            ),
+            contentDescription = "",
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
+        if (!isMe){
+            Column(horizontalAlignment = Alignment.Start) {
+                Text(text = "${chatMessage.username}·${chatMessage.createTimestamp}")
+                Text(text = chatMessage.message, modifier = Modifier.height(40.dp))
+            }
+        }
+    }
 }
 
 @ExperimentalAnimationApi

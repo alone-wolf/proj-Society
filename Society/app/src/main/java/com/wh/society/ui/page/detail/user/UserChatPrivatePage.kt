@@ -1,4 +1,4 @@
-package com.wh.society.ui.page.detail
+package com.wh.society.ui.page.detail.user
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,10 +23,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.wh.society.api.data.user.UserChatPrivate
 import com.wh.society.api.data.ReturnListData
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
 import com.wh.society.typeExt.spacer
+import com.wh.society.ui.componment.ChatMessageItem
 import com.wh.society.ui.componment.GlobalScaffold
 import kotlinx.coroutines.launch
 
@@ -68,11 +70,14 @@ fun UserChatPrivatePage(requestHolder: RequestHolder) {
                 content = {
                     items(
                         items = chatPrivateList.data,
-                        key = { item: UserChatPrivate -> item.id },
-                        itemContent = { it ->
-                            Text(text = it.toString())
-                        }
-                    )
+                        key = { item: UserChatPrivate -> item.id }
+                    ) { it ->
+                        ChatMessageItem(
+                            meId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                            chatMessage = it,
+                            requestHolder = requestHolder
+                        )
+                    }
                     empty(chatPrivateList)
                     spacer()
                 },

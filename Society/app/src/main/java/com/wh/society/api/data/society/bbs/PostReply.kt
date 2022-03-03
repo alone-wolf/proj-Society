@@ -21,7 +21,7 @@ class PostReply:RealIconUrl {
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
             userIconUrl
         else
-            ServerApi.picUrl(userIconUrl)
+            ServerApi.userPicUrl(userIconUrl)
 
     override fun toString(): String {
         return "PostReply(id=$id, societyId=$societyId, societyName='$societyName', postId=$postId, postTitle='$postTitle', userId=$userId, userIconUrl='$userIconUrl', username='$username', reply='$reply', deviceName='$deviceName', createTimestamp='$createTimestamp', updateTimestamp='$updateTimestamp')"

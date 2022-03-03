@@ -33,7 +33,7 @@ class Society:IContain,RealIconUrl {
         get() = if (iconUrl.startsWith("http://") || iconUrl.startsWith("https://") || iconUrl.isBlank())
             iconUrl
         else
-            ServerApi.picUrl(iconUrl)
+            ServerApi.userPicUrl(iconUrl)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

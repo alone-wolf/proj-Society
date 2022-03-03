@@ -21,7 +21,7 @@ class Post:RealIconUrl {
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
             userIconUrl
         else
-            ServerApi.picUrl(userIconUrl)
+            ServerApi.userPicUrl(userIconUrl)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

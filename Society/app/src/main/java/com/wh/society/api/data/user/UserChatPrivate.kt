@@ -1,20 +1,15 @@
 package com.wh.society.api.data.user
 
-import com.wh.society.api.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.ChatMessage
 
-class UserChatPrivate : RealIconUrl {
+class UserChatPrivate : ChatMessage {
     var id: Int = 0
-    var userId: Int = 0
-    var username: String = ""
-    var userIconUrl: String = ""
+    override var userId: Int = 0
+    override var username: String = ""
+    override var userIconUrl: String = ""
     var opUserId: Int = 0
-    var message: String = ""
-    override val realIconUrl: String
-        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
-            userIconUrl
-        else
-            ServerApi.picUrl(userIconUrl)
+    override var message: String = ""
+    override var createTimestamp: String = ""
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -28,6 +23,7 @@ class UserChatPrivate : RealIconUrl {
         if (userIconUrl != other.userIconUrl) return false
         if (opUserId != other.opUserId) return false
         if (message != other.message) return false
+        if (createTimestamp != other.createTimestamp) return false
 
         return true
     }
@@ -39,11 +35,12 @@ class UserChatPrivate : RealIconUrl {
         result = 31 * result + userIconUrl.hashCode()
         result = 31 * result + opUserId
         result = 31 * result + message.hashCode()
+        result = 31 * result + createTimestamp.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "ChatPrivate(id=$id, userId=$userId, username='$username', userIconUrl='$userIconUrl', opUserId=$opUserId, message='$message')"
+        return "UserChatPrivate(id=$id, userId=$userId, username='$username', userIconUrl='$userIconUrl', opUserId=$opUserId, message='$message', createTimestamp='$createTimestamp')"
     }
 
 

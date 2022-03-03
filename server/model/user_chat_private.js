@@ -22,8 +22,8 @@ UserChatPrivate.init(
     {
         sequelize,
         timestamps: true,
-        createdAt: "createTimeStamp",
-        updatedAt: "updateTimeStamp",
+        createdAt: "createTimestamp",
+        updatedAt: "updateTimestamp",
     }
 );
 

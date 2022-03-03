@@ -18,7 +18,7 @@ class SocietyMember :RealIconUrl{
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
             userIconUrl
         else
-            ServerApi.picUrl(userIconUrl)
+            ServerApi.userPicUrl(userIconUrl)
 
     fun levelToString(): String {
         return when{

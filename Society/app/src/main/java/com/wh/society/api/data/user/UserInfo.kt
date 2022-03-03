@@ -42,7 +42,7 @@ open class UserInfo : IContain,RealIconUrl {
         get() = if (iconUrl.startsWith("http://") || iconUrl.startsWith("https://") || iconUrl.isBlank())
             iconUrl
         else
-            ServerApi.picUrl(iconUrl)
+            ServerApi.userPicUrl(iconUrl)
 
     override val checkArray: Array<String>
         get() = arrayOf(username)

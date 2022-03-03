@@ -2,26 +2,18 @@ package com.wh.society.api.data.society
 
 import com.wh.common.typeExt.toTimestamp
 import com.wh.common.util.TimeUtils
-import com.wh.society.api.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.ChatMessage
 import com.wh.society.util.CurrentTimeUtil
 
-class SocietyChatMessage:RealIconUrl {
-    var id:Int = 0
-    var societyId:Int = 0
-    var userId:Int = 0
-    var username:String = ""
-    var userIconUrl:String = ""
-    var message:String = ""
-    var createTimestamp:String = ""
-    var updateTimestamp:String = ""
-
-
-    override val realIconUrl: String
-        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
-            userIconUrl
-        else
-            ServerApi.picUrl(userIconUrl)
+class SocietyChatMessage : ChatMessage {
+    var id: Int = 0
+    var societyId: Int = 0
+    override var userId: Int = 0
+    override var username: String = ""
+    override var userIconUrl: String = ""
+    override var message: String = ""
+    override var createTimestamp: String = ""
+    var updateTimestamp: String = ""
 
 
     override fun equals(other: Any?): Boolean {
@@ -59,7 +51,8 @@ class SocietyChatMessage:RealIconUrl {
     }
 
     val createTimestamp2ymdhms: String
-    get() = CurrentTimeUtil.utcTS2ms("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'").toTimestamp(TimeUtils.fullDateTimeFormat)
+        get() = CurrentTimeUtil.utcTS2ms("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'")
+            .toTimestamp(TimeUtils.fullDateTimeFormat)
 
 
 }

@@ -26,7 +26,7 @@ interface ServerApi {
             get() = "${if (ssl) "https://" else "http://"}${host}:${sioPort}"
 
 
-        fun picUrl(picToken: String): String {
+        fun userPicUrl(picToken: String): String {
             return "$baseUrl/pic/$picToken"
         }
 

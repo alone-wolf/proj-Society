@@ -27,6 +27,7 @@ import com.wh.society.ui.page.detail.society.chat.SocietyChatInnerPage
 import com.wh.society.ui.page.detail.society.member.SocietyMemberDetailPage
 import com.wh.society.ui.page.detail.society.member.SocietyMemberListPage
 import com.wh.society.ui.page.detail.society.picture.SocietyPictureListPage
+import com.wh.society.ui.page.detail.user.UserChatPrivatePage
 import com.wh.society.ui.page.login.FindPasswordPage
 import com.wh.society.ui.page.login.LoginPage
 import com.wh.society.ui.page.login.RegisterPage

@@ -12,7 +12,7 @@ class UserPicture : RealIconUrl {
     var updateTimestamp: String = ""
 
     override val realIconUrl
-        get() = ServerApi.picUrl(newFilename)
+        get() = ServerApi.userPicUrl(newFilename)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
