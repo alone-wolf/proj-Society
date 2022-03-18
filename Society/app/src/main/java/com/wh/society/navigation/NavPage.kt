@@ -64,6 +64,10 @@ sealed class MainNavPage(val label: String, val route: String, val icon: ImageVe
             Society.route to Society,
             BBS.route to BBS,
         )
+        val navMapNoBBS = mapOf(
+            Mine.route to Mine,
+            Society.route to Society,
+        )
     }
 }
 

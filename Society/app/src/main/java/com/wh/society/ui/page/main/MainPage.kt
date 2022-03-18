@@ -77,7 +77,11 @@ fun MainPage(requestHolder: RequestHolder) {
             BottomNavigation(elevation = 3.dp) {
                 val navBackStackEntry by mainNavController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-                MainNavPage.navMap.values.forEach { mainNavPage ->
+                if (requestHolder.settingStore.showBBS){
+                    MainNavPage.navMap
+                }else{
+                    MainNavPage.navMapNoBBS
+                }.values.forEach { mainNavPage ->
                     BottomNavigationItem(
                         selected = currentDestination?.hierarchy?.any { it.route == mainNavPage.route } == true,
                         onClick = {

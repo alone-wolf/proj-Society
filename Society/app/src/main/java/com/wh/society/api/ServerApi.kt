@@ -259,7 +259,7 @@ interface ServerApi {
         @Field("societyId") societyId: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int
-    ):ReturnListData<SocietyNotice>
+    ): ReturnListData<SocietyNotice>
 
     @FormUrlEncoded
     @POST("/society/notice/create")
@@ -271,7 +271,7 @@ interface ServerApi {
         @Field("permissionLevel") permissionLevel: Int,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int
-    ):String
+    ): String
 
     // /user
 
@@ -433,5 +433,5 @@ interface ServerApi {
 
 
     @POST("/admin/user/register/allow")
-    suspend fun adminUserRegisterAllow():ReturnObjectData<UserRegisterAllow>
+    suspend fun adminUserRegisterAllow(): ReturnObjectData<UserRegisterAllow>
 }

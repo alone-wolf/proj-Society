@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.compose.material.SnackbarHostState
 import com.wh.society.service.SocketIOService
 
 class OperatePlatform {
@@ -12,7 +13,7 @@ class OperatePlatform {
 
     var currentOperate: () -> Unit = {}
 
-    private val onOperationRequestReceiver = object : BroadcastReceiver(){
+    private val onOperationRequestReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             p1?.let {
                 val path = it.getStringExtra("path")
@@ -26,11 +27,11 @@ class OperatePlatform {
     }
     private val intentFilter = IntentFilter(SocketIOService.OPERATE_PLATFORM)
 
-    fun reg(context: Context){
-        context.registerReceiver(onOperationRequestReceiver,intentFilter)
+    fun reg(context: Context) {
+        context.registerReceiver(onOperationRequestReceiver, intentFilter)
     }
 
-    fun unreg(context: Context){
+    fun unreg(context: Context) {
         context.unregisterReceiver(onOperationRequestReceiver)
     }
 }

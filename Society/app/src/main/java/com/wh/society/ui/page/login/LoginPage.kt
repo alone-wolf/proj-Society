@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -82,16 +83,20 @@ fun LoginPage(requestHolder: RequestHolder) {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = "找回密码", fontSize = 14.sp, modifier = Modifier.clickable {
                 requestHolder.globalNav.goto(GlobalNavPage.FindPasswordPage)
-            })
+            }, textAlign = TextAlign.Center)
             if (userRegisterAllow) {
-                Text(text = " | ")
-                Text(text = "注册用户", fontSize = 14.sp, modifier = Modifier.clickable {
-                    requestHolder.globalNav.goto(GlobalNavPage.RegisterPage)
-                })
+                Text(text = " | ", textAlign = TextAlign.Center)
+                Text(
+                    text = "注册用户",
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.clickable {
+                        requestHolder.globalNav.goto(GlobalNavPage.RegisterPage)
+                    })
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.wh.society.ui.componment
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
@@ -21,6 +20,7 @@ fun GlobalScaffold(
     fab: @Composable ()->Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
+
 
     LaunchedEffect(Unit){
         requestHolder.operatePlatform.currentRoute = page.route

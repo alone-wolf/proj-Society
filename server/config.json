@@ -3,5 +3,5 @@
   "cros": true,
   "compression": true,
   "pusherUrl": "http://127.0.0.1:5200",
-  "userRegisterAllow": false
+  "userRegisterAllow": true
 }

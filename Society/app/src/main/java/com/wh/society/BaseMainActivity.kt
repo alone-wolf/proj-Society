@@ -3,6 +3,8 @@ package com.wh.society
 import android.content.*
 import android.os.Bundle
 import android.text.util.Linkify
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +57,13 @@ abstract class BaseMainActivity : AppCompatActivity(), RequestHolder {
             }
             .build()
     }
+    override val toast: ToastRequest by lazy {
+        ToastRequest().also {
+            it.toast = { it ->
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     override val markdown: Markwon by lazy {
         Markwon.builder(this)
             .usePlugin(CoilImagesPlugin.create(this, coilImageLoader))
@@ -65,7 +74,14 @@ abstract class BaseMainActivity : AppCompatActivity(), RequestHolder {
     override val settingStore: SettingStore by lazy { (application as App).storeKeeper.settingStore }
 
 
-    override lateinit var deviceName: String
+    override val deviceName: String
+        get() {
+            return if (settingStore.deviceName == "") {
+                SystemUtil.getDeviceModel()
+            } else {
+                settingStore.deviceName
+            }
+        }
 
     override val alert: AlertRequestCompact by lazy {
         AlertRequestCompact(this.resources, this)
@@ -88,7 +104,7 @@ abstract class BaseMainActivity : AppCompatActivity(), RequestHolder {
             requestHolder = this
         )
 
-        deviceName = SystemUtil.getDeviceModel()
+
     }
 
     override fun onDestroy() {

@@ -2,6 +2,8 @@ package com.wh.society.ui.componment
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,31 +22,12 @@ fun RoundedTextFiled(value: String, onValueChange: (String) -> Unit) {
         onValueChange = onValueChange,
         colors = TextFieldDefaults.textFieldColors(
             textColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-//            disabledTextColor = textColor.copy(ContentAlpha.disabled),
-//            backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = BackgroundOpacity),
             cursorColor = MaterialTheme.colors.primary,
             errorCursorColor = MaterialTheme.colors.error,
             focusedIndicatorColor = Color.Transparent,
-//            MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
             unfocusedIndicatorColor = Color.Transparent,
-//            MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.UnfocusedIndicatorLineOpacity),
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
-//            leadingIconColor =
-//            MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.IconOpacity),
-//            disabledLeadingIconColor = leadingIconColor.copy(alpha = ContentAlpha.disabled),
-//            errorLeadingIconColor = leadingIconColor,
-//            trailingIconColor =
-//            MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.IconOpacity),
-//            disabledTrailingIconColor = trailingIconColor.copy(alpha = ContentAlpha.disabled),
-//            errorTrailingIconColor = MaterialTheme.colors.error,
-//            focusedLabelColor =
-//            MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
-//            unfocusedLabelColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
-//            disabledLabelColor = unfocusedLabelColor.copy(ContentAlpha.disabled),
-//            errorLabelColor = MaterialTheme.colors.error,
-//            placeholderColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
-//            disabledPlaceholderColor = placeholderColor.copy(ContentAlpha.disabled)
         ),
         shape = RoundedCornerShape(16.dp)
     )
@@ -63,31 +46,12 @@ fun RoundedTextFiled(
         onValueChange = onValueChange,
         colors = TextFieldDefaults.textFieldColors(
             textColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-//            disabledTextColor = textColor.copy(ContentAlpha.disabled),
-//            backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = BackgroundOpacity),
             cursorColor = MaterialTheme.colors.primary,
             errorCursorColor = MaterialTheme.colors.error,
             focusedIndicatorColor = Color.Transparent,
-//            MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
             unfocusedIndicatorColor = Color.Transparent,
-//            MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.UnfocusedIndicatorLineOpacity),
             disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-//            leadingIconColor =
-//            MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.IconOpacity),
-//            disabledLeadingIconColor = leadingIconColor.copy(alpha = ContentAlpha.disabled),
-//            errorLeadingIconColor = leadingIconColor,
-//            trailingIconColor =
-//            MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.IconOpacity),
-//            disabledTrailingIconColor = trailingIconColor.copy(alpha = ContentAlpha.disabled),
-//            errorTrailingIconColor = MaterialTheme.colors.error,
-//            focusedLabelColor =
-//            MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
-//            unfocusedLabelColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
-//            disabledLabelColor = unfocusedLabelColor.copy(ContentAlpha.disabled),
-//            errorLabelColor = MaterialTheme.colors.error,
-//            placeholderColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
-//            disabledPlaceholderColor = placeholderColor.copy(ContentAlpha.disabled)
+            errorIndicatorColor = Color.Transparent
         ),
         shape = RoundedCornerShape(16.dp),
         modifier = modifier,

@@ -18,6 +18,7 @@ import com.wh.society.api.data.user.UserInfo
 import com.wh.society.api.data.user.UserPicture
 import com.wh.society.api.repository.ApiRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
@@ -36,19 +37,18 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     val TAG = "WH_"
 
-    fun societyList() {
+    fun societyList(onError: (String) -> Unit = {}) {
         viewModelScope.launch {
             societyList = apiRepository.societyList(
                 cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
+                authUserId = loginToken.data!!.userId,
+                onError = onError
             )
             val b: MutableList<BBS> = mutableListOf()
             societyList.data.forEach {
                 b.add(BBS.fromSociety(it))
             }
             bbsList = b
-            Log.d(TAG, "societyList: ${societyList.data.size}")
-            Log.d(TAG, "bbsList: ${bbsList.size}")
         }
     }
 
@@ -61,7 +61,8 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         bbsName: String,
         bbsDescribe: String,
         iconUrl: String,
-        onReturn: CoroutineScope.() -> Unit
+        onReturn: CoroutineScope.() -> Unit,
+        onError: (String) -> Unit = {}
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyUpdate(
@@ -74,19 +75,25 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
                 bbsDescribe = bbsDescribe,
                 iconUrl = iconUrl,
                 cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
+                authUserId = loginToken.data!!.userId,
+                onError = onError
             )
             Log.d(TAG, "societyUpdate: $a")
             onReturn()
         }
     }
 
-    fun societyInfo(societyId: Int, onReturn: CoroutineScope.(ReturnObjectData<Society>) -> Unit) {
+    fun societyInfo(
+        societyId: Int,
+        onError: (String) -> Unit = {},
+        onReturn: CoroutineScope.(ReturnObjectData<Society>) -> Unit,
+    ) {
         viewModelScope.launch {
             val a = apiRepository.societyInfo(
                 societyId = societyId,
                 cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
+                authUserId = loginToken.data!!.userId,
+                onError = onError
             )
             onReturn(a)
         }

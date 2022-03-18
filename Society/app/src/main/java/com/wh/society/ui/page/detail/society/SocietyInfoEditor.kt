@@ -1,6 +1,5 @@
 package com.wh.society.ui.page.detail.society
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,15 +24,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.wh.society.api.data.ReturnListData
-import com.wh.society.api.data.ReturnObjectData
 import com.wh.society.api.data.society.Society
 import com.wh.society.api.data.society.SocietyPicture
-import com.wh.society.api.data.user.UserInfo
-import com.wh.society.api.data.user.UserPicture
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
-import com.wh.society.typeExt.firstOrDefault
 import com.wh.society.ui.componment.GlobalScaffold
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -65,14 +61,34 @@ fun SocietyInfoEditor(requestHolder: RequestHolder) {
                     college = tempSociety.college,
                     bbsName = tempSociety.bbsName,
                     bbsDescribe = tempSociety.bbsDescribe,
-                    iconUrl = tempSociety.iconUrl
-                ) {
-                    requestHolder.apiViewModel.societyInfo(tempSociety.id){
-                        requestHolder.trans.society = it.notNullOrBlank(Society())
+                    iconUrl = tempSociety.iconUrl,
+                    onError = {
+                        requestHolder.coroutineScope.launch {
+                            requestHolder.toast.toast(it)
+                        }
+                    },
+                    onReturn = {
+                        requestHolder.apiViewModel.societyInfo(tempSociety.id,
+                            onError = {
+                                requestHolder.coroutineScope.launch {
+                                    requestHolder.toast.toast(it)
+                                }
+                            },
+                            onReturn = {
+                                requestHolder.trans.society = it.notNullOrBlank(Society())
+                            }
+                        )
+                        requestHolder.apiViewModel.societyList(
+                            onError = {
+                                requestHolder.coroutineScope.launch {
+                                    requestHolder.toast.toast(it)
+                                }
+                            }
+                        )
+                        requestHolder.globalNav.goBack()
                     }
-                    requestHolder.apiViewModel.societyList()
-                    requestHolder.globalNav.goBack()
-                }
+
+                )
             }) {
                 Icon(imageVector = Icons.Default.Check, contentDescription = "")
             }

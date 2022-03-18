@@ -43,6 +43,7 @@ interface RequestHolder {
 
     val alert: AlertRequestCompact
     val imagePicker: ImagePickerRequest
+    val toast: ToastRequest
 
     val myContentResolver: ContentResolver
     val markdown: Markwon
@@ -57,7 +58,7 @@ interface RequestHolder {
                 settingStore.password
             ) { loginReturn ->
 
-                sioService.start(loginReturn.userId,loginReturn.cookieToken)
+                sioService.start(loginReturn.userId, loginReturn.cookieToken)
 
                 apiViewModel.userInfo { userInfo ->
 
@@ -69,9 +70,13 @@ interface RequestHolder {
                     }
 
                 }
-                apiViewModel.societyList()
+                apiViewModel.societyList(onError = {
+                })
                 apiViewModel.picList()
             }
+        } else {
+            toast.toast("请输入 手机号/邮箱 和 密码")
+
         }
     }
 
