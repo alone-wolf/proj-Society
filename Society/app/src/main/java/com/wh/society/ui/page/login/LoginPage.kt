@@ -31,7 +31,7 @@ fun LoginPage(requestHolder: RequestHolder) {
     }
 
     var userRegisterAllow by remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
     LaunchedEffect(Unit) {

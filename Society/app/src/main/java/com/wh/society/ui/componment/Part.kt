@@ -71,33 +71,34 @@ fun MinePageTopInfoCard(requestHolder: RequestHolder) {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 10.dp)
                 ) {
+                    val userInfo = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo())
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "姓名: ")
-                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).name)
+                        Text(text = userInfo.name)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "学号: ")
-                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).studentNumber)
+                        Text(text = userInfo.studentNumber)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "邮箱: ")
-                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).email)
+                        Text(text = userInfo.email)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(text = "电话: ")
-                        Text(text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).phone)
+                        Text(text = userInfo.phone)
                     }
                 }
             }

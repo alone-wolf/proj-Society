@@ -381,6 +381,19 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         return "failed"
     }
 
+    suspend fun societyBBSPostReplyDelete(
+        postReplyId: Int,
+        cookieToken: String,
+        authUserId: Int
+    ): String {
+        try {
+            return serverApi.societyBBSPostReplyDelete(postReplyId, cookieToken, authUserId)
+        } catch (e: Exception) {
+            Log.e(TAG, "societyBBSPostReplyDelete: ${e.localizedMessage}")
+        }
+        return "failed"
+    }
+
     suspend fun societyChatInnerList(
         societyId: Int,
         cookieToken: String,

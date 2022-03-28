@@ -24,6 +24,8 @@ const collegeRouter = require("./routes/college/router");
 app.use("/college", collegeRouter.apiRouter);
 const adminRouter = require("./routes/admin/router");
 app.use("/admin", adminRouter.apiRouter);
+const allRouter = require("./routes/all/router");
+app.use('/all', allRouter.apiRouter);
 
 app.use("/", express.static(path.join(__dirname, "public")));
 

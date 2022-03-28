@@ -100,7 +100,14 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
                 itemContent = { item ->
                     PostReplyItem(
                         requestHolder = requestHolder,
-                        postReply = item
+                        postReply = item,
+                        onItemDeleteDone = {
+                            requestHolder.trans.postId.let {
+                                requestHolder.apiViewModel.societyBBSPostReplyList(it) { a ->
+                                    postReplyList = a
+                                }
+                            }
+                        }
                     )
                 })
 

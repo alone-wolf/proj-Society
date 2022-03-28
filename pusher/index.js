@@ -79,7 +79,7 @@ io.on("connection", (socket) => {
                 // post-created
 
                 axios.post(
-                    'http://127.0.0.1:5001/user/room/info',
+                    'http://127.0.0.1:5100/user/room/info',
                     { userId }
                 ).then(res => {
                     if (res.status != 200) {

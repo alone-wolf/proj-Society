@@ -9,6 +9,7 @@ import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserChatPrivate
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.api.data.user.UserPicture
+import com.wh.society.navigation.GlobalNavPage
 import okhttp3.MultipartBody
 import okio.FileNotFoundException
 import retrofit2.Retrofit
@@ -46,6 +47,49 @@ interface ServerApi {
                 .create(ServerApi::class.java)
         }
     }
+
+    @POST("/all/user")
+    suspend fun allUser(): ReturnListData<UserInfo>
+
+    @POST("/all/user/pic")
+    suspend fun allUserPic(): ReturnListData<UserPicture>
+
+    @POST("/all/society")
+    suspend fun allSociety(): ReturnListData<Society>
+
+    @POST("/all/post")
+    suspend fun allPost(): ReturnListData<Post>
+
+    @POST("/all/post/reply")
+    suspend fun allPostReply(): ReturnListData<PostReply>
+
+    @POST("/all/society/pic")
+    suspend fun allSocietyPic(): ReturnListData<SocietyPicture>
+
+    @POST("/all/society/member")
+    suspend fun allSocietyMember(): ReturnListData<SocietyMember>
+
+    @POST("/all/society/member/request")
+    suspend fun allSocietyMemberRequest(): ReturnListData<SocietyMemberRequest>
+
+    @POST("/all/society/activity")
+    suspend fun allSocietyActivity(): ReturnListData<SocietyActivity>
+
+    @POST("/all/society/activity/member/request")
+    suspend fun allSocietyActivityMemberRequest(): ReturnListData<SocietyActivityRequest>
+
+    @POST("/all/society/activity/member")
+    suspend fun allSocietyActivityMember(): ReturnListData<SocietyActivityMember>
+
+    @POST("/all/society/chat/inner")
+    suspend fun allSocietyChatInner():ReturnListData<SocietyChatMessage>
+
+    @POST("/all/society/notice")
+    suspend fun allSocietyNotice():ReturnListData<SocietyNotice>
+
+    @POST("/all/user/chat/private")
+    suspend fun allUserChatPrivate():ReturnListData<UserChatPrivate>
+
 
     // /society
 //    @FormUrlEncoded
@@ -161,6 +205,14 @@ interface ServerApi {
         @Field("deviceName") deviceName: String,
         @Header("cookieToken") cookieToken: String,
         @Header("authUserId") authUserId: Int,
+    ): String
+
+    @FormUrlEncoded
+    @POST("/society/bbs/post/reply/delete")
+    suspend fun societyBBSPostReplyDelete(
+        @Field("postReplyId") postReplyId: Int,
+        @Header("cookieToken") cookieToken: String,
+        @Header("authUserId") authUserId: Int
     ): String
 
     // /society/chat/inner

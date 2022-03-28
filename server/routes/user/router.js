@@ -11,6 +11,25 @@ const PostReply = require("../../model/post_reply");
 const SocietyJoinRequest = require("../../model/society_member_request");
 const BBSUserWatch = require("../../model/bbs_user_watch");
 
+
+// apiRouter.get("/list", (req, res, next) => {
+//   User.findAll().then(d => {
+//     res.json(STATUS.STATUS_200(d));
+//   }).catch((e) => {
+//     console.log(e);
+//     res.status(500).json(STATUS.STATUS_500);
+//   });
+// });
+
+apiRouter.post("/list", (req, res, next) => {
+  User.findAll().then(d => {
+    res.json(STATUS.STATUS_200(d));
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).json(STATUS.STATUS_500);
+  });
+});
+
 // the feature of login is done
 // user's basic info
 apiRouter.post("/info", authMiddleware.checkCookieToken, (req, res, next) => {

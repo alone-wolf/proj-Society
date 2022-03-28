@@ -1,9 +1,6 @@
 package com.wh.society.ui.page.detail.society.bbs
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
@@ -26,8 +23,8 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
         mutableStateOf(Post())
     }
 
-    LaunchedEffect(Unit){
-        requestHolder.apiViewModel.societyBBSPostById(requestHolder.trans.postId){
+    LaunchedEffect(Unit) {
+        requestHolder.apiViewModel.societyBBSPostById(requestHolder.trans.postId) {
             postData = it.notNullOrBlank(Post())
         }
     }
@@ -75,6 +72,34 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
             }
             Card(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            ) {
+                Box {
+                    var showDropDown by remember {
+                        mutableStateOf(false)
+                    }
+                    val map = mapOf(
+                        0 to "0：所有人可见",
+                        10 to "10：成员可见",
+                        100 to "100：管理可见"
+                    )
+                    DropdownMenu(
+                        expanded = showDropDown,
+                        onDismissRequest = { showDropDown = false }) {
+                        map.entries.forEach {
+                            DropdownMenuItem(onClick = { level = it.key }) {
+                                Text(text = it.value)
+                            }
+                        }
+                    }
+                    TextButton(onClick = { showDropDown = true }) {
+                        Text(text = map[level].toString())
+                    }
+                }
+            }
+            Card(
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
@@ -86,6 +111,7 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
                         .padding(16.dp)
                 )
             }
+
         }
     }
 }

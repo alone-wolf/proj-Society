@@ -8,11 +8,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +33,7 @@ import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
@@ -77,7 +76,7 @@ fun ChatMessageItem(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (isMe) Arrangement.End else Arrangement.Start
     ) {
-        if (isMe){
+        if (isMe) {
             Column(horizontalAlignment = Alignment.End) {
                 Text(text = "${chatMessage.createTimestamp}·${chatMessage.username}")
                 Text(text = chatMessage.message, modifier = Modifier.height(40.dp))
@@ -94,7 +93,7 @@ fun ChatMessageItem(
                 .clip(CircleShape),
             contentScale = ContentScale.Crop
         )
-        if (!isMe){
+        if (!isMe) {
             Column(horizontalAlignment = Alignment.Start) {
                 Text(text = "${chatMessage.username}·${chatMessage.createTimestamp}")
                 Text(text = chatMessage.message, modifier = Modifier.height(40.dp))
@@ -347,20 +346,6 @@ fun PostItem(
                 ) {
                     Text(text = post.title, fontWeight = FontWeight.Bold)
                     Text(text = post.post, maxLines = postMaxLine)
-//                    AndroidView(
-//                        factory = { ctx ->
-//                            TextView(ctx).apply {
-//                                this.post {
-//                                    requestHolder.markdown.setMarkdown(
-//                                        this,
-//                                        post.post
-//                                    )
-//                                }
-//                            }
-//                        }, modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(16.dp)
-//                    )
                 }
             }
         }
@@ -374,7 +359,8 @@ fun PostReplyItem(
     postReply: PostReply,
     modifier: Modifier = Modifier,
     postMaxLine: Int = 5,
-    ignoreClick: Boolean = false
+    ignoreClick: Boolean = false,
+    onItemDeleteDone: CoroutineScope.() -> Unit
 ) {
     Card(
         onClick = {
@@ -406,8 +392,7 @@ fun PostReplyItem(
                         contentScale = ContentScale.Crop
                     )
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.weight(0.7F)
                     ) {
                         Text(text = postReply.username)
                         Text(
@@ -416,13 +401,23 @@ fun PostReplyItem(
                             modifier = Modifier.alpha(0.7F)
                         )
                     }
+                    if (requestHolder.apiViewModel.userInfo.data!!.id == postReply.userId) {
+                        IconButton(onClick = {
+                            requestHolder.apiViewModel.societyBBSPostReplyDelete(
+                                postReply.id,
+                                onItemDeleteDone
+                            )
+//                            requestHolder.apiViewModel.
+                        }) {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+                        }
+                    }
                 }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 10.dp)
                 ) {
-//                    Text(text = postReply.reply, fontWeight = FontWeight.Bold)
                     Text(text = postReply.reply, maxLines = postMaxLine)
                 }
             }

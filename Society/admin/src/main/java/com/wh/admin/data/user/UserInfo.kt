@@ -1,12 +1,12 @@
-package com.wh.society.api.data.user
+package com.wh.admin.data.user
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.wh.society.api.ServerApi
+import com.wh.admin.componment.ServerApi
 import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.api.data.shadow.UserInfoShadow
 import com.wh.society.api.data.impl.IContain
+import org.json.JSONObject
 
 
 @Entity
@@ -39,6 +39,19 @@ open class UserInfo : IContain,RealIconUrl {
             this.updateTimestamp = this@UserInfo.updateTimestamp
         }
     }
+
+//    fun toJSONObject(): JSONObject {
+//        val j = JSONObject()
+//        j.put("username",username)
+//        j.put("email",email)
+//        j.put("studentNumber",studentNumber)
+//        j.put("iconUrl",iconUrl)
+//        j.put("phone",username)
+//        j.put("name",name)
+//        j.put("college",college)
+//        j.put("password",password)
+//        return j
+//    }
 
     fun shadow(): UserInfoShadow {
         return UserInfoShadow.fromUserInfo(this)

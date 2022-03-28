@@ -345,6 +345,8 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         }
     }
 
+//    fun societyBBS
+
     fun societyBBSPostReplyCreate(
         societyId: Int,
         postId: Int,
@@ -360,6 +362,17 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
                 userId = userId,
                 reply = reply,
                 deviceName = deviceName,
+                cookieToken = loginToken.data!!.cookieToken,
+                authUserId = userInfo.data!!.id
+            )
+            onReturn()
+        }
+    }
+
+    fun societyBBSPostReplyDelete(postReplyId: Int, onReturn: CoroutineScope.() -> Unit) {
+        viewModelScope.launch {
+            val a = apiRepository.societyBBSPostReplyDelete(
+                postReplyId = postReplyId,
                 cookieToken = loginToken.data!!.cookieToken,
                 authUserId = userInfo.data!!.id
             )

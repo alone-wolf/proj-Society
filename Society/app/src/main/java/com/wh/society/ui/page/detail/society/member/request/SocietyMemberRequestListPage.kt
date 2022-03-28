@@ -1,16 +1,15 @@
 package com.wh.society.ui.page.detail.society.member.request
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.wh.society.api.data.society.SocietyMemberRequest
 import com.wh.society.api.data.society.SocietyNotice
 import com.wh.society.componment.RequestHolder
@@ -34,7 +33,32 @@ fun SocietyMemberRequestListPage(requestHolder: RequestHolder) {
                     items = requestHolder.trans.societyMemberRequestList.data.asReversed(),
                     key = { item: SocietyMemberRequest -> item.id },
                     itemContent = { it ->
-                        Text(text = it.toString())
+                        Card(modifier = Modifier.padding(vertical = 16.dp, horizontal = 10.dp)) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp, horizontal = 10.dp)
+                            ) {
+                                Column {
+                                    Text(text = it.request)
+                                    Row {
+                                        if (it.isJoin) {
+                                            Text(text = "加入申请 ")
+                                        } else {
+                                            Text(text = "退出申请 ")
+                                        }
+                                        if (it.isDealDone) {
+                                            Text(text = "已处理 ")
+                                            if (it.isPass) {
+                                                Text(text = "已通过")
+                                            } else {
+                                                Text(text = "未通过")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 )
                 empty(requestHolder.trans.societyMemberRequestList)

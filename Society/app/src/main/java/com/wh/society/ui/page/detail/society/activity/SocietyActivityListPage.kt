@@ -1,16 +1,17 @@
 package com.wh.society.ui.page.detail.society.activity
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.society.SocietyActivity
 import com.wh.society.componment.RequestHolder
@@ -36,18 +37,51 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
         requestHolder = requestHolder,
         // 管理员增加一个 加号 fab
         fab = {
+            var activityTitle by remember {
+                mutableStateOf("")
+            }
+            var activity by remember {
+                mutableStateOf("")
+            }
             FloatingActionButton(onClick = {
-                requestHolder.apiViewModel.societyActivityCreate(
-                    societyId = requestHolder.trans.society.id,
-                    deviceName = requestHolder.deviceName,
-                    title = System.currentTimeMillis().toString(),
-                    activity = System.currentTimeMillis().toString(),
-                    level = 11
-                ) {
-                    requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { it ->
-                        activityList = it
-                    }
-                }
+                requestHolder.alert.alert(
+                    title = "New Activity",
+                    content = {
+
+                        Column {
+                            TextField(
+                                value = activityTitle,
+                                onValueChange = { activityTitle = it },
+                                label = { Text(text = "Activity Title") }
+                            )
+                            TextField(
+                                value = activity,
+                                onValueChange = { activity = it },
+                                label = { Text(text = "Content") }
+                            )
+                            Box {
+
+                            }
+                        }
+                    },
+                    onOk = {
+
+                        requestHolder.apiViewModel.societyActivityCreate(
+                            societyId = requestHolder.trans.society.id,
+                            deviceName = requestHolder.deviceName,
+                            title = activityTitle,
+                            activity = activity,
+                            level = 10
+                        ) {
+                            requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { it ->
+                                activityList = it
+                            }
+                        }
+
+                    },
+                    onCancel = {}
+                )
+
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "")
             }
@@ -61,17 +95,36 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
                     itemContent = { it ->
                         Card(
                             onClick = {
-                                requestHolder.globalNav.goto(GlobalNavPage.SocietyActivityDetailPage,it)
+                                requestHolder.globalNav.goto(
+                                    GlobalNavPage.SocietyActivityDetailPage,
+                                    it
+                                )
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp)
                                 .padding(vertical = 1.dp)
                         ) {
-                            Text(
-                                text = it.title,
-                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
-                            )
+                            Column(
+                                modifier = Modifier.padding(
+                                    vertical = 10.dp,
+                                    horizontal = 16.dp
+                                )
+                            ) {
+                                Row(verticalAlignment = Alignment.Bottom) {
+                                    Text(
+                                        text = it.title,
+                                        fontSize = 20.sp,
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                    Text(
+                                        text = it.updateTimestamp,
+                                        fontWeight = FontWeight.Light,
+                                        fontSize = 14.sp
+                                    )
+                                }
+                                Text(text = it.activity)
+                            }
                         }
                     }
                 )

@@ -1,11 +1,12 @@
 package com.wh.society.ui.page.detail.society.activity
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.society.SocietyActivityRequest
 import com.wh.society.componment.RequestHolder
@@ -52,8 +53,31 @@ fun SocietyActivityRequestListPage(requestHolder: RequestHolder) {
                     items = requestList.data,
                     key = { item: SocietyActivityRequest -> item.id },
                     itemContent = { it ->
-                        Card(onClick = { /*TODO*/ }) {
-                            Text(text = it.toString())
+                        Card(modifier = Modifier.padding(vertical = 16.dp, horizontal = 10.dp)) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp, horizontal = 10.dp)
+                            ) {
+                                Column {
+                                    Text(text = "${it.username} ${it.activity}")
+                                    Row {
+                                        if (it.isJoin) {
+                                            Text(text = "加入申请 ")
+                                        } else {
+                                            Text(text = "退出申请 ")
+                                        }
+                                        if (it.isDealDone) {
+                                            Text(text = "已处理 ")
+                                            if (it.isAgreed) {
+                                                Text(text = "已通过")
+                                            } else {
+                                                Text(text = "未通过")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 )
