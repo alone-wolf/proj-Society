@@ -68,15 +68,15 @@ fun SingleLineText(text: String, modifier: Modifier = Modifier) {
 class MainActivity : ComponentActivity() {
 
     sealed class NavDes(val route: String, val title: String) {
-        object Main : NavDes("main", "Main")
-        object UserDetail : NavDes("user-detail", "User Detail")
-        object UserPostList : NavDes("user-post-list", "User Post List")
-        object UserReplyList : NavDes("user-reply-list", "User Reply List")
-        object UserSocietyMemberList : NavDes("user-society-member-list", "User Society Member")
-        object SocietyDetail : NavDes("society-detail", "Society Detail")
-        object PostDetail : NavDes("post-detail", "Post Detail")
-        object UserCreator : NavDes("user-creator", "User Creator")
-        object SocietyCreator : NavDes("society-creator", "Society Creator")
+        object Main : NavDes("main", "社团·管理端")
+        object UserDetail : NavDes("user-detail", "用户详情")
+        object UserPostList : NavDes("user-post-list", "用户发帖列表")
+        object UserReplyList : NavDes("user-reply-list", "用户回复列表")
+        object UserSocietyMemberList : NavDes("user-society-member-list", "用户加入的社团")
+        object SocietyDetail : NavDes("society-detail", "社团详情")
+        object PostDetail : NavDes("post-detail", "帖子详情")
+        object UserCreator : NavDes("user-creator", "创建用户")
+        object SocietyCreator : NavDes("society-creator", "创建社团")
 
         companion object {
 
@@ -345,7 +345,9 @@ fun UserDetailPage(activity: MainActivity) {
                         .padding(start = 8.dp, bottom = 30.dp)
                 ) {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+
+                        },
                         modifier = Modifier
                             .shadow(3.dp, CircleShape)
                             .background(Color.Green, CircleShape)
@@ -354,7 +356,9 @@ fun UserDetailPage(activity: MainActivity) {
                     }
                     Spacer(modifier = Modifier.size(8.dp))
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                  //
+                        },
                         modifier = Modifier
                             .shadow(3.dp, CircleShape)
                             .background(Color.Red, CircleShape)
