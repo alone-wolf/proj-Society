@@ -3,13 +3,15 @@ package com.wh.admin.data.society
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import com.wh.admin.componment.ServerApi
+import com.wh.admin.data.impl.IRequestBody
 import com.wh.admin.data.society.bbs.Post
 import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.api.data.shadow.SocietyShadow
 import com.wh.society.api.data.impl.IContain
+import org.json.JSONObject
 
-open class Society : IContain, RealIconUrl {
+open class Society : IContain, RealIconUrl,IRequestBody {
     var id: Int = 0
     open var name: String = ""
     open var openTimestamp: String = ""
@@ -25,9 +27,17 @@ open class Society : IContain, RealIconUrl {
         get() = field.ifBlank { "未知" }
 
 
-    val posts by mutableStateOf(emptyList<Post>())
-    fun getPost(serverApi: ServerApi) {
-
+    override fun toJSONObject(): JSONObject {
+        val a = JSONObject()
+        a.put("name", name)
+        a.put("openTimestamp", openTimestamp)
+        a.put("describe", describe)
+        a.put("college", college)
+        a.put("bbsName", bbsName)
+        a.put("bbsName", bbsName)
+        a.put("bbsDescribe", bbsDescribe)
+        a.put("iconUrl", iconUrl)
+        return a
     }
 
 

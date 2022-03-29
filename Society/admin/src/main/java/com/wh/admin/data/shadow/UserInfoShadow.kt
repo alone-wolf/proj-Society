@@ -1,8 +1,9 @@
-package com.wh.society.api.data.shadow
+package com.wh.admin.data.shadow
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.colorResource
 import com.wh.admin.data.user.UserInfo
 
 class UserInfoShadow : UserInfo() {
@@ -14,6 +15,16 @@ class UserInfoShadow : UserInfo() {
     override var name: String by mutableStateOf(super.name)
     override var college: String by mutableStateOf(super.college)
     override var password:String by mutableStateOf(super.password)
+
+    fun clear(){
+        username = ""
+        email = ""
+        iconUrl = ""
+        phone = ""
+        name = ""
+        college = ""
+        password = ""
+    }
 
     companion object {
         fun fromUserInfo(u: UserInfo): UserInfoShadow {

@@ -36,6 +36,26 @@ class ServerDataViewModel : ViewModel() {
         }
     }
 
+    suspend fun adminUserCreate(userInfo: UserInfo,onReturn: () -> Unit,onError: (String) -> Unit){
+        try {
+            val a = serverApi.adminUserCreate(userInfo.toRequestBody())
+            onReturn()
+        }catch (e:Exception){
+            e.printStackTrace()
+            onError(e.stackTraceToString())
+        }
+    }
+
+    suspend fun adminUserDelete(userId: Int, onReturn: () -> Unit, onError: (String) -> Unit) {
+        try {
+            val a = serverApi.adminUserDelete(userId)
+            onReturn()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(e.stackTraceToString())
+        }
+    }
+
     suspend fun getAllUserPost(userId: Int, onError: (String) -> Unit): List<Post> {
         try {
             return serverApi.allUserPost(userId).data
@@ -46,7 +66,7 @@ class ServerDataViewModel : ViewModel() {
         return emptyList()
     }
 
-    suspend fun getAllUserReply(userId: Int,onError: (String) -> Unit): List<PostReply> {
+    suspend fun getAllUserReply(userId: Int, onError: (String) -> Unit): List<PostReply> {
         try {
             return serverApi.allUserReply(userId).data
         } catch (e: Exception) {
@@ -55,7 +75,11 @@ class ServerDataViewModel : ViewModel() {
         }
         return emptyList()
     }
-    suspend fun getAllUserSocietyMember(userId: Int,onError: (String) -> Unit): List<SocietyMember> {
+
+    suspend fun getAllUserSocietyMember(
+        userId: Int,
+        onError: (String) -> Unit
+    ): List<SocietyMember> {
         try {
             return serverApi.allUserSocietyMember(userId).data
         } catch (e: Exception) {

@@ -1,17 +1,18 @@
 package com.wh.admin.data.user
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.wh.admin.componment.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
-import com.wh.society.api.data.shadow.UserInfoShadow
+import com.wh.admin.data.impl.IJsonObject
+import com.wh.admin.data.impl.IRequestBody
+import com.wh.admin.data.shadow.UserInfoShadow
 import com.wh.society.api.data.impl.IContain
+import com.wh.society.api.data.impl.RealIconUrl
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
 
-@Entity
-open class UserInfo : IContain,RealIconUrl {
-    @PrimaryKey(autoGenerate = true)
+open class UserInfo : IContain, RealIconUrl, IRequestBody {
     var id: Int = 0
     open var username: String = ""
     open var email: String = ""
@@ -20,7 +21,7 @@ open class UserInfo : IContain,RealIconUrl {
     open var phone: String = ""
     open var name: String = ""
     open var college: String = ""
-    open var password:String = ""
+    open var password: String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
 
@@ -40,18 +41,18 @@ open class UserInfo : IContain,RealIconUrl {
         }
     }
 
-//    fun toJSONObject(): JSONObject {
-//        val j = JSONObject()
-//        j.put("username",username)
-//        j.put("email",email)
-//        j.put("studentNumber",studentNumber)
-//        j.put("iconUrl",iconUrl)
-//        j.put("phone",username)
-//        j.put("name",name)
-//        j.put("college",college)
-//        j.put("password",password)
-//        return j
-//    }
+    override fun toJSONObject(): JSONObject {
+        val a = JSONObject()
+        a.put("username", username)
+        a.put("email", email)
+        a.put("studentNumber", studentNumber)
+        a.put("iconUrl", iconUrl)
+        a.put("phone", phone)
+        a.put("name", name)
+        a.put("college", college)
+        a.put("password", password)
+        return a
+    }
 
     fun shadow(): UserInfoShadow {
         return UserInfoShadow.fromUserInfo(this)

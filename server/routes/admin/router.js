@@ -34,6 +34,16 @@ apiRouter.post("/user/create", (req, res, next) => {
     });
 });
 
+apiRouter.post("/user/delete", (req, res, next) => {
+    let userId = req.body.userId;
+    User.destroy({ where: { id: userId } }).then(d => {
+        res.json(STATUS.STATUS_200(d));
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500);
+    });
+});
+
 apiRouter.post("/society/list", (req, res, next) => {
     Society.findAll().then(d => {
         res.json(STATUS.STATUS_200(d));

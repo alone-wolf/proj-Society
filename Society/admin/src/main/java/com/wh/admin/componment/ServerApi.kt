@@ -11,6 +11,7 @@ import com.wh.admin.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserChatPrivate
 import com.wh.admin.data.user.UserInfo
 import com.wh.admin.data.user.UserPicture
+import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -22,7 +23,6 @@ import retrofit2.http.POST
 
 interface ServerApi {
     companion object {
-        //        private const val host = "39.103.143.157"
         private const val host = "192.168.50.115"
         private const val ssl = false
         private const val port = 5100
@@ -53,6 +53,12 @@ interface ServerApi {
 
     @POST("/all/user")
     suspend fun allUser(): ReturnListData<UserInfo>
+
+    @FormUrlEncoded
+    @POST("/admin/user/delete")
+    suspend fun adminUserDelete(
+        @Field("userId") userId: Int
+    ): String
 
     @FormUrlEncoded
     @POST("/all/user/post")
@@ -93,7 +99,7 @@ interface ServerApi {
 
 
     @POST("/admin/user/create")
-    suspend fun adminUserCreate(@Body userInfo: UserInfo): String
+    suspend fun adminUserCreate(@Body userInfo: RequestBody): String
 
     @POST("/admin/user/register/allow")
     suspend fun adminUserRegisterAllow(): String
