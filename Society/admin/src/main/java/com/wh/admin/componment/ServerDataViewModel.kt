@@ -18,12 +18,16 @@ class ServerDataViewModel : ViewModel() {
     var allUser by mutableStateOf(emptyList<UserInfo>())
     var allSociety by mutableStateOf(emptyList<Society>())
 
+    val dealWithException: (Exception, (String) -> Unit) -> Unit = {e,su->
+        e.printStackTrace()
+        su(e.localizedMessage!!)
+    }
+
     suspend fun getAllUser(onError: (String) -> Unit) {
         try {
             allUser = serverApi.allUser().data
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
     }
 
@@ -31,101 +35,115 @@ class ServerDataViewModel : ViewModel() {
         try {
             allSociety = serverApi.allSociety().data
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
     }
 
-    suspend fun adminUserCreate(userInfo: UserInfo,onReturn: () -> Unit,onError: (String) -> Unit){
+    suspend fun adminUserCreate(
+        userInfo: UserInfo,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            val a = serverApi.adminUserCreate(userInfo.toRequestBody())
-            onReturn()
-        }catch (e:Exception){
-            e.printStackTrace()
-            onError(e.stackTraceToString())
-        }
-    }
-
-    suspend fun adminUserDelete(userId: Int, onReturn: () -> Unit, onError: (String) -> Unit) {
-        try {
-            val a = serverApi.adminUserDelete(userId)
+            serverApi.adminUserCreate(userInfo.toRequestBody())
             onReturn()
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
     }
 
-    suspend fun getAllUserPost(userId: Int, onError: (String) -> Unit): List<Post> {
+    suspend fun adminUserDelete(
+        userId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.allUserPost(userId).data
+            serverApi.adminUserDelete(userId)
+            onReturn()
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
-        return emptyList()
     }
 
-    suspend fun getAllUserReply(userId: Int, onError: (String) -> Unit): List<PostReply> {
+    suspend fun getAllUserPost(
+        userId: Int,
+        onReturn: (List<Post>) -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.allUserReply(userId).data
+            onReturn(serverApi.allUserPost(userId).data)
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
-        return emptyList()
+    }
+
+    suspend fun getAllUserReply(
+        userId: Int,
+        onReturn: (List<PostReply>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            onReturn(serverApi.allUserReply(userId).data)
+        } catch (e: Exception) {
+            dealWithException(e,onError)
+        }
     }
 
     suspend fun getAllUserSocietyMember(
         userId: Int,
+        onReturn: (List<SocietyMember>) -> Unit,
         onError: (String) -> Unit
-    ): List<SocietyMember> {
+    ) {
         try {
-            return serverApi.allUserSocietyMember(userId).data
+            onReturn(serverApi.allUserSocietyMember(userId).data)
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
-        return emptyList()
     }
 
-    suspend fun getAllSocietyPost(societyId: Int, onError: (String) -> Unit): List<Post> {
+    suspend fun getAllSocietyPost(
+        societyId: Int,
+        onReturn: (List<Post>) -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.allSocietyPost(societyId).data
+            onReturn(serverApi.allSocietyPost(societyId).data)
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
-        return emptyList()
     }
 
-    suspend fun getAllPostReply(postId: Int, onError: (String) -> Unit): List<PostReply> {
+    suspend fun getAllPostReply(
+        postId: Int,
+        onReturn: (List<PostReply>) -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.allPostReply(postId).data
+            onReturn(serverApi.allPostReply(postId).data)
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
-        return emptyList()
     }
 
-    suspend fun adminUserRegisterAllow(onError: (String) -> Unit): String {
+    suspend fun adminUserRegisterAllow(
+        onReturn: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.adminUserRegisterAllow()
+            onReturn(serverApi.adminUserRegisterAllow())
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
-        return ""
     }
 
-    suspend fun adminUserRegisterAllowSwitch(onError: (String) -> Unit): String {
+    suspend fun adminUserRegisterAllowSwitch(
+        onReturn: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.adminUserRegisterAllowSwitch()
+            onReturn(serverApi.adminUserRegisterAllowSwitch())
         } catch (e: Exception) {
-            e.printStackTrace()
-            onError(e.stackTraceToString())
+            dealWithException(e,onError)
         }
-        return ""
     }
 }

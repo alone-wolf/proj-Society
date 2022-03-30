@@ -1,9 +1,10 @@
 package com.wh.admin.data.society.bbs
 
 import com.wh.admin.componment.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.admin.data.impl.IRealIconUrl
+import com.wh.admin.data.impl.IZTimestamp
 
-class Post:RealIconUrl {
+class Post: IRealIconUrl ,IZTimestamp{
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
@@ -14,8 +15,8 @@ class Post:RealIconUrl {
     var level: Int = 0
     var title: String = ""
     var post: String = ""
-    var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
 
     override val realIconUrl: String
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())

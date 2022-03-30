@@ -7,6 +7,9 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.wh.admin.*
+import com.wh.admin.ui.pager.SettingOptionList
+import com.wh.admin.ui.pager.SocietyList
+import com.wh.admin.ui.pager.UserList
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable

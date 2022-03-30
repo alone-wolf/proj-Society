@@ -1,4 +1,4 @@
-package com.wh.admin
+package com.wh.admin.ui.pager
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -22,7 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.wh.admin.MainActivity
+import com.wh.admin.corner8
 import com.wh.admin.ext.borderButton
+import com.wh.admin.listItemModifierWithPadding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -35,8 +38,7 @@ fun SettingOptionList(activity: MainActivity) {
 
     LaunchedEffect(Unit) {
         delay(500)
-        allowUserRegister = activity.serverDataViewModel.adminUserRegisterAllow() {}
-            .contentEquals("{\"code\":200,\"message\":\"OK\",\"data\":{\"userRegisterAllow\":true}}")
+        activity.http.adminUserRegisterAllow { allowUserRegister = it }
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -49,9 +51,7 @@ fun SettingOptionList(activity: MainActivity) {
                     .clip(corner8)
                     .clickable {
                         activity.coroutineScope.launch {
-                            allowUserRegister = activity.serverDataViewModel
-                                .adminUserRegisterAllowSwitch { }
-                                .contentEquals("{\"code\":200,\"message\":\"OK\",\"data\":{\"userRegisterAllow\":true}}")
+                            activity.http.adminUserRegisterAllowSwitch { allowUserRegister = it }
                         }
                     }
                     .border(width = 2.dp, bc, corner8)

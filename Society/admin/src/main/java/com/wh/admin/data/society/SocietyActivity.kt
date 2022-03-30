@@ -1,6 +1,8 @@
-package com.wh.society.api.data.society
+package com.wh.admin.data.society
 
-class SocietyActivity {
+import com.wh.admin.data.impl.IZTimestamp
+
+class SocietyActivity:IZTimestamp {
     var id:Int = 0
     var societyId:Int = 0
     var societyName:String = ""
@@ -8,8 +10,8 @@ class SocietyActivity {
     var level:Int = 0
     var title:String = ""
     var activity:String = ""
-    var createTimestamp:String = ""
-    var updateTimestamp:String = ""
+    override var createTimestamp:String = ""
+    override var updateTimestamp:String = ""
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

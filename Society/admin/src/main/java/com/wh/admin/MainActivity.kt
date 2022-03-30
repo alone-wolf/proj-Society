@@ -1,8 +1,6 @@
 package com.wh.admin
 
-import android.graphics.Point
 import android.os.Bundle
-import android.view.Display
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -13,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
@@ -21,6 +18,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import com.google.accompanist.pager.*
+import com.wh.admin.componment.HttpRequest
+import com.wh.admin.componment.NavRequest
 import com.wh.admin.componment.ServerDataViewModel
 import com.wh.admin.data.society.Society
 import com.wh.admin.data.society.bbs.Post
@@ -29,7 +28,6 @@ import com.wh.admin.ext.NavHost
 import com.wh.admin.store.SettingStore
 import com.wh.admin.ui.theme.SocietyTheme
 import kotlinx.coroutines.CoroutineScope
-import kotlin.properties.Delegates
 
 val listItemModifierWithPadding =
     Modifier
@@ -38,9 +36,14 @@ val listItemModifierWithPadding =
 
 val corner8 = RoundedCornerShape(8.dp)
 
+
+
+
 class MainActivity : ComponentActivity() {
 
     private val TAG = "WH_"
+
+    val http by lazy { HttpRequest(this) }
 
     val coilImageLoader: ImageLoader by lazy {
         ImageLoader.Builder(this)
@@ -59,57 +62,13 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalPagerApi::class)
     lateinit var pagerState: PagerState
-
     lateinit var navController: NavHostController
 
     var selectedUserInfo by mutableStateOf(UserInfo())
     var selectedSociety by mutableStateOf(Society())
     var selectedPost by mutableStateOf(Post())
 
-    private fun NavHostController.goto(n: NavDes) {
-        this.navigate(n.route)
-    }
-
-    val navBack = {
-        navController.popBackStack()
-    }
-
-    val navToUserDetail = { u: UserInfo ->
-        selectedUserInfo = u
-        navController.goto(NavDes.UserDetail)
-    }
-
-    val navToUserPostList = {
-        navController.goto(NavDes.UserPostList)
-    }
-
-    val navToUserReplyList = {
-        navController.goto(NavDes.UserReplyList)
-    }
-
-    val navToUserSocietyMemberList = {
-        navController.goto(NavDes.UserSocietyMemberList)
-    }
-
-    val navToSocietyDetail = { s: Society ->
-        selectedSociety = s
-        navController.goto(NavDes.SocietyDetail)
-    }
-
-
-    val navToPostDetail = { p: Post ->
-        selectedPost = p
-        navController.goto(NavDes.PostDetail)
-    }
-
-    val navToUserCreator = {
-        navController.goto(NavDes.UserCreator)
-    }
-
-    val navToSocietyCreator = {
-        navController.goto(NavDes.SocietyCreator)
-    }
-
+    val nav by lazy { NavRequest(this) }
 
 
     @OptIn(
@@ -120,11 +79,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val defaultDisplay: Display = windowManager.defaultDisplay
-        val point = Point()
-        defaultDisplay.getSize(point)
-        val x: Int = point.x
-
         serverDataViewModel = ViewModelProvider(this)[ServerDataViewModel::class.java]
         settingStore = SettingStore(this)
 
@@ -134,8 +88,8 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
 
                     LaunchedEffect(Unit) {
-                        serverDataViewModel.getAllUser() {}
-                        serverDataViewModel.getAllSociety() {}
+                        http.getAllUser()
+                        http.getAllSociety()
                     }
 
                     scaffoldState = rememberScaffoldState()
@@ -158,26 +112,40 @@ class MainActivity : ComponentActivity() {
                         currentTitle = it
                     }
 
-
-
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         scaffoldState = scaffoldState,
-                        topBar = { TopAppBar(title = { Text(text = currentTitle) }) },
+                        topBar = {
+                            TopAppBar(
+                                title = { Text(text = currentTitle) },
+                                actions = {
+                                    if (pagerState.currentPage != 2){
+                                        IconButton(onClick = {
+                                            when(pagerState.currentPage){
+                                                0->{http.getAllUser()}
+                                                1->{http.getAllSociety()}
+                                            }
+                                        }) {
+                                            Icon(Icons.Default.Refresh, "")
+                                        }
+                                    }
+                                }
+                            )
+                        },
                         floatingActionButton = {
                             if (currentRoute == NavDes.Main.route) {
                                 if (pagerState.currentPage != 2) {
                                     FloatingActionButton(onClick = {
                                         when (pagerState.currentPage) {
-                                            0 -> navToUserCreator()
-                                            1 -> navToSocietyCreator()
+                                            0 -> nav.navToUserCreator()
+                                            1 -> nav.navToSocietyCreator()
                                         }
                                     }) {
                                         Icon(Icons.Default.Add, "")
                                     }
                                 }
                             }
-                        }
+                        },
                     ) {
 
                         NavHost(

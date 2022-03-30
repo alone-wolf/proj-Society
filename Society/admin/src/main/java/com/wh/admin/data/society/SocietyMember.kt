@@ -1,9 +1,10 @@
 package com.wh.admin.data.society
 
 import com.wh.admin.componment.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.admin.data.impl.IRealIconUrl
+import com.wh.admin.data.impl.IZTimestamp
 
-class SocietyMember :RealIconUrl{
+class SocietyMember : IRealIconUrl,IZTimestamp {
     var id:Int = 0
     var userId: Int = 0
     var societyId: Int = 0
@@ -11,8 +12,8 @@ class SocietyMember :RealIconUrl{
     var joinTimestamp: Long = 0L
     var username:String = ""
     var userIconUrl:String = ""
-    var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
 
     override val realIconUrl: String
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())

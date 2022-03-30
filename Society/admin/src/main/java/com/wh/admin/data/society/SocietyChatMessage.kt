@@ -1,6 +1,5 @@
 package com.wh.admin.data.society
 
-import com.wh.common.util.TimeUtils
 import com.wh.admin.data.impl.ChatMessage
 
 class SocietyChatMessage : ChatMessage {
@@ -11,7 +10,7 @@ class SocietyChatMessage : ChatMessage {
     override var userIconUrl: String = ""
     override var message: String = ""
     override var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var updateTimestamp: String = ""
 
 
     override fun equals(other: Any?): Boolean {

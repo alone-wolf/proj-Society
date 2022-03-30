@@ -23,7 +23,9 @@ fun UserPostListPage(activity: MainActivity) {
     }
 
     LaunchedEffect(Unit) {
-        posts = activity.serverDataViewModel.getAllUserPost(userInfo.id) {}
+        activity.http.getAllUserPost(userInfo.id) {
+            posts = it
+        }
     }
 
     LazyColumn(content = {
@@ -34,14 +36,14 @@ fun UserPostListPage(activity: MainActivity) {
                 Column(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        activity.navToPostDetail(it)
+                        activity.nav.navToPostDetail(it)
                     }
                     .padding(horizontal = 20.dp, vertical = 10.dp)) {
                     SingleLineText(text = "标题：${it.title}")
                     SingleLineText(text = "帖子内容：${it.post}")
                     SingleLineText(text = "社团名称：${it.societyName}")
-                    SingleLineText(text = "发帖时间：${it.createTimestamp}")
-                    SingleLineText(text = "更新时间：${it.updateTimestamp}")
+                    SingleLineText(text = "发帖时间：${it.createTSFmt()}")
+                    SingleLineText(text = "更新时间：${it.updateTSFmt()}")
                 }
             }
         )

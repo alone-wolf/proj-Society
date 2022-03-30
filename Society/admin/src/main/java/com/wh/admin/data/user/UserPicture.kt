@@ -1,15 +1,16 @@
 package com.wh.admin.data.user
 
 import com.wh.admin.componment.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.admin.data.impl.IRealIconUrl
+import com.wh.admin.data.impl.IZTimestamp
 
-class UserPicture : RealIconUrl {
+class UserPicture : IRealIconUrl,IZTimestamp {
     var id: Int = 0
     var userId: Int = 0
     var originalFilename: String = ""
     var newFilename: String = ""
-    var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
 
     override val realIconUrl
         get() = ServerApi.userPicUrl(newFilename)

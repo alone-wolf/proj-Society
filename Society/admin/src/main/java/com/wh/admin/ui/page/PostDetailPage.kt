@@ -24,7 +24,7 @@ fun PostDetailPage(activity: MainActivity) {
     }
 
     LaunchedEffect(Unit) {
-        replies = activity.serverDataViewModel.getAllPostReply(post.id) {}
+        activity.http.getAllPostReply(post.id) { replies = it }
     }
 
     LazyColumn(content = {
@@ -37,8 +37,8 @@ fun PostDetailPage(activity: MainActivity) {
                 SingleLineText(text = "标题：${post.title}")
                 SingleLineText(text = "帖子内容：${post.post}")
                 SingleLineText(text = "社团名称：${post.societyName}")
-                SingleLineText(text = "发帖时间：${post.createTimestamp}")
-                SingleLineText(text = "更新时间：${post.updateTimestamp}")
+                SingleLineText(text = "发帖时间：${post.createTSFmt()}")
+                SingleLineText(text = "更新时间：${post.updateTSFmt()}")
             }
         }
 
@@ -52,8 +52,8 @@ fun PostDetailPage(activity: MainActivity) {
                     .padding(horizontal = 20.dp, vertical = 10.dp)) {
                     SingleLineText(text = "回复内容：${it.reply}")
                     SingleLineText(text = "设备尾巴：${it.deviceName}")
-                    SingleLineText(text = "回复时间：${it.createTimestamp}")
-                    SingleLineText(text = "更新时间：${it.updateTimestamp}")
+                    SingleLineText(text = "回复时间：${it.createTSFmt()}")
+                    SingleLineText(text = "更新时间：${it.updateTSFmt()}")
                 }
             }
         )

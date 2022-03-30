@@ -1,4 +1,4 @@
-package com.wh.society.api.data.society.bbs
+package com.wh.admin.data.society.bbs
 
 import com.wh.admin.data.society.bbs.Post
 

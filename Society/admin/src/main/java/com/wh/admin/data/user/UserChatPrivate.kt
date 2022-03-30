@@ -1,4 +1,4 @@
-package com.wh.society.api.data.user
+package com.wh.admin.data.user
 
 import com.wh.admin.data.impl.ChatMessage
 
@@ -9,6 +9,7 @@ class UserChatPrivate : ChatMessage {
     override var userIconUrl: String = ""
     var opUserId: Int = 0
     override var message: String = ""
+    override val updateTimestamp: String = ""
     override var createTimestamp: String = ""
 
     override fun equals(other: Any?): Boolean {

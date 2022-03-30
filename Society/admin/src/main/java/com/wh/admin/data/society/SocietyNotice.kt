@@ -1,4 +1,4 @@
-package com.wh.society.api.data.society
+package com.wh.admin.data.society
 
 class SocietyNotice {
     var id: Int = 0

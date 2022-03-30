@@ -1,4 +1,4 @@
-package com.wh.society.api.data
+package com.wh.admin.data
 
 class LoginReturn {
     var userId: Int = 0

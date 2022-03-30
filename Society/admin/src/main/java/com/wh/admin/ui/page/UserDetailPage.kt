@@ -94,12 +94,12 @@ fun UserDetailPage(activity: MainActivity) {
                         onClick = {
                             //
                             activity.coroutineScope.launch {
-                                activity.serverDataViewModel.adminUserDelete(userInfo.id, {
+                                activity.http.adminUserDelete(userInfo.id) {
                                     activity.coroutineScope.launch {
-                                        activity.serverDataViewModel.getAllUser() {}
+                                        activity.http.getAllUser()
                                     }
-                                    activity.navBack()
-                                }) {}
+                                    activity.nav.navBack.invoke()
+                                }
                             }
                         },
                         modifier = Modifier
@@ -125,9 +125,9 @@ fun UserDetailPage(activity: MainActivity) {
                 SingleLineText(text = "学号: ${userInfo.studentNumber}")
             }
         }
-        textLineButton("用户发布的帖子",activity.navToUserPostList)
-        textLineButton("用户发表的回复",activity.navToUserReplyList)
-        textLineButton("用户加入的社团",activity.navToUserSocietyMemberList)
+        textLineButton("用户发布的帖子",activity.nav.navToUserPostList)
+        textLineButton("用户发表的回复",activity.nav.navToUserReplyList)
+        textLineButton("用户加入的社团",activity.nav.navToUserSocietyMemberList)
         textLineButton("用户的社团申请",{})
         textLineButton("用户参加的活动",{})
         textLineButton("用户的活动申请",{})

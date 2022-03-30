@@ -1,4 +1,4 @@
-package com.wh.society.api.data
+package com.wh.admin.data
 
 class College {
     var id:Int = 0

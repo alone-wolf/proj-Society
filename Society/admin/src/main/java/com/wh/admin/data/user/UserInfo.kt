@@ -1,18 +1,15 @@
 package com.wh.admin.data.user
 
 import com.wh.admin.componment.ServerApi
-import com.wh.admin.data.impl.IJsonObject
 import com.wh.admin.data.impl.IRequestBody
+import com.wh.admin.data.impl.IZTimestamp
 import com.wh.admin.data.shadow.UserInfoShadow
 import com.wh.society.api.data.impl.IContain
-import com.wh.society.api.data.impl.RealIconUrl
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import com.wh.admin.data.impl.IRealIconUrl
 import org.json.JSONObject
 
 
-open class UserInfo : IContain, RealIconUrl, IRequestBody {
+open class UserInfo : IContain, IRealIconUrl, IRequestBody,IZTimestamp {
     var id: Int = 0
     open var username: String = ""
     open var email: String = ""
@@ -22,8 +19,8 @@ open class UserInfo : IContain, RealIconUrl, IRequestBody {
     open var name: String = ""
     open var college: String = ""
     open var password: String = ""
-    var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
 
     fun copy(): UserInfo {
         return UserInfo().apply {

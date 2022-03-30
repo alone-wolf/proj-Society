@@ -20,21 +20,21 @@ fun UserCreatorPage(activity: MainActivity) {
         textFiled(userShadow.email, "邮箱") { userShadow.email = it }
         borderButton("保存") {
             activity.coroutineScope.launch {
-                activity.serverDataViewModel.adminUserCreate(userShadow, {
+                activity.http.adminUserCreate(userShadow) {
                     activity.coroutineScope.launch {
-                        activity.serverDataViewModel.getAllUser { }
+                        activity.http.getAllUser()
                     }
-                    activity.navBack.invoke()
-                }) {}
+                    activity.nav.navBack.invoke()
+                }
             }
         }
         borderButton("保存并继续") {
             activity.coroutineScope.launch {
-                activity.serverDataViewModel.adminUserCreate(userShadow, {
+                activity.http.adminUserCreate(userShadow) {
                     userShadow.clear()
-                }) {}
+                }
             }
         }
-        borderButton("取消") { activity.navBack.invoke() }
+        borderButton("取消") { activity.nav.navBack.invoke() }
     }, modifier = Modifier.fillMaxSize())
 }

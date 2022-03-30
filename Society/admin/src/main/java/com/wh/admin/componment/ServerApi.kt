@@ -1,16 +1,12 @@
 package com.wh.admin.componment
 
-import com.wh.admin.data.society.Society
-import com.wh.admin.data.society.SocietyChatMessage
-import com.wh.admin.data.society.SocietyMember
-import com.wh.admin.data.society.SocietyPicture
-import com.wh.society.api.data.ReturnListData
+import com.wh.admin.data.ReturnListData
+import com.wh.admin.data.society.*
 import com.wh.society.api.data.society.*
 import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.society.bbs.PostReply
-import com.wh.society.api.data.user.UserChatPrivate
+import com.wh.admin.data.user.UserChatPrivate
 import com.wh.admin.data.user.UserInfo
-import com.wh.admin.data.user.UserPicture
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

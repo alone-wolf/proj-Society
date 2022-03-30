@@ -1,16 +1,17 @@
-package com.wh.society.api.data.society.bbs
+package com.wh.admin.data.society.bbs
 
+import com.wh.admin.data.impl.IZTimestamp
 import com.wh.admin.data.society.Society
 import com.wh.society.api.data.impl.IContain
 
 
-class BBS: IContain {
+class BBS: IContain,IZTimestamp {
     var id: Int = 0
     var name: String = ""
     var openTimestamp: String = ""
     var describe: String = ""
-    var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
 
     override val checkArray: Array<String>
         get() = arrayOf(name,describe)

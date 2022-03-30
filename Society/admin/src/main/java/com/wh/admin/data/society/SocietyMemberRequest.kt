@@ -1,6 +1,8 @@
-package com.wh.society.api.data.society
+package com.wh.admin.data.society
 
-class SocietyMemberRequest {
+import com.wh.admin.data.impl.IZTimestamp
+
+class SocietyMemberRequest:IZTimestamp {
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
@@ -10,7 +12,8 @@ class SocietyMemberRequest {
     var isPass:Boolean = false
     var request: String = ""
     var isDealDone:Boolean = false
-    var updateTimestamp:String = ""
+    override var updateTimestamp:String = ""
+    override val createTimestamp: String = ""
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -28,6 +31,7 @@ class SocietyMemberRequest {
         if (request != other.request) return false
         if (isDealDone != other.isDealDone) return false
         if (updateTimestamp != other.updateTimestamp) return false
+        if (createTimestamp != other.createTimestamp) return false
 
         return true
     }
@@ -43,10 +47,11 @@ class SocietyMemberRequest {
         result = 31 * result + request.hashCode()
         result = 31 * result + isDealDone.hashCode()
         result = 31 * result + updateTimestamp.hashCode()
+        result = 31 * result + createTimestamp.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "MemberRequest(id=$id, societyId=$societyId, societyName='$societyName', userId=$userId, username='$username', isJoin=$isJoin, isPass=$isPass, request='$request', isDealDone=$isDealDone, updateTimestamp='$updateTimestamp')"
+        return "SocietyMemberRequest(id=$id, societyId=$societyId, societyName='$societyName', userId=$userId, username='$username', isJoin=$isJoin, isPass=$isPass, request='$request', isDealDone=$isDealDone, updateTimestamp='$updateTimestamp', createTimestamp='$createTimestamp')"
     }
 }

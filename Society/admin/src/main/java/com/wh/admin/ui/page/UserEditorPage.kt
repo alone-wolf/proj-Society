@@ -27,6 +27,6 @@ fun UserEditorPage(activity: MainActivity) {
 //                }) {}
             }
         }
-        borderButton("取消") { activity.navBack.invoke() }
+        borderButton("取消") { activity.nav.navBack.invoke() }
     }, modifier = Modifier.fillMaxSize())
 }

@@ -26,7 +26,7 @@ fun UserSocietyMemberListPage(activity: MainActivity) {
         mutableStateOf(emptyList<Society>())
     }
     LaunchedEffect(Unit) {
-        memberList = activity.serverDataViewModel.getAllUserSocietyMember(userInfo.id) {}
+        activity.http.getAllUserSocietyMember(userInfo.id) { memberList = it }
         societyList = activity.serverDataViewModel.allSociety.filter { s ->
             memberList.any { sm -> s.id == sm.societyId }
         }
@@ -43,10 +43,8 @@ fun UserSocietyMemberListPage(activity: MainActivity) {
                     .padding(horizontal = 20.dp, vertical = 10.dp)) {
                     SingleLineText(text = "社团名称：${it.name}")
                     SingleLineText(text = "社团简介：${it.describe}")
-//                    SingleLineText(text = "设备尾巴：${it.deviceName}")
-//                    SingleLineText(text = "社团名称：${it.societyName}")
-                    SingleLineText(text = "发帖时间：${it.createTimestamp}")
-                    SingleLineText(text = "更新时间：${it.updateTimestamp}")
+                    SingleLineText(text = "发帖时间：${it.createTSFmt()}")
+                    SingleLineText(text = "更新时间：${it.updateTSFmt()}")
                 }
             }
         )

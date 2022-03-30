@@ -1,4 +1,4 @@
-package com.wh.admin
+package com.wh.admin.ui.pager
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,7 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.wh.admin.MainActivity
+import com.wh.admin.SingleLineText
 import com.wh.admin.data.user.UserInfo
+import com.wh.admin.listItemModifierWithPadding
 
 @Composable
 fun UserList(activity: MainActivity) {
@@ -28,7 +31,7 @@ fun UserList(activity: MainActivity) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        activity.navToUserDetail(it)
+                        activity.nav.navToUserDetail(it)
                     }) {
                     Row(
                         modifier = listItemModifierWithPadding.padding(vertical = 4.dp),

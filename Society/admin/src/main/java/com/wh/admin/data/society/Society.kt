@@ -1,17 +1,15 @@
 package com.wh.admin.data.society
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import com.wh.admin.componment.ServerApi
 import com.wh.admin.data.impl.IRequestBody
-import com.wh.admin.data.society.bbs.Post
-import com.wh.society.api.data.society.bbs.BBS
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.admin.data.society.bbs.BBS
+import com.wh.admin.data.impl.IRealIconUrl
+import com.wh.admin.data.impl.IZTimestamp
 import com.wh.society.api.data.shadow.SocietyShadow
 import com.wh.society.api.data.impl.IContain
 import org.json.JSONObject
 
-open class Society : IContain, RealIconUrl,IRequestBody {
+open class Society : IContain, IRealIconUrl,IRequestBody,IZTimestamp {
     var id: Int = 0
     open var name: String = ""
     open var openTimestamp: String = ""
@@ -19,8 +17,8 @@ open class Society : IContain, RealIconUrl,IRequestBody {
     open var college: String = ""
     open var bbsName: String = ""
     open var bbsDescribe: String = ""
-    var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
     open var iconUrl: String = ""
 
     val optCollege: String = ""

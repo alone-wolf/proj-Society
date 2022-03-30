@@ -22,7 +22,7 @@ fun UserReplyListPage(activity: MainActivity) {
     }
 
     LaunchedEffect(Unit) {
-        replies = activity.serverDataViewModel.getAllUserReply(userInfo.id) {}
+        activity.http.getAllUserReply(userInfo.id) { replies = it }
     }
 
     LazyColumn(content = {
@@ -38,8 +38,8 @@ fun UserReplyListPage(activity: MainActivity) {
                     SingleLineText(text = "回复内容：${it.reply}")
                     SingleLineText(text = "设备尾巴：${it.deviceName}")
                     SingleLineText(text = "社团名称：${it.societyName}")
-                    SingleLineText(text = "发帖时间：${it.createTimestamp}")
-                    SingleLineText(text = "更新时间：${it.updateTimestamp}")
+                    SingleLineText(text = "发帖时间：${it.createTSFmt()}")
+                    SingleLineText(text = "更新时间：${it.updateTSFmt()}")
                 }
             }
         )
