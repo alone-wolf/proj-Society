@@ -18,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import com.google.accompanist.pager.*
+import com.wh.admin.componment.AlertRequest
 import com.wh.admin.componment.HttpRequest
 import com.wh.admin.componment.NavRequest
 import com.wh.admin.componment.ServerDataViewModel
@@ -35,8 +36,6 @@ val listItemModifierWithPadding =
         .padding(horizontal = 16.dp, vertical = 4.dp)
 
 val corner8 = RoundedCornerShape(8.dp)
-
-
 
 
 class MainActivity : ComponentActivity() {
@@ -69,6 +68,7 @@ class MainActivity : ComponentActivity() {
     var selectedPost by mutableStateOf(Post())
 
     val nav by lazy { NavRequest(this) }
+    val alert = AlertRequest()
 
 
     @OptIn(
@@ -88,8 +88,9 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
 
                     LaunchedEffect(Unit) {
-                        http.getAllUser()
-                        http.getAllSociety()
+                        http.allUser()
+                        http.allSociety()
+                        http.allActivity()
                     }
 
                     scaffoldState = rememberScaffoldState()
@@ -119,14 +120,20 @@ class MainActivity : ComponentActivity() {
                             TopAppBar(
                                 title = { Text(text = currentTitle) },
                                 actions = {
-                                    if (pagerState.currentPage != 2){
-                                        IconButton(onClick = {
-                                            when(pagerState.currentPage){
-                                                0->{http.getAllUser()}
-                                                1->{http.getAllSociety()}
+                                    if (currentRoute == NavDes.Main.route) {
+                                        if (pagerState.currentPage != 2) {
+                                            IconButton(onClick = {
+                                                when (pagerState.currentPage) {
+                                                    0 -> {
+                                                        http.allUser()
+                                                    }
+                                                    1 -> {
+                                                        http.allSociety()
+                                                    }
+                                                }
+                                            }) {
+                                                Icon(Icons.Default.Refresh, "")
                                             }
-                                        }) {
-                                            Icon(Icons.Default.Refresh, "")
                                         }
                                     }
                                 }
@@ -137,12 +144,19 @@ class MainActivity : ComponentActivity() {
                                 if (pagerState.currentPage != 2) {
                                     FloatingActionButton(onClick = {
                                         when (pagerState.currentPage) {
-                                            0 -> nav.navToUserCreator()
-                                            1 -> nav.navToSocietyCreator()
+                                            0 -> nav.toUserCreator()
+                                            1 -> nav.toSocietyCreator()
                                         }
                                     }) {
                                         Icon(Icons.Default.Add, "")
                                     }
+                                }
+                            } else if (currentRoute == NavDes.UserSocietyMemberList.route) {
+                                FloatingActionButton(onClick = {
+                                    // 添加到
+                                    nav.toUserSocietyJoiner.invoke()
+                                }) {
+                                    Icon(Icons.Default.Add, "")
                                 }
                             }
                         },
@@ -154,6 +168,11 @@ class MainActivity : ComponentActivity() {
                             startDes = NavDes.Main,
                             activity = this
                         )
+
+                        alert.Alert1()
+                        alert.Alert2()
+                        alert.AlertX()
+
 
                     }
                 }

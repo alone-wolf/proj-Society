@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.transform.BlurTransformation
@@ -38,6 +40,7 @@ private var userJoinRequestList by mutableStateOf(ReturnListData.blank<SocietyMe
 @ExperimentalAnimationApi
 @Composable
 fun MinePage(requestHolder: RequestHolder) {
+
     LaunchedEffect(Unit) {
         requestHolder.apiViewModel.userPostList(
             requestHolder.apiViewModel.userInfo.notNullOrBlank(

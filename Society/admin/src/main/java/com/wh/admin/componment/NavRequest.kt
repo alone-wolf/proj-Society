@@ -7,45 +7,81 @@ import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.user.UserInfo
 import com.wh.admin.ext.goto
 
-class NavRequest(private val activity: MainActivity){
+class NavRequest(private val activity: MainActivity) {
     private val navController = activity.navController
-    val navBack:()->Unit = {
+    val back: () -> Unit = {
         navController.popBackStack()
     }
 
-    val navToUserDetail = { u: UserInfo ->
+    val toUserDetail = { u: UserInfo ->
         activity.selectedUserInfo = u
         navController.goto(NavDes.UserDetail)
     }
 
-    val navToUserPostList = {
+    val toUserPostList = {
         navController.goto(NavDes.UserPostList)
     }
 
-    val navToUserReplyList = {
+    val toUserReplyList = {
         navController.goto(NavDes.UserReplyList)
     }
 
-    val navToUserSocietyMemberList = {
+    val toUserSocietyMemberList = {
         navController.goto(NavDes.UserSocietyMemberList)
     }
 
-    val navToSocietyDetail = { s: Society ->
+    val toSocietyDetail = { s: Society ->
         activity.selectedSociety = s
         navController.goto(NavDes.SocietyDetail)
     }
 
 
-    val navToPostDetail = { p: Post ->
+    val toPostDetail = { p: Post ->
         activity.selectedPost = p
         navController.goto(NavDes.PostDetail)
     }
 
-    val navToUserCreator = {
+    val toUserCreator = {
         navController.goto(NavDes.UserCreator)
     }
 
-    val navToSocietyCreator = {
+    val toSocietyCreator = {
         navController.goto(NavDes.SocietyCreator)
+    }
+
+    val toUserSocietyJoiner = {
+        navController.goto(NavDes.UserSocietyJoiner)
+    }
+
+    val toUserEditor = {
+        navController.goto(NavDes.UserEditor)
+    }
+
+    val toUserSocietyMemberRequestList = {
+        navController.goto(NavDes.UserSocietyMemberRequestList)
+    }
+
+    val toUserSocietyActivityMemberList = {
+        navController.goto(NavDes.UserSocietyActivityMemberList)
+    }
+
+    val toSocietyEditor = {
+        navController.goto(NavDes.SocietyEditor)
+    }
+
+    val toSocietyPostList = {
+        navController.goto(NavDes.SocietyPostList)
+    }
+
+    val toSocietyMemberList = {
+        navController.goto(NavDes.SocietyMemberList)
+    }
+
+    val toSocietyMemberRequestList = {
+        navController.goto(NavDes.SocietyMemberRequestList)
+    }
+
+    val toSocietyActivityList = {
+        navController.goto(NavDes.SocietyActivityList)
     }
 }

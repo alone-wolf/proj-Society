@@ -9,8 +9,8 @@ import com.wh.admin.data.impl.IRealIconUrl
 import org.json.JSONObject
 
 
-open class UserInfo : IContain, IRealIconUrl, IRequestBody,IZTimestamp {
-    var id: Int = 0
+open class UserInfo : IContain, IRealIconUrl, IRequestBody, IZTimestamp {
+    open var id: Int = 0
     open var username: String = ""
     open var email: String = ""
     open var studentNumber: String = ""
@@ -40,6 +40,7 @@ open class UserInfo : IContain, IRealIconUrl, IRequestBody,IZTimestamp {
 
     override fun toJSONObject(): JSONObject {
         val a = JSONObject()
+        a.put("id", id)
         a.put("username", username)
         a.put("email", email)
         a.put("studentNumber", studentNumber)

@@ -9,7 +9,7 @@ import com.wh.society.api.data.shadow.SocietyShadow
 import com.wh.society.api.data.impl.IContain
 import org.json.JSONObject
 
-open class Society : IContain, IRealIconUrl,IRequestBody,IZTimestamp {
+open class Society : IContain, IRealIconUrl, IRequestBody, IZTimestamp {
     var id: Int = 0
     open var name: String = ""
     open var openTimestamp: String = ""
@@ -27,6 +27,7 @@ open class Society : IContain, IRealIconUrl,IRequestBody,IZTimestamp {
 
     override fun toJSONObject(): JSONObject {
         val a = JSONObject()
+        a.put("id", id)
         a.put("name", name)
         a.put("openTimestamp", openTimestamp)
         a.put("describe", describe)

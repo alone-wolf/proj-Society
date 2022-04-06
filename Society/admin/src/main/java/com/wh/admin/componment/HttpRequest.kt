@@ -1,7 +1,7 @@
 package com.wh.admin.componment
 
 import com.wh.admin.MainActivity
-import com.wh.admin.data.society.SocietyMember
+import com.wh.admin.data.society.*
 import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.society.bbs.PostReply
 import com.wh.admin.data.user.UserInfo
@@ -18,43 +18,88 @@ class HttpRequest(activity: MainActivity) {
         }
     }
 
-    fun getAllUser() {
+    fun allUser() {
         coroutineScope.launch {
             serverDataViewModel.getAllUser(snapBar)
         }
     }
 
-    fun getAllSociety() {
+    fun allSociety() {
         coroutineScope.launch {
             serverDataViewModel.getAllSociety(snapBar)
         }
     }
 
-    fun getAllSocietyPost(societyId: Int, onReturn: (List<Post>) -> Unit) {
+    fun allActivity() {
+        coroutineScope.launch {
+            serverDataViewModel.getAllActivity(snapBar)
+        }
+    }
+
+    fun allSocietyPost(societyId: Int, onReturn: (List<Post>) -> Unit) {
         coroutineScope.launch {
             serverDataViewModel.getAllSocietyPost(societyId, onReturn, snapBar)
         }
     }
 
-    fun getAllUserPost(userId: Int, onReturn: (List<Post>) -> Unit) {
+    fun allSocietyReply(societyId: Int, onReturn: (List<PostReply>) -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.allSocietyReply(societyId, onReturn, snapBar)
+        }
+    }
+
+    fun allSocietyMember(societyId: Int, onReturn: (List<SocietyMember>) -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.allSocietyMember(societyId, onReturn, snapBar)
+        }
+    }
+
+    fun allSocietyMemberRequest(societyId: Int, onReturn: (List<SocietyMemberRequest>) -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.allSocietyMemberRequest(societyId, onReturn, snapBar)
+        }
+    }
+
+    fun allSocietyActivity(societyId: Int, onReturn: (List<SocietyActivity>) -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.allSocietyActivity(societyId, onReturn, snapBar)
+        }
+    }
+
+    fun allUserPost(userId: Int, onReturn: (List<Post>) -> Unit) {
         coroutineScope.launch {
             serverDataViewModel.getAllUserPost(userId, onReturn, snapBar)
         }
     }
 
-    fun getAllUserReply(userId: Int, onReturn: (List<PostReply>) -> Unit) {
+    fun allUserReply(userId: Int, onReturn: (List<PostReply>) -> Unit) {
         coroutineScope.launch {
             serverDataViewModel.getAllUserReply(userId, onReturn, snapBar)
         }
     }
 
-    fun getAllUserSocietyMember(userId: Int, onReturn: (List<SocietyMember>) -> Unit) {
+    fun allUserSocietyMember(userId: Int, onReturn: (List<SocietyMember>) -> Unit) {
         coroutineScope.launch {
-            serverDataViewModel.getAllUserSocietyMember(userId, onReturn, snapBar)
+            serverDataViewModel.allUserSocietyMember(userId, onReturn, snapBar)
         }
     }
 
-    fun getAllPostReply(postId: Int, onReturn: (List<PostReply>) -> Unit) {
+    fun allUserSocietyMemberRequest(userId: Int, onReturn: (List<SocietyMemberRequest>) -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.allUserSocietyMemberRequest(userId, onReturn, snapBar)
+        }
+    }
+
+    fun allUserSocietyActivityMember(
+        userId: Int,
+        onReturn: (List<SocietyActivityMember>) -> Unit
+    ) {
+        coroutineScope.launch {
+            serverDataViewModel.allUserSocietyActivityMember(userId, onReturn, snapBar)
+        }
+    }
+
+    fun allPostReply(postId: Int, onReturn: (List<PostReply>) -> Unit) {
         coroutineScope.launch {
             serverDataViewModel.getAllPostReply(postId, onReturn, snapBar)
         }
@@ -78,6 +123,24 @@ class HttpRequest(activity: MainActivity) {
         }
     }
 
+    fun adminSocietyCreate(society: Society, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyCreate(society, onReturn, snapBar)
+        }
+    }
+
+    fun adminSocietyUpdate(society: Society, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyUpdate(society, onReturn, snapBar)
+        }
+    }
+
+    fun adminSocietyDelete(societyId: Int, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyDelete(societyId, onReturn, snapBar)
+        }
+    }
+
 
     fun adminUserCreate(userInfo: UserInfo, onReturn: () -> Unit) {
         coroutineScope.launch {
@@ -85,9 +148,73 @@ class HttpRequest(activity: MainActivity) {
         }
     }
 
+    fun adminUserUpdate(userInfo: UserInfo, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminUserUpdate(userInfo, onReturn, snapBar)
+        }
+    }
+
     fun adminUserDelete(userId: Int, onReturn: () -> Unit) {
         coroutineScope.launch {
             serverDataViewModel.adminUserDelete(userId, onReturn, snapBar)
+        }
+    }
+
+    fun adminUserById(userId: Int, onReturn: (UserInfo) -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminUserById(userId, onReturn, snapBar)
+        }
+    }
+
+    fun adminSocietyMemberCreate(
+        userId: Int,
+        societyId: Int,
+        permissionLevel: Int,
+        onReturn: () -> Unit
+    ) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyMemberCreate(
+                userId,
+                societyId,
+                permissionLevel,
+                onReturn,
+                snapBar
+            )
+        }
+    }
+
+    fun adminSocietyMemberUpdatePermission(
+        userId: Int,
+        societyId: Int,
+        permissionLevel: Int,
+        onReturn: () -> Unit
+    ) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyMemberUpdatePermission(
+                userId,
+                societyId,
+                permissionLevel,
+                onReturn,
+                snapBar
+            )
+        }
+    }
+
+    fun adminPostDelete(postId: Int, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminPostDelete(postId, onReturn, snapBar)
+        }
+    }
+
+    fun adminPostReplyDelete(replyId: Int, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminPostReplyDelete(replyId, onReturn, snapBar)
+        }
+    }
+
+    fun adminSocietyMemberDelete(userId: Int, societyId: Int, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyMemberDelete(userId, societyId, onReturn, snapBar)
         }
     }
 

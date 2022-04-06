@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import com.wh.admin.MainActivity
 import com.wh.admin.ext.borderButton
 import com.wh.admin.ext.textFiled
-import kotlinx.coroutines.launch
 
 @Composable
 fun UserEditorPage(activity: MainActivity) {
@@ -18,15 +17,14 @@ fun UserEditorPage(activity: MainActivity) {
         textFiled(userShadow.phone, "手机号") { userShadow.phone = it }
         textFiled(userShadow.email, "邮箱") { userShadow.email = it }
         borderButton("保存") {
-            activity.coroutineScope.launch {
-//                activity.serverDataViewModel.adminUserCreate(userShadow, {
-//                    activity.coroutineScope.launch {
-//                        activity.serverDataViewModel.getAllUser {  }
-//                    }
-//                    activity.navBack.invoke()
-//                }) {}
+            activity.http.adminUserUpdate(userShadow) {
+                activity.http.allUser()
+                activity.http.adminUserById(userShadow.id) {
+                    activity.selectedUserInfo = it
+                }
+                activity.nav.back.invoke()
             }
         }
-        borderButton("取消") { activity.nav.navBack.invoke() }
+        borderButton("取消") { activity.nav.back.invoke() }
     }, modifier = Modifier.fillMaxSize())
 }

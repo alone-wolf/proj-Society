@@ -4,6 +4,8 @@ import android.content.ContentResolver
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
+import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
 import coil.ImageLoader
 import com.wh.society.BaseMainActivity
 import com.wh.society.api.data.*
@@ -11,6 +13,7 @@ import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.componment.request.*
 import com.wh.society.navigation.GlobalNavPage
+import com.wh.society.service.SocketIOService
 import com.wh.society.store.SettingStore
 import com.wh.society.viewModel.ApiViewModel
 import com.wh.society.viewModel.NotifyViewModel
@@ -39,6 +42,7 @@ interface RequestHolder {
 
 
     val globalNav: GlobalNavRequest
+    val mainNavController:NavHostController
     val trans: DataTrans
 
     val alert: AlertRequestCompact
@@ -58,7 +62,9 @@ interface RequestHolder {
                 settingStore.password
             ) { loginReturn ->
 
-                sioService.start(loginReturn.userId, loginReturn.cookieToken)
+                if (settingStore.receivePush) {
+                    sioService.start(loginReturn.userId, loginReturn.cookieToken)
+                }
 
                 apiViewModel.userInfo { userInfo ->
 

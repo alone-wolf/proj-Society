@@ -8,6 +8,8 @@ import com.wh.admin.data.user.UserInfo
 
 class UserInfoShadow : UserInfo() {
 
+    override var id = 0
+
     override var username: String by mutableStateOf(super.username)
     override var email: String by mutableStateOf(super.email)
     override var iconUrl: String by mutableStateOf(super.iconUrl)

@@ -60,10 +60,22 @@ apiRouter.post("/user/reply", (req, res, next) => {
             res.status(500).json(STATUS.STATUS_500);
         });
 });
-// 列出用户所属的社团--成员  这里以后需要改成返回社团本体
+// 列出用户拥有的社团成员身份
 apiRouter.post("/user/society/member", (req, res, next) => {
     let userId = req.body.userId;
     SocietyMember.findAll({ where: { userId } })
+        .then(d => {
+            res.json(STATUS.STATUS_200(d));
+        }).catch(e => {
+            console.log(e);
+            res.status(500).json(STATUS.STATUS_500);
+        });
+});
+// 列出用户参加的社团活动成员身份
+apiRouter.post("/user/society/activity/member", (req, res, next) => {
+    let userId = req.body.userId;
+    let societyId = req.body.societyId;
+    SocietyActivityMember.findAll({ where: { userId, societyId } })
         .then(d => {
             res.json(STATUS.STATUS_200(d));
         }).catch(e => {
@@ -105,6 +117,7 @@ apiRouter.post("/user/society/activity/member/request", (req, res, next) => {
         });
 });
 
+
 // 列出社团
 apiRouter.post("/society", (req, res, next) => {
     Society.findAll()
@@ -127,16 +140,16 @@ apiRouter.post("/society/post", (req, res, next) => {
         });
 });
 // 列出社团的回复
-apiRouter.post("/society/reply", (req, res, next) => {
-    let societyId = req.body.societyId;
-    PostReply.findAll({ where: { societyId } })
-        .then(d => {
-            res.json(STATUS.STATUS_200(d));
-        }).catch(e => {
-            console.log(e);
-            res.status(500).json(STATUS.STATUS_500);
-        });
-});
+// apiRouter.post("/society/reply", (req, res, next) => {
+//     let societyId = req.body.societyId;
+//     PostReply.findAll({ where: { societyId } })
+//         .then(d => {
+//             res.json(STATUS.STATUS_200(d));
+//         }).catch(e => {
+//             console.log(e);
+//             res.status(500).json(STATUS.STATUS_500);
+//         });
+// });
 // 列出社团图片
 apiRouter.post("/society/pic", (req, res, next) => {
     let societyId = req.body.societyId;
@@ -170,6 +183,15 @@ apiRouter.post("/society/member/request", (req, res, next) => {
             res.status(500).json(STATUS.STATUS_500);
         });
 });
+
+apiRouter.post("/activity", (req, res, next) => {
+    SocietyActivity.findAll().then(d => {
+        res.json(STATUS.STATUS_200(d));
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500);
+    });
+})
 // 列出社团活动
 apiRouter.post("/society/activity", (req, res, next) => {
     let societyId = req.body.societyId;

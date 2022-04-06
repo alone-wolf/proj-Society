@@ -31,7 +31,7 @@ fun UserList(activity: MainActivity) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        activity.nav.navToUserDetail(it)
+                        activity.nav.toUserDetail(it)
                     }) {
                     Row(
                         modifier = listItemModifierWithPadding.padding(vertical = 4.dp),

@@ -10,6 +10,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import com.wh.society.App
@@ -117,6 +118,7 @@ class SocketIOService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand: ")
 
+        Toast.makeText(this, "sio start", Toast.LENGTH_SHORT).show()
         if (sio.isActive) {
             Log.d(TAG, "onStartCommand: sio isActive == true")
             intent?.let {
@@ -254,9 +256,9 @@ class SocketIOService : Service() {
                         val userId = it.optInt("userId")
                         val request = it.optString("request")
                         val societyName = it.optString("societyName")
-                        if (userId == this.userId){
+                        if (userId == this.userId) {
                             Log.d(TAG, "onStartCommand: $SOCIETY_ACTIVITY_REQUEST isMe")
-                        }else{
+                        } else {
                             Log.d(TAG, "onStartCommand: $SOCIETY_ACTIVITY_REQUEST isNotMe")
                             notifySocietyActivityRequest(username, request, societyName)
                         }
@@ -277,6 +279,8 @@ class SocketIOService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Toast.makeText(this, "sio stop", Toast.LENGTH_SHORT).show()
+
         if (sio.isActive) {
             sio.close()
         }

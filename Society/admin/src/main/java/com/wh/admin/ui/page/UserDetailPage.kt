@@ -3,18 +3,15 @@ package com.wh.admin.ui.page
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +20,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import coil.transform.BlurTransformation
 import com.wh.admin.MainActivity
@@ -81,7 +77,7 @@ fun UserDetailPage(activity: MainActivity) {
                 ) {
                     IconButton(
                         onClick = {
-
+                            activity.nav.toUserEditor()
                         },
                         modifier = Modifier
                             .shadow(3.dp, CircleShape)
@@ -92,13 +88,14 @@ fun UserDetailPage(activity: MainActivity) {
                     Spacer(modifier = Modifier.size(8.dp))
                     IconButton(
                         onClick = {
-                            //
-                            activity.coroutineScope.launch {
-                                activity.http.adminUserDelete(userInfo.id) {
-                                    activity.coroutineScope.launch {
-                                        activity.http.getAllUser()
+                            activity.alert.alertConfirm {
+                                activity.coroutineScope.launch {
+                                    activity.http.adminUserDelete(userInfo.id) {
+                                        activity.coroutineScope.launch {
+                                            activity.http.allUser()
+                                        }
+                                        activity.nav.back.invoke()
                                     }
-                                    activity.nav.navBack.invoke()
                                 }
                             }
                         },
@@ -125,12 +122,12 @@ fun UserDetailPage(activity: MainActivity) {
                 SingleLineText(text = "学号: ${userInfo.studentNumber}")
             }
         }
-        textLineButton("用户发布的帖子",activity.nav.navToUserPostList)
-        textLineButton("用户发表的回复",activity.nav.navToUserReplyList)
-        textLineButton("用户加入的社团",activity.nav.navToUserSocietyMemberList)
-        textLineButton("用户的社团申请",{})
-        textLineButton("用户参加的活动",{})
-        textLineButton("用户的活动申请",{})
+        textLineButton("用户发布的帖子", activity.nav.toUserPostList)
+        textLineButton("用户发表的回复", activity.nav.toUserReplyList)
+        textLineButton("用户加入的社团", activity.nav.toUserSocietyMemberList)
+        textLineButton("用户的社团申请", activity.nav.toUserSocietyMemberRequestList)
+        textLineButton("用户参加的活动", activity.nav.toUserSocietyActivityMemberList)
+        textLineButton("用户的活动申请", {})
 
     }, modifier = Modifier.fillMaxSize())
 }

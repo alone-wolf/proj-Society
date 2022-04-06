@@ -7,7 +7,6 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import coil.decode.withInterruptibleSource
 import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBS
@@ -15,15 +14,15 @@ import com.wh.society.api.data.society.bbs.Post
 import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
-import com.wh.society.ui.page.detail.*
-import com.wh.society.ui.page.detail.society.bbs.BBSDetailPage
-import com.wh.society.ui.page.detail.society.bbs.BBSPostDetail
-import com.wh.society.ui.page.detail.society.bbs.BBSPostEditor
+import com.wh.society.ui.page.detail.UserDetailPage
 import com.wh.society.ui.page.detail.society.SocietyDetailPage
 import com.wh.society.ui.page.detail.society.SocietyInfoEditor
 import com.wh.society.ui.page.detail.society.activity.SocietyActivityDetailPage
 import com.wh.society.ui.page.detail.society.activity.SocietyActivityListPage
 import com.wh.society.ui.page.detail.society.activity.SocietyActivityRequestListPage
+import com.wh.society.ui.page.detail.society.bbs.BBSDetailPage
+import com.wh.society.ui.page.detail.society.bbs.BBSPostDetail
+import com.wh.society.ui.page.detail.society.bbs.BBSPostEditor
 import com.wh.society.ui.page.detail.society.chat.SocietyChatInnerPage
 import com.wh.society.ui.page.detail.society.member.SocietyMemberDetailPage
 import com.wh.society.ui.page.detail.society.member.SocietyMemberListPage
@@ -38,22 +37,22 @@ import com.wh.society.ui.page.main.MainPage
 import com.wh.society.ui.page.main.mine.*
 import com.wh.society.ui.page.setting.SettingPage
 
-sealed class MainNavPage(val label: String, val route: String, val icon: ImageVector) {
+sealed class MainNavPage(val title: String, val route: String, val icon: ImageVector) {
 
     object Society : MainNavPage(
-        label = "Society",
+        title = "Society",
         route = "society",
         icon = Icons.Default.List
     )
 
     object BBS : MainNavPage(
-        label = "BBS",
+        title = "BBS",
         route = "bbs",
         icon = Icons.Default.List
     )
 
     object Mine : MainNavPage(
-        label = "Mine",
+        title = "Mine",
         route = "mine",
         icon = Icons.Default.Person
     )
@@ -72,7 +71,7 @@ sealed class MainNavPage(val label: String, val route: String, val icon: ImageVe
 }
 
 sealed class GlobalNavPage(
-    val label: String,
+    val title: String,
     val route: String,
     val content: @Composable (RequestHolder) -> Unit,
     val navExtraOperation: (r: RequestHolder, a: Any) -> Unit = { _, _ -> },
@@ -305,6 +304,12 @@ sealed class GlobalNavPage(
                 .map { it.objectInstance as GlobalNavPage }
                 .toTypedArray()
         }
+
+        @OptIn(
+            ExperimentalAnimationApi::class,
+            ExperimentalMaterialApi::class
+        )
+        val aa = a()
     }
 }
 

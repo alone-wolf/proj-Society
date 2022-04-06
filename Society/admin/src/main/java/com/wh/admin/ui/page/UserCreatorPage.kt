@@ -22,9 +22,9 @@ fun UserCreatorPage(activity: MainActivity) {
             activity.coroutineScope.launch {
                 activity.http.adminUserCreate(userShadow) {
                     activity.coroutineScope.launch {
-                        activity.http.getAllUser()
+                        activity.http.allUser()
                     }
-                    activity.nav.navBack.invoke()
+                    activity.nav.back.invoke()
                 }
             }
         }
@@ -35,6 +35,6 @@ fun UserCreatorPage(activity: MainActivity) {
                 }
             }
         }
-        borderButton("取消") { activity.nav.navBack.invoke() }
+        borderButton("取消") { activity.nav.back.invoke() }
     }, modifier = Modifier.fillMaxSize())
 }

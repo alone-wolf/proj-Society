@@ -1,10 +1,8 @@
 package com.wh.society.ui.page.main
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -12,14 +10,12 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.navigation.MainNavPage
@@ -30,7 +26,7 @@ private var _currentPageLabel = "Mine"
 @ExperimentalMaterialApi
 @Composable
 fun MainPage(requestHolder: RequestHolder) {
-    val mainNavController = rememberNavController()
+    val mainNavController = requestHolder.mainNavController
     var currentPageLabel: String by remember { mutableStateOf(_currentPageLabel) }
 
     Scaffold(
@@ -92,16 +88,16 @@ fun MainPage(requestHolder: RequestHolder) {
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                            currentPageLabel = mainNavPage.label
-                            _currentPageLabel = mainNavPage.label
+                            currentPageLabel = mainNavPage.title
+                            _currentPageLabel = mainNavPage.title
                         },
                         icon = {
                             Icon(
                                 imageVector = mainNavPage.icon,
-                                contentDescription = mainNavPage.label
+                                contentDescription = mainNavPage.title
                             )
                         },
-                        label = { Text(text = mainNavPage.label) }
+                        label = { Text(text = mainNavPage.title) }
                     )
                 }
             }

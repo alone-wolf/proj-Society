@@ -30,7 +30,7 @@ fun GlobalScaffold(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = page.label) },
+                title = { Text(text = page.title) },
                 navigationIcon = {
                     IconButton(onClick = { requestHolder.globalNav.goBack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")

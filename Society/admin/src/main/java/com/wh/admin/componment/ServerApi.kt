@@ -1,12 +1,13 @@
 package com.wh.admin.componment
 
 import com.wh.admin.data.ReturnListData
+import com.wh.admin.data.ReturnObjectData
 import com.wh.admin.data.society.*
-import com.wh.society.api.data.society.*
 import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.society.bbs.PostReply
 import com.wh.admin.data.user.UserChatPrivate
 import com.wh.admin.data.user.UserInfo
+import com.wh.society.api.data.society.SocietyActivityRequest
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -47,14 +48,99 @@ interface ServerApi {
         }
     }
 
-    @POST("/all/user")
-    suspend fun allUser(): ReturnListData<UserInfo>
-
     @FormUrlEncoded
     @POST("/admin/user/delete")
     suspend fun adminUserDelete(
         @Field("userId") userId: Int
     ): String
+
+    @FormUrlEncoded
+    @POST("/admin/user/byid")
+    suspend fun adminUserById(
+        @Field("userId") userId: Int
+    ): ReturnObjectData<UserInfo>
+
+
+    @POST("/admin/user/create")
+    suspend fun adminUserCreate(@Body userInfo: RequestBody): String
+
+    @POST("/admin/user/update")
+    suspend fun adminUserUpdate(@Body userInfo: RequestBody): String
+
+    @POST("/admin/user/register/allow")
+    suspend fun adminUserRegisterAllow(): String
+
+    @POST("/admin/user/register/allow/switch")
+    suspend fun adminUserRegisterAllowSwitch(): String
+
+    @POST("/admin/society/create")
+    suspend fun adminSocietyCreate(@Body society: RequestBody): String
+
+    @POST("/admin/society/update")
+    suspend fun adminSocietyUpdate(@Body society: RequestBody): String
+
+    @FormUrlEncoded
+    @POST("/admin/society/delete")
+    suspend fun adminSocietyDelete(
+        @Field("societyId") societyId: Int
+    ): String
+
+    @FormUrlEncoded
+    @POST("/admin/society/member/delete")
+    suspend fun adminSocietyMemberDelete(
+        @Field("userId") userId: Int,
+        @Field("societyId") societyId: Int
+    ): String
+
+    @FormUrlEncoded
+    @POST("/admin/society/member/create")
+    suspend fun adminSocietyMemberCreate(
+        @Field("userId") userId: Int,
+        @Field("societyId") societyId: Int,
+        @Field("permissionLevel") permissionLevel: Int
+    ): String
+
+
+    @FormUrlEncoded
+    @POST("/admin/society/member/update/permission")
+    suspend fun adminSocietyMemberUpdatePermission(
+        @Field("userId") userId: Int,
+        @Field("societyId") societyId: Int,
+        @Field("permissionLevel") permissionLevel: Int
+    ): String
+
+
+    @FormUrlEncoded
+    @POST("/admin/post/delete")
+    suspend fun adminPostDelete(
+        @Field("postId") postId: Int
+    ): String
+
+    @FormUrlEncoded
+    @POST("/admin/post/reply/delete")
+    suspend fun adminPostReplyDelete(
+        @Field("replyId") replyId: Int
+    ): String
+
+
+//    @POST("/all/post/reply")
+//    suspend fun allPostReply(): ReturnListData<PostReply>
+
+//    @POST("/all/society/pic")
+//    suspend fun allSocietyPic(): ReturnListData<SocietyPicture>
+
+//    @POST("/all/society/member")
+//    suspend fun allSocietyMember(): ReturnListData<SocietyMember>
+
+//    @POST("/all/society/member/request")
+//    suspend fun allSocietyMemberRequest(): ReturnListData<SocietyMemberRequest>
+//
+//    @POST("/all/society/activity")
+//    suspend fun allSocietyActivity(): ReturnListData<SocietyActivity>
+
+
+    @POST("/all/user")
+    suspend fun allUser(): ReturnListData<UserInfo>
 
     @FormUrlEncoded
     @POST("/all/user/post")
@@ -74,6 +160,18 @@ interface ServerApi {
         @Field("userId") userId: Int
     ): ReturnListData<SocietyMember>
 
+    @FormUrlEncoded
+    @POST("/all/user/society/member/request")
+    suspend fun allUserSocietyMemberRequest(
+        @Field("userId") userId: Int
+    ): ReturnListData<SocietyMemberRequest>
+
+    @FormUrlEncoded
+    @POST("/all/user/society/activity/member")
+    suspend fun allUserSocietyActivityMember(
+        @Field("userId") userId: Int,
+    ): ReturnListData<SocietyActivityMember>
+
 //    @POST("/all/user/pic")
 //    suspend fun allUserPic(): ReturnListData<UserPicture>
 
@@ -86,6 +184,12 @@ interface ServerApi {
         @Field("societyId") societyId: Int
     ): ReturnListData<Post>
 
+    @FormUrlEncoded
+    @POST("/all/society/reply")
+    suspend fun allSocietyReply(
+        @Field("societyId") societyId: Int
+    ): ReturnListData<PostReply>
+
 
     @FormUrlEncoded
     @POST("/all/post/reply")
@@ -93,31 +197,26 @@ interface ServerApi {
         @Field("postId") postId: Int
     ): ReturnListData<PostReply>
 
+    @FormUrlEncoded
+    @POST("/all/society/member")
+    suspend fun allSocietyMember(
+        @Field("societyId") societyId: Int
+    ): ReturnListData<SocietyMember>
 
-    @POST("/admin/user/create")
-    suspend fun adminUserCreate(@Body userInfo: RequestBody): String
+    @FormUrlEncoded
+    @POST("/all/society/member/request")
+    suspend fun allSocietyMemberRequest(
+        @Field("societyId") societyId: Int
+    ): ReturnListData<SocietyMemberRequest>
 
-    @POST("/admin/user/register/allow")
-    suspend fun adminUserRegisterAllow(): String
+    @FormUrlEncoded
+    @POST("/all/society/activity")
+    suspend fun allSocietyActivity(
+        @Field("societyId") societyId: Int
+    ): ReturnListData<SocietyActivity>
 
-    @POST("/admin/user/register/allow/switch")
-    suspend fun adminUserRegisterAllowSwitch(): String
-
-
-//    @POST("/all/post/reply")
-//    suspend fun allPostReply(): ReturnListData<PostReply>
-
-//    @POST("/all/society/pic")
-//    suspend fun allSocietyPic(): ReturnListData<SocietyPicture>
-
-//    @POST("/all/society/member")
-//    suspend fun allSocietyMember(): ReturnListData<SocietyMember>
-
-//    @POST("/all/society/member/request")
-//    suspend fun allSocietyMemberRequest(): ReturnListData<SocietyMemberRequest>
-//
-//    @POST("/all/society/activity")
-//    suspend fun allSocietyActivity(): ReturnListData<SocietyActivity>
+    @POST("/all/activity")
+    suspend fun allActivity(): ReturnListData<SocietyActivity>
 
     @POST("/all/society/activity/member/request")
     suspend fun allSocietyActivityMemberRequest(): ReturnListData<SocietyActivityRequest>

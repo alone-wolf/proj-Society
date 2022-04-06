@@ -30,7 +30,7 @@ fun SocietyList(activity: MainActivity) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        activity.nav.navToSocietyDetail(it)
+                        activity.nav.toSocietyDetail(it)
                     }
                 ) {
                     Row(
