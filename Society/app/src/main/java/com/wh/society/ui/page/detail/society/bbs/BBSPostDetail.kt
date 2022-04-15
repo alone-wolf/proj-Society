@@ -48,14 +48,16 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
         requestHolder = requestHolder,
         fab = {
             FloatingActionButton(onClick = {
+                val postReply = PostReply.new(
+                    societyId = requestHolder.trans.society.id,
+                    postId = requestHolder.trans.postId,
+                    userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                    reply = "",
+                    deviceName = requestHolder.deviceName
+                )
                 requestHolder.alert.alertFor1TextFiled("reply post") {
-                    requestHolder.apiViewModel.societyBBSPostReplyCreate(
-                        societyId = requestHolder.trans.society.id,
-                        postId = requestHolder.trans.postId,
-                        userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
-                        reply = it,
-                        deviceName = requestHolder.deviceName
-                    ) {
+                    postReply.reply = it
+                    requestHolder.apiViewModel.societyBBSPostReplyCreate(postReply) {
                         requestHolder.apiViewModel.societyBBSPostReplyList(
                             postId = requestHolder.trans.postId
                         ) { item ->

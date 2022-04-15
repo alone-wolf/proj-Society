@@ -3,9 +3,7 @@ package com.wh.society.componment
 import android.content.ContentResolver
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
 import coil.ImageLoader
 import com.wh.society.BaseMainActivity
 import com.wh.society.api.data.*
@@ -13,8 +11,6 @@ import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.componment.request.*
 import com.wh.society.navigation.GlobalNavPage
-import com.wh.society.service.SocketIOService
-import com.wh.society.store.SettingStore
 import com.wh.society.viewModel.ApiViewModel
 import com.wh.society.viewModel.NotifyViewModel
 import io.noties.markwon.Markwon
@@ -42,7 +38,7 @@ interface RequestHolder {
 
 
     val globalNav: GlobalNavRequest
-    val mainNavController:NavHostController
+    val mainNavController: NavHostController
     val trans: DataTrans
 
     val alert: AlertRequestCompact
@@ -58,9 +54,12 @@ interface RequestHolder {
     fun loginLogic() {
         if (settingStore.phoneStudentIdEmail.isNotBlank() && settingStore.password.isNotBlank()) {
             apiViewModel.userLogin(
-                settingStore.phoneStudentIdEmail,
-                settingStore.password
+                phoneStudentIdEmail = settingStore.phoneStudentIdEmail,
+                password = settingStore.password,
+                onError = toast.toast
             ) { loginReturn ->
+
+                settingStore.token = loginReturn.cookieToken
 
                 if (settingStore.receivePush) {
                     sioService.start(loginReturn.userId, loginReturn.cookieToken)
@@ -82,7 +81,6 @@ interface RequestHolder {
             }
         } else {
             toast.toast("请输入 手机号/邮箱 和 密码")
-
         }
     }
 
@@ -96,11 +94,13 @@ interface RequestHolder {
 
             globalNav.gotoWithBack(GlobalNavPage.LoginPage)
             apiViewModel.userInfo = ReturnObjectData.blank()
-            apiViewModel.societyList = ReturnListData.blank()
+            apiViewModel.societyList = emptyList()
             apiViewModel.bbsList = emptyList()
             apiViewModel.collegeList = ReturnListData.blank()
             apiViewModel.loginToken = ReturnObjectData.blank()
             apiViewModel.picDataList = ReturnListData.blank()
+
+            settingStore.token = ""
 
             trans.clear()
         }

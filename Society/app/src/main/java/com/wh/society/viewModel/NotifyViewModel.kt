@@ -2,11 +2,15 @@ package com.wh.society.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wh.society.api.db.AppDatabase
 import com.wh.society.api.db.entity.Notify
 import com.wh.society.api.repository.NotifyRepository
 import kotlinx.coroutines.launch
 
-class NotifyViewModel(private val notifyRepository: NotifyRepository) : ViewModel() {
+class NotifyViewModel(appDatabase: AppDatabase) : ViewModel() {
+
+    private val notifyRepository: NotifyRepository = NotifyRepository(appDatabase.notifyDao())
+
     val all = notifyRepository.all
 
     fun insert(notify: Notify) {

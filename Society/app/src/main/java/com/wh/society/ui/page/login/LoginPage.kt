@@ -35,9 +35,7 @@ fun LoginPage(requestHolder: RequestHolder) {
     }
 
     LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.adminUserRegisterAllow {
-            userRegisterAllow = it
-        }
+        requestHolder.apiViewModel.adminUserRegisterAllow(  { userRegisterAllow = it }) {}
     }
 
     Box(modifier = Modifier.fillMaxSize()) {

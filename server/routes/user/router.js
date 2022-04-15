@@ -1,18 +1,21 @@
 const express = require("express");
 const apiRouter = express.Router();
+const STATUS = require("../../utils/return_data");
 const User = require("../../model/user");
 const UserLogin = require("../../model/user_login");
 const SocietyMember = require("../../model/society_member");
-const authMiddleware = require("../../middleware/auth");
-
-const STATUS = require("../../utils/return_data");
 const Post = require("../../model/post");
 const PostReply = require("../../model/post_reply");
 const SocietyJoinRequest = require("../../model/society_member_request");
 const BBSUserWatch = require("../../model/bbs_user_watch");
+const UserChatPrivate = require("../../model/user_chat_private");
+const SocietyActivityRequest = require("../../model/society_activity_request");
+const SocietyInnerChat = require("../../model/society_inner_chat");
+const SocietyNotice = require("../../model/society_notice");
 
+const { checkCookieToken } = require("../../middleware/auth");
 
-// apiRouter.get("/list", (req, res, next) => {
+// apiRouter.post("/list", checkCookieToken, (req, res, next) => {
 //   User.findAll().then(d => {
 //     res.json(STATUS.STATUS_200(d));
 //   }).catch((e) => {
@@ -21,18 +24,9 @@ const BBSUserWatch = require("../../model/bbs_user_watch");
 //   });
 // });
 
-apiRouter.post("/list", (req, res, next) => {
-  User.findAll().then(d => {
-    res.json(STATUS.STATUS_200(d));
-  }).catch((e) => {
-    console.log(e);
-    res.status(500).json(STATUS.STATUS_500);
-  });
-});
-
 // the feature of login is done
 // user's basic info
-apiRouter.post("/info", authMiddleware.checkCookieToken, (req, res, next) => {
+apiRouter.post("/info", checkCookieToken, (req, res, next) => {
   let id = req.body.userId;
   User.findOne({ where: { id } })
     .then(data => {
@@ -47,7 +41,7 @@ apiRouter.post("/info", authMiddleware.checkCookieToken, (req, res, next) => {
     });
 });
 
-apiRouter.post("/info/simple", (req, res, next) => {
+apiRouter.post("/info/simple", checkCookieToken, (req, res, next) => {
   let userId = req.body.userId;
   User.findOne({ where: { id: userId } })
     .then(data => {
@@ -62,8 +56,8 @@ apiRouter.post("/info/simple", (req, res, next) => {
     });
 });
 
-apiRouter.post("/info/update", (req, res, next) => {
-  let userId = req.body.userId;
+apiRouter.post("/info/update", checkCookieToken, (req, res, next) => {
+  let userId = req.body.id;
   let username = req.body.username;
   let email = req.body.email;
   let studentNumber = req.body.studentNumber;
@@ -105,7 +99,7 @@ apiRouter.post("/info/update", (req, res, next) => {
   });
 });
 
-apiRouter.post("/info/update/password", (req, res, next) => {
+apiRouter.post("/info/update/password", checkCookieToken, (req, res, next) => {
   let name = req.body.name;
   let username = req.body.username;
   let studentNumber = req.body.studentNumber;
@@ -170,7 +164,7 @@ apiRouter.post("/login", (req, res, next) => {
   });
 });
 
-apiRouter.post("/logout", authMiddleware.checkCookieToken, (req, res, next) => {
+apiRouter.post("/logout", checkCookieToken, (req, res, next) => {
   let userId = req.body.userId;
   console.log(userId);
   UserLogin.destroy({ where: { userId } }).then(data => {
@@ -182,129 +176,48 @@ apiRouter.post("/logout", authMiddleware.checkCookieToken, (req, res, next) => {
 });
 
 // create user
-// check adminToken
-apiRouter.post("/create", authMiddleware.checkAdminToken, (req, res, next) => {
-  let name = req.body.name;
-  let username = req.body.username || name;
-  let email = req.body.email || "";
-  let phone = req.body.phone || "";
-  let studentNumber = req.body.studentNumber;
-  let password = req.body.password;
-  User.create({ name, username, email, studentNumber, password, phone })
-    .then((data) => {
-      res.json(STATUS.STATUS_200(data));
-    })
-    .catch((e) => {
-      res.status(500).json(STATUS.STATUS_500);
-      console.log(e);
-    });
-});
-
-// update userInfo
-// and update some other model
-// apiRouter.post("/update", (req, res, next) => {
-//   let userId = req.body.userId;
+// authCheckRouter.post("/create", (req, res, next) => {
 //   let name = req.body.name;
-//   let username = req.body.username;
-//   let phone = req.body.phone;
-//   let email = req.body.email;
+//   let username = req.body.username || name;
+//   let email = req.body.email || "";
+//   let phone = req.body.phone || "";
 //   let studentNumber = req.body.studentNumber;
 //   let password = req.body.password;
-//   let describe = req.body.describe;
-//   let iconUrl = req.body.iconUrl;
-//   console.log(req.body);
-//   let m = {
-//     name, username, phone, email,
-//     studentNumber, password, describe, iconUrl
-//   };
-
-
-//   User.findOne({ where: { id: userId } }).then((data) => {
-//     if (!data) {
-//       res.status(404).json(STATUS.STATUS_404);
-//       return;
-//     }
-
-//     if (username) {
-//       SocietyJoinRequest.update(
-//         { username },
-//         { where: { userId } }
-//       );
-
-//       SocietyJoinRequest.update(
-//         { username },
-//         { where: { userId } }
-//       );
-//       if (iconUrl) {
-//         SocietyMember.update(
-//           { username, userIconUrl: iconUrl },
-//           { where: { userId } }
-//         );
-//         PostReply.update(
-//           { username, userIconUrl: iconUrl },
-//           { where: { userId } }
-//         );
-//         Post.update(
-//           { username, userIconUrl: iconUrl },
-//           { where: { userId } }
-//         );
-//       }
-//     }
-
-//     data
-//       .update(m)
-//       .then((data) => {
-//         res.json(STATUS.STATUS_200(data));
-//       })
-//       .catch((e) => {
-//         console.log(e);
-//         res.status(500).json(STATUS.STATUS_500);
-//       });
-//   });
-// });
-
-apiRouter.post("/delete", authMiddleware.checkAdminToken, (req, res, next) => {
-  let userId = req.body.userId;
-  User.destroy({ where: { id: userId } }).then(d => {
-    res.json(STATUS.STATUS_200(d));
-    UserLogin.destroy({ where: { userId } });
-    SocietyMember.destroy({ where: { userId } });
-    UserChatPrivate.destroy({ where: { $or: [{ userId }, { opUserId: userId }] } });
-    PostReply.destroy({ where: { userId } });
-    Post.destroy({ where: { userId } });
-  }).catch((e) => {
-    console.log(e);
-    res.status(500).json(STATUS.STATUS_500);
-  });
-});
-
-// // find join by userId
-// apiRouter.get("/join", (req, res, next) => {
-//   let userId = req.body.userId;
-//   if (!userId) {
-//     res.status(400).json(STATUS.STATUS_400);
-//     return;
-//   }
-//   UserSocietyJoint.findAll({ where: { userId } })
+//   User.create({ name, username, email, studentNumber, password, phone })
 //     .then((data) => {
-//       res.json(data);
+//       res.json(STATUS.STATUS_200(data));
 //     })
 //     .catch((e) => {
-//       console.log(e);
 //       res.status(500).json(STATUS.STATUS_500);
+//       console.log(e);
 //     });
 // });
 
-apiRouter.post("/list", (req, res, next) => {
-  User.findAll().then((data) => {
-    res.json(STATUS.STATUS_200(data))
-  }).catch((e) => {
-    console.log(e);
-    res.status(500).json(STATUS.STATUS_500);
-  });
-});
+// authCheckRouter.post("/delete", (req, res, next) => {
+//   let userId = req.body.userId;
+//   User.destroy({ where: { id: userId } }).then(d => {
+//     res.json(STATUS.STATUS_200(d));
+//     UserLogin.destroy({ where: { userId } });
+//     SocietyMember.destroy({ where: { userId } });
+//     UserChatPrivate.destroy({ where: { $or: [{ userId }, { opUserId: userId }] } });
+//     PostReply.destroy({ where: { userId } });
+//     Post.destroy({ where: { userId } });
+//   }).catch((e) => {
+//     console.log(e);
+//     res.status(500).json(STATUS.STATUS_500);
+//   });
+// });
 
-apiRouter.post("/join/request/list", (req, res, next) => {
+// authCheckRouter.post("/list", (req, res, next) => {
+//   User.findAll().then((data) => {
+//     res.json(STATUS.STATUS_200(data))
+//   }).catch((e) => {
+//     console.log(e);
+//     res.status(500).json(STATUS.STATUS_500);
+//   });
+// });
+
+apiRouter.post("/join/request/list", checkCookieToken, (req, res, next) => {
   let userId = req.body.userId;
   SocietyJoinRequest.findAll({ where: { userId } }).then(data => {
     res.json(STATUS.STATUS_200(data))
@@ -314,7 +227,7 @@ apiRouter.post("/join/request/list", (req, res, next) => {
   })
 })
 
-apiRouter.post("/joint", (req, res, next) => {
+apiRouter.post("/joint", checkCookieToken, (req, res, next) => {
   var userId = req.body.userId;
   SocietyMember.findAll({ where: { userId } }).then((data) => {
     res.json(STATUS.STATUS_200(data));
@@ -324,7 +237,7 @@ apiRouter.post("/joint", (req, res, next) => {
   })
 })
 
-apiRouter.post("/post/list", (req, res, next) => {
+apiRouter.post("/post/list", checkCookieToken, (req, res, next) => {
   let userId = req.body.userId;
   Post.findAll({ where: { userId } }).then(data => {
     res.json(STATUS.STATUS_200(data));
@@ -334,7 +247,7 @@ apiRouter.post("/post/list", (req, res, next) => {
   });
 });
 
-apiRouter.post("/post/reply/list", (req, res, next) => {
+apiRouter.post("/post/reply/list", checkCookieToken, (req, res, next) => {
   let userId = req.body.userId;
   let postId = req.body.postId;
   let where = { userId };
@@ -370,10 +283,8 @@ apiRouter.post("/room/info", (req, res, next) => {
 });
 
 const userChatRouter = require("./chat/router");
-const UserChatPrivate = require("../../model/user_chat_private");
-const SocietyActivityRequest = require("../../model/society_activity_request");
-const SocietyInnerChat = require("../../model/society_inner_chat");
-const SocietyNotice = require("../../model/society_notice");
-apiRouter.use("/chat", userChatRouter.apiRouter);
+
+
+apiRouter.use("/chat", checkCookieToken, userChatRouter.apiRouter);
 
 module.exports = { apiRouter };

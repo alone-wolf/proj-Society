@@ -41,17 +41,28 @@ import com.wh.society.ui.componment.GlobalScaffold
 import com.wh.society.ui.componment.SocietyDetailTopInfoPart
 
 
-private var thisSocietyJointList by mutableStateOf(ReturnListData.blank<SocietyMember>())
-private var memberRequestList by mutableStateOf(ReturnListData.blank<SocietyMemberRequest>())
-private var activityList by mutableStateOf(ReturnListData.blank<SocietyActivity>())
-private var activityRequestList by mutableStateOf(ReturnListData.blank<SocietyActivityRequest>())
-private var societyPictureList by mutableStateOf(ReturnListData.blank<SocietyPicture>())
-private var societyNoticeList by mutableStateOf(ReturnListData.blank<SocietyNotice>())
+
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun SocietyDetailPage(requestHolder: RequestHolder) {
+
+    var thisSocietyJointList by remember {
+        mutableStateOf(ReturnListData.blank<SocietyMember>())
+    }
+    var memberRequestList by remember {
+        mutableStateOf(ReturnListData.blank<SocietyMemberRequest>())
+    }
+    var activityList by remember {
+        mutableStateOf(ReturnListData.blank<SocietyActivity>())
+    }
+    var societyPictureList by remember {
+        mutableStateOf(ReturnListData.blank<SocietyPicture>())
+    }
+    var societyNoticeList by remember {
+        mutableStateOf(ReturnListData.blank<SocietyNotice>())
+    }
 
     val myJoint = thisSocietyJointList.data.find {
         it.userId == requestHolder.apiViewModel
@@ -78,9 +89,6 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
             if (it.permissionLevel == 111) {
                 requestHolder.apiViewModel.societyMemberRequestList(requestHolder.trans.society.id) { it ->
                     memberRequestList = it
-                }
-                requestHolder.apiViewModel.societyActivityRequestList(requestHolder.trans.society.id) { it ->
-                    activityRequestList = it
                 }
                 requestHolder.apiViewModel.societyPictureList(requestHolder.trans.society.id) { it ->
                     societyPictureList = it
@@ -225,16 +233,6 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                         page = GlobalNavPage.SocietyMemberRequestListPage,
                         a = memberRequestList
                     )
-                }
-            )
-
-            // activity request for admin
-            smallListTitle(
-                title = "社团活动申请",
-                n = activityRequestList.data.size,
-                show = isAdmin,
-                onClick = {
-                    requestHolder.globalNav.goto(GlobalNavPage.SocietyActivityRequestListPage)
                 }
             )
 

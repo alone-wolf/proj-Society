@@ -14,7 +14,7 @@ abstract class IViewModelFactory : ViewModelProvider.Factory {
 //                return PortainerViewModel(portainerStore) as T
 //            }
 //            modelClass.isAssignableFrom(QWeatherViewModel::class.java) -> {
-//                @Suppress("UNCHECKED_CAST")
+//                @Suppress("UNCHECKED_CAST"
 //                return QWeatherViewModel(qWeatherStore) as T
 //            }
 //            modelClass.isAssignableFrom(LoggerViewModel::class.java) -> {

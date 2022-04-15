@@ -7,10 +7,12 @@ import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.api.data.shadow.UserInfoShadow
 import com.wh.society.api.data.impl.IContain
+import com.wh.society.api.data.impl.IRequestBody
+import org.json.JSONObject
 
 
 @Entity
-open class UserInfo : IContain,RealIconUrl {
+open class UserInfo : IContain, RealIconUrl, IRequestBody {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
     open var username: String = ""
@@ -20,9 +22,23 @@ open class UserInfo : IContain,RealIconUrl {
     open var phone: String = ""
     open var name: String = ""
     open var college: String = ""
-    open var password:String = ""
+    open var password: String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
+
+    override fun toJSONObject(): JSONObject {
+        val a = JSONObject()
+        a.put("id", id)
+        a.put("username", username)
+        a.put("email", email)
+        a.put("studentNumber", studentNumber)
+        a.put("iconUrl", iconUrl)
+        a.put("phone", phone)
+        a.put("name", name)
+        a.put("college", college)
+        a.put("password", password)
+        return a
+    }
 
     fun copy(): UserInfo {
         return UserInfo().apply {

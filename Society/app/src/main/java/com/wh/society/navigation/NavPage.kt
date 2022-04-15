@@ -19,7 +19,6 @@ import com.wh.society.ui.page.detail.society.SocietyDetailPage
 import com.wh.society.ui.page.detail.society.SocietyInfoEditor
 import com.wh.society.ui.page.detail.society.activity.SocietyActivityDetailPage
 import com.wh.society.ui.page.detail.society.activity.SocietyActivityListPage
-import com.wh.society.ui.page.detail.society.activity.SocietyActivityRequestListPage
 import com.wh.society.ui.page.detail.society.bbs.BBSDetailPage
 import com.wh.society.ui.page.detail.society.bbs.BBSPostDetail
 import com.wh.society.ui.page.detail.society.bbs.BBSPostEditor
@@ -245,13 +244,6 @@ sealed class GlobalNavPage(
         "Society Activity List",
         "detail/society/activity/list",
         { SocietyActivityListPage(requestHolder = it) }
-    )
-
-    @ExperimentalMaterialApi
-    object SocietyActivityRequestListPage : GlobalNavPage(
-        "Society Activity Request List",
-        "detail/society/activity/request/list",
-        { SocietyActivityRequestListPage(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi

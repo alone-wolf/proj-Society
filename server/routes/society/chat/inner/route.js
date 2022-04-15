@@ -53,4 +53,14 @@ apiRouter.post("/list", (req, res, next) => {
     });
 });
 
+apiRouter.post("/clear", (req, res, next) => {
+    let societyId = req.body.societyId;
+    SocietyInnerChat.destroy({ where: { societyId } }).then(d => {
+        res.json(STATUS.STATUS_200(d))
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500);
+    });
+})
+
 module.exports = { apiRouter };

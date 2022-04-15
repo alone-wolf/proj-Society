@@ -27,6 +27,8 @@ import com.wh.society.api.data.user.UserPicture
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
+import com.wh.society.typeExt.borderButton
+import com.wh.society.typeExt.textFiled
 import com.wh.society.ui.componment.GlobalScaffold
 
 @ExperimentalMaterialApi
@@ -37,18 +39,8 @@ fun MineInfoEditor(requestHolder: RequestHolder) {
 
     GlobalScaffold(
         page = GlobalNavPage.MainMineInfoEditorPage,
-        requestHolder = requestHolder,
-        actions = {
-            IconButton(onClick = {
-                requestHolder.apiViewModel.userInfoUpdate(tempUserInfo) {
-                    requestHolder.apiViewModel.userInfo {}
-                }
-                requestHolder.globalNav.goBack()
-            }) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "")
-            }
-        }) {
-
+        requestHolder = requestHolder
+    ) {
 
         LazyColumn(
             content = {
@@ -131,47 +123,48 @@ fun MineInfoEditor(requestHolder: RequestHolder) {
                     }
                 }
 
+                textFiled(
+                    value = tempUserInfo.phone,
+                    label = "手机号码",
+                    onUpdate = { tempUserInfo.phone = it }
+                )
 
-                item {
-                    TextField(
-                        value = tempUserInfo.phone,
-                        onValueChange = { tempUserInfo.phone = it },
-                        placeholder = { Text(text = "手机号码") },
-                        label = { Text(text = "手机号码")}
-                    )
-                }
-                item {
-                    TextField(
-                        value = tempUserInfo.email,
-                        onValueChange = { tempUserInfo.email = it },
-                        placeholder = { Text(text = "邮箱") },
-                        label = { Text(text = "邮箱") },
-                    )
-                }
-                item {
-                    TextField(
-                        value = tempUserInfo.username,
-                        onValueChange = { tempUserInfo.username = it },
-                        placeholder = { Text(text = "用户名") },
-                        label = { Text(text = "用户名") },
-                    )
-                }
-                item {
-                    TextField(
-                        value = tempUserInfo.name,
-                        onValueChange = { tempUserInfo.name = it },
-                        placeholder = { Text(text = "姓名") },
-                        label = { Text(text = "姓名") },
-                    )
-                }
-                item {
-                    TextField(
-                        value = tempUserInfo.password,
-                        onValueChange = { tempUserInfo.password = it },
-                        placeholder = { Text(text = "密码") },
-                        label = { Text(text = "密码") },
-                    )
-                }
+                textFiled(
+                    value = tempUserInfo.email,
+                    label = "邮箱",
+                    onUpdate = { tempUserInfo.email = it }
+                )
+
+                textFiled(
+                    value = tempUserInfo.username,
+                    label = "用户名",
+                    onUpdate = { tempUserInfo.username = it }
+                )
+
+                textFiled(
+                    value = tempUserInfo.name,
+                    label = "姓名",
+                    onUpdate = { tempUserInfo.name = it }
+                )
+
+                textFiled(
+                    value = tempUserInfo.password,
+                    label = "密码",
+                    onUpdate = { tempUserInfo.password = it }
+                )
+
+                borderButton(
+                    text = "保存",
+                    onClick = {
+                        requestHolder.apiViewModel.userInfoUpdate(tempUserInfo, {
+                            requestHolder.apiViewModel.userInfo {}
+                        }) {
+
+                        }
+                        requestHolder.globalNav.goBack()
+                    }
+                )
+
             },
             modifier = Modifier.fillMaxSize()
         )

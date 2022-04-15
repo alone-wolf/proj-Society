@@ -20,11 +20,11 @@ class NotifyRepository(private val notifyDao: NotifyDao) {
         notifyDao.updateCo(notify)
     }
 
-    fun update(notify: Notify) {
-        Thread {
-            notifyDao.update(notify)
-        }.start()
-    }
+//    fun update(notify: Notify) {
+//        Thread {
+//            notifyDao.update(notify)
+//        }.start()
+//    }
 
     suspend fun deleteCo(notify: Notify) {
         notifyDao.deleteCo(notify)

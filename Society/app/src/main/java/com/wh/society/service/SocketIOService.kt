@@ -18,6 +18,7 @@ import com.wh.society.R
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.SIORoomSubBlock
 import com.wh.society.api.db.entity.Notify
+import com.wh.society.api.repository.NotifyRepository
 import com.wh.society.navigation.GlobalNavPage
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -65,7 +66,7 @@ class SocketIOService : Service() {
 
     private lateinit var notificationManager: NotificationManager
 
-    private val notifyRepository by lazy { (application as App).repositoryKeeper.notifyRepository }
+    private val notifyRepository by lazy { NotifyRepository((application as App).appDatabase.notifyDao()) }
 
     private fun setupNotificationChannel(channels: Map<String, String>) {
         notificationManager.run {

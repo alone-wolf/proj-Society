@@ -5,8 +5,10 @@ import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.api.data.impl.RealIconUrl
 import com.wh.society.api.data.shadow.SocietyShadow
 import com.wh.society.api.data.impl.IContain
+import com.wh.society.api.data.impl.IRequestBody
+import org.json.JSONObject
 
-open class Society: IContain,RealIconUrl {
+open class Society: IContain,RealIconUrl,IRequestBody {
     var id: Int = 0
     open var name: String = ""
     open var openTimestamp: String = ""
@@ -32,6 +34,20 @@ open class Society: IContain,RealIconUrl {
             this.describe = this@Society.bbsDescribe
             this.openTimestamp = this@Society.openTimestamp
         }
+    }
+
+    override fun toJSONObject(): JSONObject {
+        val a = JSONObject()
+        a.put("id", id)
+        a.put("name", name)
+        a.put("openTimestamp", openTimestamp)
+        a.put("describe", describe)
+        a.put("college", college)
+        a.put("bbsName", bbsName)
+        a.put("bbsName", bbsName)
+        a.put("bbsDescribe", bbsDescribe)
+        a.put("iconUrl", iconUrl)
+        return a
     }
 
     override val realIconUrl: String

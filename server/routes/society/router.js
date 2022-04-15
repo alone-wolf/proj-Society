@@ -1,20 +1,16 @@
 const express = require("express");
 const apiRouter = express.Router();
+const STATUS = require("../../utils/return_data");
 const Society = require("../../model/society");
 const UserSocietyJoint = require("../../model/society_member");
-const authMiddleware = require("../../middleware/auth");
-
-const STATUS = require("../../utils/return_data");
-const SocietyJoinRequest = require("../../model/society_member_request");
-const Post = require("../../model/post");
-const PostReply = require("../../model/post_reply");
 const User = require("../../model/user");
-const SocietyInnerChat = require("../../model/society_inner_chat");
-const SocietyActivity = require("../../model/society_activity");
 const BBSUserWatch = require("../../model/bbs_user_watch");
 
+const { checkCookieToken } = require("../../middleware/auth");
+
+
 // get all society
-apiRouter.post("/list", authMiddleware.checkAdminToken, (req, res, next) => {
+apiRouter.post("/list", checkCookieToken, (req, res, next) => {
   Society.findAll()
     .then((data) => {
       res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
@@ -26,28 +22,11 @@ apiRouter.post("/list", authMiddleware.checkAdminToken, (req, res, next) => {
 });
 
 // create new society
-apiRouter.post("/create", (req, res, next) => {
-  let name = req.body.name;
-  Society.create({ name, describe: name, bbsName: name, bbsDescribe: name, openTimestamp: Date.now() })
-    .then((data) => {
-      res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
-    })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).json(STATUS.STATUS_500);
-    });
-});
-
-// used to check society name
-// apiRouter.post("/check/name", (req, res, next) => {
+// apiRouter.post("/create", (req, res, next) => {
 //   let name = req.body.name;
-//   Society.findOne({ where: { name } })
+//   Society.create({ name, describe: name, bbsName: name, bbsDescribe: name, openTimestamp: Date.now() })
 //     .then((data) => {
-//       if (data) {
-//         res.json(STATUS.STATUS_200({ exit: true }));
-//       } else {
-//         res.json(STATUS.STATUS_200({ exit: false }));
-//       }
+//       res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
 //     })
 //     .catch((e) => {
 //       console.log(e);
@@ -55,25 +34,8 @@ apiRouter.post("/create", (req, res, next) => {
 //     });
 // });
 
-// used to check bbs name
-// apiRouter.post("/check/bbsname", (req, res, next) => {
-//   let bbsName = req.body.bbsName;
-//   Society.findOne({ where: { bbsName } })
-//     .then((data) => {
-//       if (data) {
-//         res.json(STATUS.STATUS_200({ exit: true }));
-//       } else {
-//         res.json(STATUS.STATUS_200({ exit: false }));
-//       }
-//     })
-//     .catch((e) => {
-//       console.log(e);
-//       res.status(500).json(STATUS.STATUS_500);
-//     });
-// });
-
-apiRouter.post("/update", (req, res, next) => {
-  let societyId = req.body.societyId;
+apiRouter.post("/update", checkCookieToken, (req, res, next) => {
+  let societyId = req.body.id;
 
   let name = req.body.name;
   let openTimestamp = req.body.openTimestamp;
@@ -84,8 +46,6 @@ apiRouter.post("/update", (req, res, next) => {
   let iconUrl = req.body.iconUrl;
   let m = { name, openTimestamp, describe, college, bbsName, bbsDescribe, iconUrl };
 
-  console.log(req.body);
-
   Society.update(m, { where: { id: societyId } }).then(d => {
     res.json(STATUS.STATUS_200(d[0]));
   }).catch((e) => {
@@ -94,7 +54,7 @@ apiRouter.post("/update", (req, res, next) => {
   });
 });
 
-apiRouter.post("/info", (req, res, next) => {
+apiRouter.post("/info", checkCookieToken, (req, res, next) => {
   let societyId = req.body.societyId;
 
   Society.findOne({ where: { id: societyId } }).then(d => {
@@ -112,21 +72,21 @@ apiRouter.post("/info", (req, res, next) => {
 // delete one society only
 // post with admin token
 // admin function, must check permission
-apiRouter.post("/delete", (req, res, next) => {
-  let id = req.body.societyId;
-  Society.destroy({ where: { id } });
-  UserSocietyJoint.destroy({ where: { societyId: id } });
-  SocietyJoinRequest.destroy({ where: { societyId: id } });
-  Post.destroy({ where: { societyId: id } });
-  PostReply.destroy({ where: { societyId: id } });
-  SocietyActivity.destroy({ where: { societyId: id } });
-  SocietyInnerChat.destroy({ where: { societyId: id } });
-  res.json(STATUS.STATUS_200());
-});
+// apiRouter.post("/delete", (req, res, next) => {
+//   let id = req.body.societyId;
+//   Society.destroy({ where: { id } });
+//   UserSocietyJoint.destroy({ where: { societyId: id } });
+//   SocietyJoinRequest.destroy({ where: { societyId: id } });
+//   Post.destroy({ where: { societyId: id } });
+//   PostReply.destroy({ where: { societyId: id } });
+//   SocietyActivity.destroy({ where: { societyId: id } });
+//   SocietyInnerChat.destroy({ where: { societyId: id } });
+//   res.json(STATUS.STATUS_200());
+// });
 
 // add user and society exit check
 // permission level >= 100 required
-apiRouter.post("/join", (req, res, next) => {
+apiRouter.post("/join", checkCookieToken, (req, res, next) => {
   let societyId = req.body.societyId;
   let userId = req.body.userId;
   let permissionLevel = req.body.permissionLevel || 11;
@@ -164,7 +124,7 @@ apiRouter.post("/join", (req, res, next) => {
 });
 
 // permission level >= 100 required
-apiRouter.post("/leave", (req, res, next) => {
+apiRouter.post("/leave", checkCookieToken, (req, res, next) => {
   let userId = req.body.userId;
   let societyId = req.body.societyId;
   UserSocietyJoint.findOne({ where: { userId, societyId } }).then((data) => {
@@ -185,7 +145,7 @@ apiRouter.post("/leave", (req, res, next) => {
 });
 
 // find join by societyId
-apiRouter.post("/joint", (req, res, next) => {
+apiRouter.post("/joint", checkCookieToken, (req, res, next) => {
   let societyId = req.body.id;
   if (!societyId) {
     res.status(400).json(STATUS.STATUS_400);
@@ -201,16 +161,18 @@ apiRouter.post("/joint", (req, res, next) => {
     });
 });
 
+
+
 const societyBBSRouter = require("./bbs/router");
-apiRouter.use("/bbs", societyBBSRouter.apiRouter);
+apiRouter.use("/bbs", checkCookieToken, societyBBSRouter.apiRouter);
 const societyChatRouter = require("./chat/router");
-apiRouter.use("/chat", societyChatRouter.apiRouter);
+apiRouter.use("/chat", checkCookieToken, societyChatRouter.apiRouter);
 const societyMemberRouter = require("./member/router");
-apiRouter.use("/member", societyMemberRouter.apiRouter);
+apiRouter.use("/member", checkCookieToken, societyMemberRouter.apiRouter);
 const societyNoticeRouter = require("./notice/router");
-apiRouter.use("/notice", societyNoticeRouter.apiRouter);
+apiRouter.use("/notice", checkCookieToken, societyNoticeRouter.apiRouter);
 const societyActivity = require("./activity/router");
-apiRouter.use("/activity", societyActivity.apiRouter);
+apiRouter.use("/activity", checkCookieToken, societyActivity.apiRouter);
 const societyPicture = require("./picture/router");
 apiRouter.use("/picture", societyPicture.apiRouter);
 

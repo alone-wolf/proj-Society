@@ -16,6 +16,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.navigation.MainNavPage
@@ -26,7 +27,7 @@ private var _currentPageLabel = "Mine"
 @ExperimentalMaterialApi
 @Composable
 fun MainPage(requestHolder: RequestHolder) {
-    val mainNavController = requestHolder.mainNavController
+    val mainNavController = rememberNavController()
     var currentPageLabel: String by remember { mutableStateOf(_currentPageLabel) }
 
     Scaffold(

@@ -1,6 +1,9 @@
 package com.wh.society.api.data.society
 
-class SocietyNotice {
+import com.wh.society.api.data.impl.IRequestBody
+import org.json.JSONObject
+
+class SocietyNotice:IRequestBody {
     var id: Int = 0
     var title: String = ""
     var notice: String = ""
@@ -10,6 +13,18 @@ class SocietyNotice {
     var societyName: String = ""
 
     var permissionLevel: Int = 10
+    override fun toJSONObject(): JSONObject {
+        val j = JSONObject()
+        j.put("title",title)
+        j.put("notice",notice)
+        j.put("postUserId",postUserId)
+        j.put("postUsername",postUsername)
+        j.put("societyId",societyId)
+        j.put("societyName",societyName)
+        j.put("permissionLevel",permissionLevel)
+        return j
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

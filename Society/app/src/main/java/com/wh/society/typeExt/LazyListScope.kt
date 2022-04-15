@@ -89,17 +89,17 @@ fun <T> LazyListScope.everyNForRow(
 fun <T> LazyListScope.everyNForRow(
     items: List<T>,
     n: Int = 3,
-    itemContent: @Composable LazyItemScope.(T, Modifier) -> Unit,
+    itemContent: @Composable LazyItemScope.(T, index:Int, Modifier) -> Unit,
     placeholder: @Composable LazyItemScope.(Modifier) -> Unit = { m -> Spacer(modifier = m) }
 ) {
-    items.everyN(n, onEach = { it ->
+    items.everyN(n, onEach = { groupId, it ->
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                it.forEach {
-                    itemContent(it, Modifier.weight(1F / n.toFloat()))
+                it.forEachIndexed { i, it ->
+                    itemContent(it, groupId * n + i, Modifier.weight(1F / n.toFloat()))
                 }
                 repeat(n - it.size) {
                     placeholder(Modifier.weight(1F / n.toFloat()))

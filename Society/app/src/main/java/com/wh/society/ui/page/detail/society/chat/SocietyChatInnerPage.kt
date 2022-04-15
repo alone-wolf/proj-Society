@@ -1,32 +1,35 @@
 package com.wh.society.ui.page.detail.society.chat
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.wh.society.api.data.society.SocietyChatMessage
 import com.wh.society.api.data.ReturnListData
+import com.wh.society.api.data.society.SocietyChatMessage
+import com.wh.society.api.data.society.SocietyMember
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
@@ -45,9 +48,20 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
 
     val lazyListState = rememberLazyListState()
 
+    var societyMember by remember {
+        mutableStateOf(SocietyMember())
+    }
+
     LaunchedEffect(Unit) {
         requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
             chatMessageList = it
+        }
+
+        requestHolder.apiViewModel.societyMemberBySocietyId(
+            requestHolder.trans.society.id,
+            requestHolder.toast.toast
+        ) {
+            societyMember = it
         }
     }
     val newestIndex = chatMessageList.newestIndex
@@ -63,6 +77,24 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
         remoteOperate = {
             requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
                 chatMessageList = it
+            }
+        },
+        actions = {
+            if (societyMember.permissionLevel == 111) {
+                IconButton(onClick = {
+                    requestHolder.alert.tip("确定要清除聊天记录？", onOk = {
+                        requestHolder.apiViewModel.societyChatInnerClear(
+                            requestHolder.trans.society.id,
+                            requestHolder.toast.toast
+                        ) {
+                            requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
+                                chatMessageList = it
+                            }
+                        }
+                    })
+                }) {
+                    Icon(imageVector = Icons.Default.Clear, contentDescription = "")
+                }
             }
         },
         requestHolder = requestHolder
@@ -86,8 +118,12 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                 },
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickable {
-                        focusManager.clearFocus()
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = {
+                                focusManager.clearFocus()
+                            }
+                        )
                     }
             )
 

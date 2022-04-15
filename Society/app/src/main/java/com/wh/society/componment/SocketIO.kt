@@ -2,7 +2,7 @@
 //
 //import android.util.Log
 //import com.wh.society.api.data.SIORoomSubBlock
-//import com.wh.society.store.SettingStore
+//import com.wh.society.componment.SettingStore
 //import io.socket.client.IO
 //import io.socket.client.Socket
 //import io.socket.emitter.Emitter

@@ -98,4 +98,8 @@ abstract class AlertRequest(private val resources: Resources) {
     ) {
         alert(resources.getString(title), content, onOk)
     }
+
+    fun tip(content: String,onOk: () -> Unit = {}) {
+        alert("提示", content, onOk = onOk)
+    }
 }

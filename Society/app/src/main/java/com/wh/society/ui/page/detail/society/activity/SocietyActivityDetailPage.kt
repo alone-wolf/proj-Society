@@ -27,7 +27,7 @@ fun SocietyActivityDetailPage(requestHolder: RequestHolder) {
     }
 
     LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.societyActivityMemberList(requestHolder.trans.societyActivity.id) {
+        requestHolder.apiViewModel.societyActivityMember(requestHolder.trans.societyActivity.id) {
             memberList = it
         }
     }
@@ -51,7 +51,7 @@ fun SocietyActivityDetailPage(requestHolder: RequestHolder) {
                         ) {
                             Text(text = activity.title)
                             Text(text = activity.activity)
-                            Text(text = activity.createTimestamp)
+                            Text(text = activity.createTSFmt())
                             Text(text = activity.societyName)
                             Text(text = activity.level.toString())
                         }

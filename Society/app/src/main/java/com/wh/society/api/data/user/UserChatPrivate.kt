@@ -10,6 +10,7 @@ class UserChatPrivate : ChatMessage {
     var opUserId: Int = 0
     override var message: String = ""
     override var createTimestamp: String = ""
+    override val updateTimestamp: String = ""
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -42,6 +43,7 @@ class UserChatPrivate : ChatMessage {
     override fun toString(): String {
         return "UserChatPrivate(id=$id, userId=$userId, username='$username', userIconUrl='$userIconUrl', opUserId=$opUserId, message='$message', createTimestamp='$createTimestamp')"
     }
+
 
 
 }

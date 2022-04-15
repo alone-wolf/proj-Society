@@ -8,8 +8,7 @@ import com.wh.society.componment.RequestHolder
 import com.wh.society.ui.componment.RoundedTextFiled
 
 class AlertRequestCompact(
-    private val resources: Resources,
-    private val requestHolder: RequestHolder
+    resources: Resources
 ) : AlertRequest(resources) {
     //        fun alertNewPost(bbs: BBS) {
 //            super.alert(

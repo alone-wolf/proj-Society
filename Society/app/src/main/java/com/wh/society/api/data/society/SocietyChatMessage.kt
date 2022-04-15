@@ -13,7 +13,7 @@ class SocietyChatMessage : ChatMessage {
     override var userIconUrl: String = ""
     override var message: String = ""
     override var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var updateTimestamp: String = ""
 
 
     override fun equals(other: Any?): Boolean {

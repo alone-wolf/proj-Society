@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wh.society.api.data.ReturnObjectData
+import com.wh.society.api.data.shadow.PostShadow
 import com.wh.society.api.data.society.bbs.Post
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
@@ -19,38 +20,25 @@ import com.wh.society.ui.componment.GlobalScaffold
 @Composable
 fun BBSPostEditor(requestHolder: RequestHolder) {
 
-    var postData by remember {
-        mutableStateOf(Post())
-    }
+//    var postData by remember {
+//        mutableStateOf(Post())
+//    }
 
-    LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.societyBBSPostById(requestHolder.trans.postId) {
-            postData = it.notNullOrBlank(Post())
-        }
-    }
+    val post = PostShadow()
 
-    var title by remember {
-        mutableStateOf(postData.title)
-    }
-    var post by remember {
-        mutableStateOf(postData.post)
-    }
-    var level by remember {
-        mutableStateOf(postData.level)
-    }
+
+//    LaunchedEffect(Unit) {
+//        requestHolder.apiViewModel.societyBBSPostById(requestHolder.trans.postId) {
+//            postData = it.notNullOrBlank(Post())
+//        }
+//    }
 
     GlobalScaffold(page = GlobalNavPage.DetailPostEditor, requestHolder = requestHolder, actions = {
         IconButton(onClick = {
-            val userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id
-            val societyId = requestHolder.trans.bbs.id
-            requestHolder.apiViewModel.societyBBSPostCreate(
-                societyId = societyId,
-                userId = userId,
-                title = title,
-                post = post,
-                level = level,
-                deviceName = requestHolder.deviceName
-            ) {
+            post.userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id
+            post.societyId = requestHolder.trans.bbs.id
+            post.deviceName = requestHolder.deviceName
+            requestHolder.apiViewModel.societyBBSPostCreate(post) {
                 requestHolder.globalNav.goBack()
             }
         }) {
@@ -64,8 +52,8 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
                     .padding(16.dp)
             ) {
                 TextField(
-                    value = title,
-                    onValueChange = { title = it },
+                    value = post.title,
+                    onValueChange = { post.title = it },
                     placeholder = { Text(text = "title here ...") },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                 )
@@ -88,13 +76,13 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
                         expanded = showDropDown,
                         onDismissRequest = { showDropDown = false }) {
                         map.entries.forEach {
-                            DropdownMenuItem(onClick = { level = it.key }) {
+                            DropdownMenuItem(onClick = { post.level = it.key }) {
                                 Text(text = it.value)
                             }
                         }
                     }
                     TextButton(onClick = { showDropDown = true }) {
-                        Text(text = map[level].toString())
+                        Text(text = map[post.level].toString())
                     }
                 }
             }
@@ -104,8 +92,8 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 TextField(
-                    value = post,
-                    onValueChange = { post = it },
+                    value = post.post,
+                    onValueChange = { post.post = it },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)

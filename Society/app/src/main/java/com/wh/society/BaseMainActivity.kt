@@ -1,33 +1,22 @@
 package com.wh.society
 
-import android.content.*
+import android.content.ContentResolver
 import android.os.Bundle
 import android.text.util.Linkify
-import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.runtime.*
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.wh.society.api.data.*
-import com.wh.society.api.data.society.*
-import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.componment.OperatePlatform
 import com.wh.society.componment.RequestHolder
-import com.wh.society.componment.request.*
-import com.wh.society.navigation.GlobalNavPage
-import com.wh.society.store.SettingStore
-import com.wh.society.ui.componment.MyAlertDialog
-import com.wh.society.ui.componment.NavHost
-import com.wh.society.ui.theme.SocietyTheme
+import com.wh.society.componment.ViewModelFactory
+import com.wh.society.componment.request.AlertRequestCompact
+import com.wh.society.componment.request.DataTrans
+import com.wh.society.componment.request.ImagePickerRequest
+import com.wh.society.componment.request.ToastRequest
+import com.wh.society.componment.SettingStore
 import com.wh.society.util.ActivityOpener
 import com.wh.society.util.SystemUtil
 import com.wh.society.viewModel.ApiViewModel
@@ -35,11 +24,17 @@ import com.wh.society.viewModel.NotifyViewModel
 import io.noties.markwon.Markwon
 import io.noties.markwon.image.coil.CoilImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
-import kotlinx.coroutines.CoroutineScope
 
 abstract class BaseMainActivity : AppCompatActivity(), RequestHolder {
 
-    private val viewModelFactory by lazy { (application as App).viewModelFactory }
+    override val settingStore: SettingStore by lazy { SettingStore.instance(this) }
+
+    private val viewModelFactory by lazy {
+        ViewModelFactory(
+            settingStore = SettingStore(this),
+            application = application as App
+        )
+    }
     override val apiViewModel: ApiViewModel by viewModels { viewModelFactory }
     override val notifyViewModel: NotifyViewModel by viewModels { viewModelFactory }
 
@@ -71,7 +66,6 @@ abstract class BaseMainActivity : AppCompatActivity(), RequestHolder {
             .build()
     }
 
-    override val settingStore: SettingStore by lazy { (application as App).storeKeeper.settingStore }
 
 
     override val deviceName: String
@@ -84,7 +78,7 @@ abstract class BaseMainActivity : AppCompatActivity(), RequestHolder {
         }
 
     override val alert: AlertRequestCompact by lazy {
-        AlertRequestCompact(this.resources, this)
+        AlertRequestCompact(this.resources)
     }
 
     override val operatePlatform: OperatePlatform = OperatePlatform()

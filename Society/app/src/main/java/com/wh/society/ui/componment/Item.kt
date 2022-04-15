@@ -78,7 +78,7 @@ fun ChatMessageItem(
     ) {
         if (isMe) {
             Column(horizontalAlignment = Alignment.End) {
-                Text(text = "${chatMessage.createTimestamp}·${chatMessage.username}")
+                Text(text = "${chatMessage.createTSFmt()}·${chatMessage.username}")
                 Text(text = chatMessage.message, modifier = Modifier.height(40.dp))
             }
         }
@@ -204,7 +204,7 @@ fun SmallListTitle(title: String, n: Int, onClick: () -> Unit) {
 @Composable
 fun MineUserPostItem(requestHolder: RequestHolder, post: Post, modifier: Modifier = Modifier) {
     var society = Society()
-    requestHolder.apiViewModel.societyList.data.find { it.id == post.societyId }?.let {
+    requestHolder.societyList.find { it.id == post.societyId }?.let {
         society = it
     }
     Card(
@@ -246,14 +246,6 @@ fun MineUserPostReplyItem(
     postReply: PostReply,
     modifier: Modifier = Modifier
 ) {
-//    var post = Post()
-//    requestHolder.transPostList.data.find { it.id == postReply.postId }?.let {
-//        post = it
-//    }
-//    var society = Society()
-//    requestHolder.societyList.find { it.id == postReply.societyId }?.let {
-//        society = it
-//    }
     Card(
         onClick = {
             requestHolder.globalNav.goto(GlobalNavPage.DetailPost, postReply.postId)
@@ -276,6 +268,7 @@ fun MineUserPostReplyItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                Text(text = postReply.createTSFmt())
                 Text(
                     text = "${postReply.postTitle}·${postReply.societyName}",
                     maxLines = 1,
@@ -360,7 +353,7 @@ fun PostReplyItem(
     modifier: Modifier = Modifier,
     postMaxLine: Int = 5,
     ignoreClick: Boolean = false,
-    onItemDeleteDone: CoroutineScope.() -> Unit
+    onItemDeleteDone: () -> Unit
 ) {
     Card(
         onClick = {
@@ -405,7 +398,8 @@ fun PostReplyItem(
                         IconButton(onClick = {
                             requestHolder.apiViewModel.societyBBSPostReplyDelete(
                                 postReply.id,
-                                onItemDeleteDone
+                                onItemDeleteDone,
+                                {  }
                             )
 //                            requestHolder.apiViewModel.
                         }) {

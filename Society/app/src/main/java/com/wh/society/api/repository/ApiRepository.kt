@@ -1,6 +1,7 @@
 package com.wh.society.api.repository
 
 import android.util.Log
+import com.wh.society.api.NoAuthApi
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.*
 import com.wh.society.api.data.admin.UserRegisterAllow
@@ -11,137 +12,109 @@ import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserChatPrivate
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.api.data.user.UserPicture
-import com.wh.society.store.SettingStore
 import okhttp3.MultipartBody
 
-class ApiRepository(private val serverApi: ServerApi, private val settingStore: SettingStore) {
+class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoAuthApi) {
 
     val TAG = "WH_e"
+
+    val handleError: (path: String, ex: Exception, onError: (String) -> Unit) -> Unit =
+        { path, ex, onError ->
+            val m = "$path ${ex.localizedMessage}"
+            Log.e(TAG, m)
+            onError(m)
+        }
+
     suspend fun societyList(
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<Society> {
         try {
-            return serverApi.societyList(cookieToken, authUserId)
+            return serverApi.societyList()
         } catch (e: Exception) {
-            Log.e(TAG, "societyList: ${e.localizedMessage}")
-            onError("/society/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun societyUpdate(
-        societyId: Int,
-        name: String,
-        openTimestamp: String,
-        describe: String,
-        college: String,
-        bbsName: String,
-        bbsDescribe: String,
-        iconUrl: String,
-        cookieToken: String,
-        authUserId: Int,
-        onError: (String) -> Unit = {}
-    ): String {
+        society: Society,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.societyUpdate(
-                societyId = societyId,
-                name = name,
-                openTimestamp = openTimestamp,
-                describe = describe,
-                college = college,
-                bbsName = bbsName,
-                bbsDescribe = bbsDescribe,
-                iconUrl = iconUrl,
-                cookieToken = cookieToken,
-                authUserId = authUserId
-            )
+            serverApi.societyUpdate(society.toRequestBody())
+            onReturn()
         } catch (e: Exception) {
-            Log.e(TAG, "societyUpdate: ${e.localizedMessage}")
-            onError("/society/update ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun societyInfo(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnObjectData<Society> {
         try {
-            return serverApi.societyInfo(societyId, cookieToken, authUserId)
+            return serverApi.societyInfo(societyId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyInfo: ${e.localizedMessage}")
-            onError("/society/info ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnObjectData.blank(Society())
     }
 
+    suspend fun societyMemberBySocietyId(
+        societyId: Int,
+        onError: (String) -> Unit
+    ): ReturnObjectData<SocietyMember> {
+        try {
+            return serverApi.societyMemberBySocietyId(societyId)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+        return ReturnObjectData.blank(SocietyMember())
+    }
+
     suspend fun userInfo(
         userId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnObjectData<UserInfo> {
         try {
-            return serverApi.userInfo(userId = userId, cookieToken, authUserId)
+            return serverApi.userInfo(userId = userId)
         } catch (e: Exception) {
-            Log.e(TAG, "userInfo: ${e.localizedMessage}")
-            onError("/user/info ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnObjectData.blank()
     }
 
     suspend fun userInfoSimple(
         userId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnObjectData<UserInfo> {
         try {
-            return serverApi.userInfoSimple(userId, cookieToken, authUserId)
+            return serverApi.userInfoSimple(userId)
         } catch (e: Exception) {
-            Log.e(TAG, "userInfo: ${e.localizedMessage}")
-            onError("/user/info/simple ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnObjectData.blank()
     }
 
     suspend fun userInfoUpdate(
-        userId: Int,
-        username: String,
-        email: String,
-        studentNumber: String,
-        iconUrl: String,
-        phone: String,
-        name: String,
-        password: String,
-        college: String,
-        cookieToken: String,
-        authUserId: Int,
-        onError: (String) -> Unit = {}
-    ): String {
+        userInfo: UserInfo,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.userInfoUpdate(
-                userId = userId,
-                username = username,
-                email = email,
-                studentNumber = studentNumber,
-                iconUrl = iconUrl,
-                phone = phone,
-                name = name,
-                college = college,
-                password = password,
-                cookieToken = cookieToken,
-                authUserId = authUserId
-            )
+            serverApi.userInfoUpdate(userInfo.toRequestBody())
+            onReturn()
         } catch (e: Exception) {
-            Log.e(TAG, "userInfoUpdate: ${e.localizedMessage}")
-            onError("/user/info/update ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun userInfoUpdatePassword(
@@ -152,9 +125,9 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         email: String,
         password: String,
         onError: (String) -> Unit = {}
-    ): String {
+    ) {
         try {
-            return serverApi.userInfoUpdatePassword(
+            noAuthApi.userInfoUpdatePassword(
                 name = name,
                 username = username,
                 studentNumber = studentNumber,
@@ -163,49 +136,34 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
                 password = password
             )
         } catch (e: Exception) {
-            Log.e(TAG, "userInfoUpdate: ${e.localizedMessage}")
-            onError("/user/info/update/password ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun userLogin(
         phoneStudentIdEmail: String,
         password: String,
-        onError: (String) -> Unit = {}
+        onError: (String) -> Unit
     ): ReturnObjectData<LoginReturn> {
         try {
-            return serverApi.userLogin(phoneStudentIdEmail, password)
+            return noAuthApi.userLogin(phoneStudentIdEmail, password)
         } catch (e: Exception) {
-            Log.e(TAG, "userLogin: ${e.localizedMessage}")
-            onError("/user/login ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnObjectData.blank()
     }
 
-//    suspend fun userSIOConnected(
-//        userId: Int,
-//        cookieToken: String,
-//        authUserId: Int
-//    ): String {
-//        try {
-//            return serverApi.userSIOConnected(userId, cookieToken, authUserId)
-//        } catch (e: Exception) {
-//            Log.e(TAG, "userSIOConnected: ${e.localizedMessage}")
-//        }
-//        return "failed"
-//    }
-
     suspend fun userLogout(
         userId: Int,
-        cookieToken: String,
         onError: (String) -> Unit = {}
     ): String {
         try {
-            return serverApi.userLogout(userId, cookieToken)
+            return serverApi.userLogout(userId)
         } catch (e: Exception) {
-            Log.e(TAG, "userLogout: ${e.localizedMessage}")
-            onError("/user/logout ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return "failed"
     }
@@ -215,110 +173,85 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         societyId: Int,
         request: String,
         isJoin: Boolean,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): String {
         try {
             return serverApi.societyMemberRequestCreate(
-                userId,
-                societyId,
-                request,
-                isJoin,
-                cookieToken,
-                authUserId
+                userId = userId,
+                societyId = societyId,
+                request = request,
+                isJoin = isJoin
             )
         } catch (e: Exception) {
-            Log.e(TAG, "societyMemberRequest: ${e.localizedMessage}")
-            onError("/society/member/request/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return "failed"
     }
 
     suspend fun societyMemberRequestList(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyMemberRequest> {
         try {
-            return serverApi.societyMemberRequestList(societyId, cookieToken, authUserId)
+            return serverApi.societyMemberRequestList(societyId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyMemberRequestList: ${e.localizedMessage}")
-            onError("/society/member/request/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun societyJoint(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyMember> {
         try {
-            return serverApi.societyJoint(societyId, cookieToken, authUserId)
+            return serverApi.societyJoint(societyId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyJoint: ${e.localizedMessage}")
-            onError("/society/joint ")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun societyBBSInfo(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnObjectData<BBSInfo> {
         try {
-            return serverApi.societyBBSInfo(societyId, cookieToken, authUserId)
+            return serverApi.societyBBSInfo(societyId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyBBSInfo: ${e.localizedMessage}")
-            onError("/society/bbs/info ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnObjectData.blank()
     }
 
     suspend fun societyBBSPostCreate(
-        societyId: Int,
-        userId: Int,
-        title: String,
-        post: String,
-        level: Int, deviceName: String,
-        cookieToken: String,
-        authUserId: Int,
+        post: Post,
         onError: (String) -> Unit = {}
     ): String {
         try {
             return serverApi.societyBBSPostCreate(
-                societyId,
-                userId,
-                title,
-                post,
-                level,
-                deviceName,
-                cookieToken,
-                authUserId
+                post.toRequestBody()
             )
         } catch (e: Exception) {
-            Log.e(TAG, "societyBBSPostCreate: ${e.localizedMessage}")
-            onError("/society/bbs/post/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return "failed"
     }
 
     suspend fun societyBBSPostById(
         postId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnObjectData<Post> {
         try {
-            return serverApi.societyBBSPostById(postId, cookieToken, authUserId)
+            return serverApi.societyBBSPostById(postId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyBBSPostById: ${e.localizedMessage}")
-            onError("/society/bbs/post/by/id ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnObjectData.blank()
     }
@@ -326,85 +259,64 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
     suspend fun societyBBSPostDelete(
         userId: Int,
         postId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): String {
         try {
-            return serverApi.societyBBSPostDelete(userId, postId, cookieToken, authUserId)
+            return serverApi.societyBBSPostDelete(userId, postId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyBBSPostDelete: ${e.localizedMessage}")
-            onError("/society/bbs/post/delete ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return "failed"
     }
 
     suspend fun societyBBSPostReplyList(
         postId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<PostReply> {
         try {
-            return serverApi.societyBBSPostReplyList(postId, cookieToken, authUserId)
+            return serverApi.societyBBSPostReplyList(postId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyBBSPostReplyList: ${e.localizedMessage}")
-            onError("/society/bbs/post/reply/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun societyBBSPostReplyCreate(
-        societyId: Int,
-        postId: Int,
-        userId: Int,
-        reply: String,
-        deviceName: String,
-        cookieToken: String,
-        authUserId: Int,
+        postReply: PostReply,
         onError: (String) -> Unit = {}
     ): String {
         try {
-            return serverApi.societyBBSPostReplyCreate(
-                societyId,
-                postId,
-                userId,
-                reply,
-                deviceName,
-                cookieToken,
-                authUserId
-            )
+            return serverApi.societyBBSPostReplyCreate(postReply.toRequestBody())
         } catch (e: Exception) {
-            Log.e(TAG, "societyBBSPostReplyCreate: ${e.localizedMessage}")
-            onError("/society/bbs/post/reply/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return "failed"
     }
 
     suspend fun societyBBSPostReplyDelete(
         postReplyId: Int,
-        cookieToken: String,
-        authUserId: Int
-    ): String {
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.societyBBSPostReplyDelete(postReplyId, cookieToken, authUserId)
+            serverApi.societyBBSPostReplyDelete(postReplyId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyBBSPostReplyDelete: ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun societyChatInnerList(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyChatMessage> {
         try {
-            return serverApi.societyChatInnerList(societyId, cookieToken, authUserId)
+            return serverApi.societyChatInnerList(societyId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyChatInnerList: ${e.localizedMessage}")
-            onError("/society/chat/inner/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
@@ -413,137 +325,120 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         societyId: Int,
         userId: Int,
         message: String,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
-    ): String {
+    ) {
         try {
-            return serverApi.societyChatInnerCreate(
-                societyId,
-                userId,
-                message,
-                cookieToken,
-                authUserId
+            serverApi.societyChatInnerCreate(
+                societyId = societyId,
+                userId = userId,
+                message = message,
             )
         } catch (e: Exception) {
-            Log.e(TAG, "societyChatInnerCreate: ${e.localizedMessage}")
-            onError("/society/chat/inner/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
+
+    suspend fun societyChatInnerClear(
+        societyId: Int,
+        onError: (String) -> Unit = {}
+    ) {
+        try {
+            serverApi.societyChatInnerClear(societyId)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
 
     suspend fun societyActivityList(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyActivity> {
         try {
             return serverApi.societyActivityList(
-                societyId = societyId,
-                cookieToken = cookieToken,
-                authUserId = authUserId
+                societyId = societyId
             )
         } catch (e: Exception) {
-            Log.e(TAG, "societyActivityList: ${e.localizedMessage}")
-            onError("/society/activity/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun societyActivityCreate(
-        societyId: Int,
-        deviceName: String,
-        title: String,
-        level: Int,
-        activity: String,
-        cookieToken: String,
-        authUserId: Int,
+        activity: SocietyActivity,
         onError: (String) -> Unit = {}
-    ): String {
+    ) {
         try {
-            return serverApi.societyActivityCreate(
-                societyId = societyId,
-                deviceName = deviceName,
-                title = title,
-                level = level,
-                activity = activity,
-                cookieToken = cookieToken,
-                authUserId = authUserId
+            serverApi.societyActivityCreate(
+                activity.toRequestBody()
             )
         } catch (e: Exception) {
-            Log.e(TAG, "societyActivityCreate: ${e.localizedMessage}")
-            onError("/society/activity/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
-    suspend fun societyActivityRequestList(
-        societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
-        onError: (String) -> Unit = {}
-    ): ReturnListData<SocietyActivityRequest> {
-        try {
-            return serverApi.societyActivityRequestList(societyId, cookieToken, authUserId)
-        } catch (e: Exception) {
-            Log.e(TAG, "societyActivityRequestList: ${e.localizedMessage}")
-            onError("/society/activity/request/list ${e.localizedMessage}")
-        }
-        return ReturnListData.blank()
-    }
-
-    suspend fun societyActivityRequestCreate(
-        societyId: Int,
-        userId: Int,
-        request: String,
-        isJoin: Boolean,
-        cookieToken: String,
-        authUserId: Int,
-        onError: (String) -> Unit = {}
-    ): String {
-        try {
-            return serverApi.societyActivityRequestCreate(
-                societyId = societyId,
-                userId = userId,
-                request = request,
-                isJoin = isJoin,
-                cookieToken,
-                authUserId
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "societyActivityRequestCreate: ${e.localizedMessage}")
-            onError("/society/activity/request/request ${e.localizedMessage}")
-        }
-        return "failed"
-    }
-
-    suspend fun societyActivityMemberList(
+    suspend fun societyActivityDelete(
         activityId: Int,
-        cookieToken: String,
-        authUserId: Int,
+        onError: (String) -> Unit
+    ) {
+        try {
+            serverApi.societyActivityDelete(activityId)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
+    suspend fun societyActivityJoin(
+        activityId: Int, userId: Int,
+        onError: (String) -> Unit
+    ) {
+        try {
+            serverApi.societyActivityJoin(activityId, userId)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
+    suspend fun societyActivityLeave(
+        activityMemberId: Int,
+        onError: (String) -> Unit
+    ) {
+        try {
+            serverApi.societyActivityLeave(activityMemberId)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
+    suspend fun societyActivityMember(
+        activityId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyActivityMember> {
         try {
-            return serverApi.societyActivityMemberList(activityId, cookieToken, authUserId)
+            return serverApi.societyActivityMember(activityId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyActivityMemberList: ${e.localizedMessage}")
-            onError("/society/activity/member/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun societyPictureList(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyPicture> {
         try {
-            return serverApi.societyPictureList(societyId, cookieToken, authUserId)
+            return serverApi.societyPictureList(societyId)
         } catch (e: Exception) {
-            Log.e(TAG, "societyPictureList: ${e.localizedMessage}")
-            onError("/society/picture/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
@@ -557,8 +452,8 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
             val societyIdPart = MultipartBody.Part.createFormData("societyId", societyId.toString())
             return serverApi.societyPictureCreate(imageBodyPart, societyIdPart)
         } catch (e: Exception) {
-            Log.e(TAG, "societyPictureCreate: ${e.localizedMessage}")
-            onError("/society/picture/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return "failed"
     }
@@ -566,69 +461,48 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
     suspend fun societyPictureDelete(
         societyId: Int,
         picToken: String,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
-    ): String {
+    ) {
         try {
-            return serverApi.societyPictureDelete(
+            serverApi.societyPictureDelete(
                 societyId = societyId,
-                picToken = picToken,
-                cookieToken = cookieToken,
-                authUserId = authUserId
+                picToken = picToken
             )
         } catch (e: Exception) {
-            Log.e(TAG, "societyPictureDelete: ${e.localizedMessage}")
-            onError("/society/picture/delete")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun societyNoticeList(
         societyId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyNotice> {
         try {
             return serverApi.societyNoticeList(
-                societyId = societyId,
-                cookieToken = cookieToken,
-                authUserId = authUserId
+                societyId = societyId
             )
         } catch (e: Exception) {
-            Log.e(TAG, "societyNoticeList: ${e.localizedMessage}")
-            onError("/society/notify/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun societyNoticeCreate(
-        societyId: Int,
-        postUserId: Int,
-        title: String,
-        notice: String,
-        permissionLevel: Int,
-        cookieToken: String,
-        authUserId: Int,
-        onError: (String) -> Unit = {}
-    ): String {
+        societyNotice: SocietyNotice,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
-            return serverApi.societyNoticeCreate(
-                societyId = societyId,
-                postUserId = postUserId,
-                title = title,
-                notice = notice,
-                permissionLevel = permissionLevel,
-                cookieToken = cookieToken,
-                authUserId = authUserId
-            )
+            serverApi.societyNoticeCreate(societyNotice.toRequestBody())
+            onReturn.invoke()
         } catch (e: Exception) {
-            Log.e(TAG, "societyNoticeList: ${e.localizedMessage}")
-            onError("/society/notice/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
+
 
     suspend fun userRegister(
         username: String,
@@ -637,142 +511,108 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         name: String,
         password: String,
         onError: (String) -> Unit = {}
-    ): String {
+    ) {
         try {
-            return serverApi.userRegister(username, phone, email, name, password)
+            noAuthApi.userRegister(username, phone, email, name, password)
         } catch (e: Exception) {
-            Log.e(TAG, "userRegister: ${e.localizedMessage}")
-            onError("/user/register ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun userJoint(
         userId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyMember> {
         try {
-            return serverApi.userJoint(userId, cookieToken, authUserId)
+            return serverApi.userJoint(userId)
         } catch (e: Exception) {
-            Log.e(TAG, "userJoint: ${e.localizedMessage}")
-            onError("/user/joint ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun userJoinRequestList(
         userId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<SocietyMemberRequest> {
         try {
-            return serverApi.userJoinRequestList(userId, cookieToken, authUserId)
+            return serverApi.userJoinRequestList(userId)
         } catch (e: Exception) {
-            Log.e(TAG, "userJoinRequestList: ${e.localizedMessage}")
-            onError("/user/join/request/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun userPostList(
         userId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<Post> {
         try {
-            return serverApi.userPostList(userId, cookieToken, authUserId)
+            return serverApi.userPostList(userId)
         } catch (e: Exception) {
-            Log.e(TAG, "userPost: ${e.localizedMessage}")
-            onError("/user/post/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun userPostReplyList(
         userId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<PostReply> {
         try {
-            return serverApi.userPostReplyList(userId, cookieToken, authUserId)
+            return serverApi.userPostReplyList(userId)
         } catch (e: Exception) {
-            Log.e(TAG, "userPostReplyList: ${e.localizedMessage}")
-            onError("/user/post/reply/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
-
-//    suspend fun userPostReplyList(
-//        userId: Int,
-//        postId: Int,
-//        cookieToken: String,
-//        authUserId: Int
-//    ): ReturnListData<PostReply> {
-//        try {
-//            return serverApi.userPostReplyList(userId, postId, cookieToken, authUserId)
-//        } catch (e: Exception) {
-//            Log.e(TAG, "userPostReplyList: ${e.localizedMessage}")
-//        }
-//        return ReturnListData.blank()
-//    }
 
     suspend fun userChatPrivateCreate(
         userId: Int,
         opUserId: Int,
         message: String,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
-    ): String {
-        Log.d(TAG, "userChatPrivateCreate: userId:${userId}")
-        Log.d(TAG, "userChatPrivateCreate: opUserId:${opUserId}")
+    ) {
         try {
-            return serverApi.userChatPrivateCreate(
-                userId,
-                opUserId,
-                message,
-                cookieToken,
-                authUserId
+            serverApi.userChatPrivateCreate(
+                userId = userId,
+                opUserId = opUserId,
+                message = message
             )
         } catch (e: Exception) {
-            Log.e(TAG, "userChatPrivateCreate: ${e.localizedMessage}")
-            onError("/user/chat/private/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun userChatPrivateList(
         userId: Int,
         opUserId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<UserChatPrivate> {
         try {
-            return serverApi.userChatPrivateList(userId, opUserId, cookieToken, authUserId)
+            return serverApi.userChatPrivateList(userId, opUserId)
         } catch (e: Exception) {
-            Log.e(TAG, "userChatPrivateList: ${e.localizedMessage}")
-            onError("/user/chat/private/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
     suspend fun picList(
         userId: Int,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
     ): ReturnListData<UserPicture> {
         try {
-            return serverApi.picList(userId, cookieToken, authUserId)
+            return serverApi.picList(userId)
         } catch (e: Exception) {
-            Log.e(TAG, "picList: ${e.localizedMessage}")
-            onError("/pic/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
@@ -781,49 +621,49 @@ class ApiRepository(private val serverApi: ServerApi, private val settingStore: 
         imageBodyPart: MultipartBody.Part,
         userId: Int,
         onError: (String) -> Unit = {}
-    ): String {
+    ) {
         try {
             val userIdPart = MultipartBody.Part.createFormData("userId", userId.toString())
-            return serverApi.picCreate(imageBodyPart, userIdPart)
+            serverApi.picCreate(imageBodyPart, userIdPart)
         } catch (e: Exception) {
-            Log.e(TAG, "picCreate: ${e.localizedMessage}")
-            onError("/pic/create ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
     suspend fun picDelete(
         userId: Int,
         picToken: String,
-        cookieToken: String,
-        authUserId: Int,
         onError: (String) -> Unit = {}
-    ): String {
+    ) {
         try {
-            return serverApi.picDelete(userId, picToken, cookieToken, authUserId)
+            serverApi.picDelete(userId, picToken)
         } catch (e: Exception) {
-            Log.e(TAG, "picDelete: ${e.localizedMessage}")
-            onError("/pic/delete ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
-        return "failed"
     }
 
-    suspend fun collegeList(onError: (String) -> Unit = {}): ReturnListData<College> {
+    suspend fun collegeList(
+        onError: (String) -> Unit
+    ): ReturnListData<College> {
         try {
             return serverApi.collegeList()
         } catch (e: Exception) {
-            Log.e(TAG, "collegeList: ${e.localizedMessage}")
-            onError("/college/list ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnListData.blank()
     }
 
-    suspend fun adminUserRegisterAllow(onError: (String) -> Unit = {}): ReturnObjectData<UserRegisterAllow> {
+    suspend fun adminUserRegisterAllow(
+        onError: (String) -> Unit
+    ): ReturnObjectData<UserRegisterAllow> {
         try {
-            return serverApi.adminUserRegisterAllow()
+            return noAuthApi.adminUserRegisterAllow()
         } catch (e: Exception) {
-            Log.e(TAG, "adminUserRegisterAllow: ${e.localizedMessage}")
-            onError("/admin/user/register/allow ${e.localizedMessage}")
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
         }
         return ReturnObjectData.blank(UserRegisterAllow())
     }

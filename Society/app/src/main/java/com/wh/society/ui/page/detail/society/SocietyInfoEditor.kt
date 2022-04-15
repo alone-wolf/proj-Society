@@ -28,6 +28,8 @@ import com.wh.society.api.data.society.Society
 import com.wh.society.api.data.society.SocietyPicture
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
+import com.wh.society.typeExt.borderButton
+import com.wh.society.typeExt.textFiled
 import com.wh.society.ui.componment.GlobalScaffold
 import kotlinx.coroutines.launch
 
@@ -50,49 +52,8 @@ fun SocietyInfoEditor(requestHolder: RequestHolder) {
 
     GlobalScaffold(
         page = GlobalNavPage.SocietyInfoEditorPage,
-        requestHolder = requestHolder,
-        actions = {
-            IconButton(onClick = {
-                requestHolder.apiViewModel.societyUpdate(
-                    societyId = tempSociety.id,
-                    name = tempSociety.name,
-                    openTimestamp = tempSociety.openTimestamp,
-                    describe = tempSociety.describe,
-                    college = tempSociety.college,
-                    bbsName = tempSociety.bbsName,
-                    bbsDescribe = tempSociety.bbsDescribe,
-                    iconUrl = tempSociety.iconUrl,
-                    onError = {
-                        requestHolder.coroutineScope.launch {
-                            requestHolder.toast.toast(it)
-                        }
-                    },
-                    onReturn = {
-                        requestHolder.apiViewModel.societyInfo(tempSociety.id,
-                            onError = {
-                                requestHolder.coroutineScope.launch {
-                                    requestHolder.toast.toast(it)
-                                }
-                            },
-                            onReturn = {
-                                requestHolder.trans.society = it.notNullOrBlank(Society())
-                            }
-                        )
-                        requestHolder.apiViewModel.societyList(
-                            onError = {
-                                requestHolder.coroutineScope.launch {
-                                    requestHolder.toast.toast(it)
-                                }
-                            }
-                        )
-                        requestHolder.globalNav.goBack()
-                    }
-
-                )
-            }) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "")
-            }
-        }) {
+        requestHolder = requestHolder
+    ) {
 
         LazyColumn(
             content = {
@@ -176,50 +137,71 @@ fun SocietyInfoEditor(requestHolder: RequestHolder) {
                     }
                 }
 
-                item {
-                    TextField(
-                        value = tempSociety.name,
-                        onValueChange = { tempSociety.name = it },
-                        placeholder = { Text(text = "社团名称") },
-                        label = { Text(text = "社团名称") }
-                    )
-                }
+                textFiled(
+                    value = tempSociety.name,
+                    onUpdate = { tempSociety.name = it },
+                    label = "社团名称"
+                )
 
-                item {
-                    TextField(
-                        value = tempSociety.describe,
-                        onValueChange = { tempSociety.describe = it },
-                        placeholder = { Text(text = "社团简介") },
-                        label = { Text(text = "社团简介") }
-                    )
-                }
+                textFiled(
+                    value = tempSociety.describe,
+                    onUpdate = { tempSociety.describe = it },
+                    label = "社团简介"
+                )
 
-                item {
-                    TextField(
-                        value = tempSociety.college,
-                        onValueChange = { tempSociety.college = it },
-                        placeholder = { Text(text = "所属学院") },
-                        label = { Text(text = "所属学院") }
-                    )
-                }
+                textFiled(
+                    value = tempSociety.college,
+                    onUpdate = { tempSociety.college = it },
+                    label = "所属学院"
+                )
 
-                item {
-                    TextField(
-                        value = tempSociety.bbsName,
-                        onValueChange = { tempSociety.bbsName = it },
-                        placeholder = { Text(text = "论坛名称") },
-                        label = { Text(text = "论坛名称") }
-                    )
-                }
+                textFiled(
+                    value = tempSociety.bbsName,
+                    onUpdate = { tempSociety.bbsName = it },
+                    label = "论坛名称"
+                )
 
-                item {
-                    TextField(
-                        value = tempSociety.bbsDescribe,
-                        onValueChange = { tempSociety.bbsDescribe = it },
-                        placeholder = { Text(text = "论坛简介") },
-                        label = { Text(text = "论坛简介") }
-                    )
-                }
+                textFiled(
+                    value = tempSociety.bbsDescribe,
+                    onUpdate = { tempSociety.bbsDescribe = it },
+                    label = "论坛简介"
+                )
+
+                borderButton(
+                    text = "保存",
+                    onClick = {
+                        requestHolder.apiViewModel.societyUpdate(
+                            society= tempSociety,
+                            onError = {
+                                requestHolder.coroutineScope.launch {
+                                    requestHolder.toast.toast(it)
+                                }
+                            },
+                            onReturn = {
+                                requestHolder.apiViewModel.societyInfo(tempSociety.id,
+                                    onError = {
+                                        requestHolder.coroutineScope.launch {
+                                            requestHolder.toast.toast(it)
+                                        }
+                                    },
+                                    onReturn = {
+                                        requestHolder.trans.society = it.notNullOrBlank(Society())
+                                    }
+                                )
+                                requestHolder.apiViewModel.societyList(
+                                    onError = {
+                                        requestHolder.coroutineScope.launch {
+                                            requestHolder.toast.toast(it)
+                                        }
+                                    }
+                                )
+                                requestHolder.globalNav.goBack()
+                            }
+
+                        )
+                    }
+                )
+
             },
             modifier = Modifier.fillMaxWidth()
         )

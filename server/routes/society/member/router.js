@@ -6,6 +6,21 @@ const UserSocietyJoint = require("../../../model/society_member");
 const STATUS = require("../../../utils/return_data");
 const User = require("../../../model/user");
 
+apiRouter.post("/by/society/id", (req, res, next) => {
+    let societyId = req.body.societyId;
+    let userId = req.body.cookieTokenUserId;
+    UserSocietyJoint.findOne({ where: { societyId, userId } }).then(d => {
+        if (d) {
+            res.json(STATUS.STATUS_200(d));
+        } else {
+            res.status(404).json(STATUS.STATUS_404);
+        }
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500);
+    });
+})
+
 apiRouter.post("/info", (req, res, next) => {
     let societyId = req.body.societyId;
     UserSocietyJoint.findAll({ where: { societyId } }).then(data => {

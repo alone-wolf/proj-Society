@@ -1,15 +1,35 @@
 package com.wh.society.api.data.society
 
-class SocietyActivity {
-    var id:Int = 0
-    var societyId:Int = 0
-    var societyName:String = ""
-    var deviceName:String = ""
-    var level:Int = 0
-    var title:String = ""
-    var activity:String = ""
-    var createTimestamp:String = ""
-    var updateTimestamp:String = ""
+import com.wh.society.api.data.impl.IJoinnable
+import com.wh.society.api.data.impl.IRequestBody
+import com.wh.society.api.data.impl.IZTimestamp
+import org.json.JSONObject
+
+class SocietyActivity : IRequestBody, IZTimestamp, IJoinnable {
+    var id: Int = 0
+    var societyId: Int = 0
+    var societyName: String = ""
+    var deviceName: String = ""
+    var level: Int = 0
+    var title: String = ""
+    var activity: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
+    override var thisUserJoin: Boolean = false
+
+
+    override fun toJSONObject(): JSONObject {
+        val j = JSONObject()
+        j.put("societyId", societyId)
+        j.put("deviceName", deviceName)
+        j.put("title", title)
+        j.put("level", level)
+        j.put("activity", activity)
+        return j
+    }
+
+
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

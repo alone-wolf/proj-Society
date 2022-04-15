@@ -13,6 +13,16 @@ class ImagePickerRequest(
 ) {
     var afterImagePick: (MultipartBody.Part) -> Unit = { i: MultipartBody.Part -> }
 
+
+    val forUser:()->Unit = {
+        afterImagePick = { imageBodyPart ->
+            requestHolder.apiViewModel.picCreate(imageBodyPart) {
+                requestHolder.apiViewModel.picList()
+            }
+        }
+        imagePicker.launch("image/*")
+    }
+
     fun forUser() {
         afterImagePick = { imageBodyPart ->
             requestHolder.apiViewModel.picCreate(imageBodyPart) {

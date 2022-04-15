@@ -8,6 +8,20 @@ fun <T> List<T>.firstN(n: Int): List<T> {
     }
 }
 
+inline fun <T> List<T>.everyN(n: Int, onEach: (groupId: Int, List<T>) -> Unit) {
+    val times = this.size / n
+    var tmp = 0
+    var groupId = 0
+    while (times > tmp) {
+        onEach(groupId, this.getGroup(n, tmp))
+        tmp += 1
+        groupId += 1
+    }
+    if (size % n != 0) {
+        onEach(groupId + 1, getRest(times * n))
+    }
+}
+
 inline fun <T> List<T>.everyN(n: Int, onEach: (List<T>) -> Unit) {
     val times = this.size / n
     var tmp = 0

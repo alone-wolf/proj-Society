@@ -45,9 +45,8 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
             }
             FloatingActionButton(onClick = {
                 requestHolder.alert.alert(
-                    title = "New Activity",
+                    title = "新活动",
                     content = {
-
                         Column {
                             TextField(
                                 value = activityTitle,
@@ -66,13 +65,13 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
                     },
                     onOk = {
 
-                        requestHolder.apiViewModel.societyActivityCreate(
-                            societyId = requestHolder.trans.society.id,
-                            deviceName = requestHolder.deviceName,
-                            title = activityTitle,
-                            activity = activity,
-                            level = 10
-                        ) {
+                        val societyActivity = SocietyActivity()
+                        societyActivity.societyId = requestHolder.trans.society.id
+                        societyActivity.deviceName = requestHolder.deviceName
+                        societyActivity.title = activityTitle
+                        societyActivity.activity = activity
+
+                        requestHolder.apiViewModel.societyActivityCreate(societyActivity) {
                             requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { it ->
                                 activityList = it
                             }
@@ -111,19 +110,18 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
                                     horizontal = 16.dp
                                 )
                             ) {
-                                Row(verticalAlignment = Alignment.Bottom) {
-                                    Text(
-                                        text = it.title,
-                                        fontSize = 20.sp,
-                                        modifier = Modifier.padding(end = 8.dp)
-                                    )
-                                    Text(
-                                        text = it.updateTimestamp,
-                                        fontWeight = FontWeight.Light,
-                                        fontSize = 14.sp
-                                    )
-                                }
+                                Text(
+                                    text = it.title,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+
+                                Text(
+                                    text = it.createTSFmt(),
+                                    fontSize = 14.sp
+                                )
                                 Text(text = it.activity)
+                                Text(text = "thisUserJoin:${it.thisUserJoin}")
                             }
                         }
                     }

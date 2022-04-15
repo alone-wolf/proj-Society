@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wh.society.api.NoAuthApi
+import com.wh.society.api.ServerApi
 import com.wh.society.api.data.*
 import com.wh.society.api.data.admin.UserRegisterAllow
 import com.wh.society.api.data.society.*
@@ -18,13 +20,18 @@ import com.wh.society.api.data.user.UserInfo
 import com.wh.society.api.data.user.UserPicture
 import com.wh.society.api.repository.ApiRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
-class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
+class ApiViewModel : ViewModel() {
 
-    var societyList by mutableStateOf(ReturnListData.blank<Society>())
+    private var noAuthApi = NoAuthApi.create()
+
+    private var serverApi = ServerApi.create()
+
+    private val apiRepository = ApiRepository(serverApi, noAuthApi)
+
+    var societyList by mutableStateOf(emptyList<Society>())
 
     var bbsList by mutableStateOf(emptyList<BBS>())
 
@@ -39,13 +46,9 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     fun societyList(onError: (String) -> Unit = {}) {
         viewModelScope.launch {
-            societyList = apiRepository.societyList(
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId,
-                onError = onError
-            )
+            societyList = apiRepository.societyList(onError).data
             val b: MutableList<BBS> = mutableListOf()
-            societyList.data.forEach {
+            societyList.forEach {
                 b.add(BBS.fromSociety(it))
             }
             bbsList = b
@@ -53,49 +56,36 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     }
 
     fun societyUpdate(
-        societyId: Int,
-        name: String,
-        openTimestamp: String,
-        describe: String,
-        college: String,
-        bbsName: String,
-        bbsDescribe: String,
-        iconUrl: String,
-        onReturn: CoroutineScope.() -> Unit,
-        onError: (String) -> Unit = {}
+        society: Society,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyUpdate(
-                societyId = societyId,
-                name = name,
-                openTimestamp = openTimestamp,
-                describe = describe,
-                college = college,
-                bbsName = bbsName,
-                bbsDescribe = bbsDescribe,
-                iconUrl = iconUrl,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId,
-                onError = onError
-            )
-            Log.d(TAG, "societyUpdate: $a")
-            onReturn()
+            apiRepository.societyUpdate(society, onReturn, onError)
         }
     }
 
     fun societyInfo(
         societyId: Int,
         onError: (String) -> Unit = {},
-        onReturn: CoroutineScope.(ReturnObjectData<Society>) -> Unit,
+        onReturn: (ReturnObjectData<Society>) -> Unit,
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyInfo(
                 societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId,
                 onError = onError
             )
             onReturn(a)
+        }
+    }
+
+    fun societyMemberBySocietyId(
+        societyId: Int,
+        onError: (String) -> Unit,
+        onReturn: (SocietyMember) -> Unit
+    ) {
+        viewModelScope.launch {
+            apiRepository.societyMemberBySocietyId(societyId, onError).data?.let(onReturn)
         }
     }
 
@@ -103,71 +93,30 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         viewModelScope.launch {
             loginToken.data?.cookieToken?.let {
                 userInfo = apiRepository.userInfo(
-                    userId = loginToken.data!!.userId,
-                    cookieToken = it,
-                    authUserId = loginToken.data!!.userId
+                    userId = loginToken.data!!.userId
                 )
                 userInfo.data?.let { it ->
                     onReturn(it)
                 }
-                return@launch
-            }
-            Log.e(TAG, "userInfo: token is blank")
+            } ?: Log.e(TAG, "userInfo: token is blank")
         }
     }
 
     fun userInfoSimple(userId: Int, onReturn: CoroutineScope.(UserInfo) -> Unit) {
         viewModelScope.launch {
             val userInfo = apiRepository.userInfoSimple(
-                userId = userId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                userId = userId
             )
             onReturn(userInfo.data!!)
         }
     }
 
-    fun userInfoUpdate(u: UserInfo, onReturn: CoroutineScope.() -> Unit) {
+    fun userInfoUpdate(u: UserInfo, onReturn: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.userInfoUpdate(
-                userId = userInfo.data!!.id,
-                username = u.username,
-                email = u.email,
-                studentNumber = u.studentNumber,
-                iconUrl = u.iconUrl,
-                phone = u.phone,
-                name = u.name, college = u.college,
-                password = u.password,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
-            )
-            onReturn()
-        }
-    }
-
-    fun userInfoUpdate(
-        username: String,
-        email: String,
-        studentNumber: String,
-        iconUrl: String,
-        phone: String,
-        name: String,
-        password: String,
-        college: String,
-        onReturn: CoroutineScope.() -> Unit
-    ) {
-        viewModelScope.launch {
-            val a = apiRepository.userInfoUpdate(
-                userId = userInfo.data!!.id,
-                username = username,
-                email = email,
-                studentNumber = studentNumber,
-                iconUrl = iconUrl,
-                phone = phone,
-                name = name, college = college,
-                password = password,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                userInfo = u,
+                onReturn = onReturn,
+                onError = onError
             )
             onReturn()
         }
@@ -180,10 +129,10 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         phone: String,
         email: String,
         password: String,
-        onReturn: CoroutineScope.() -> Unit
+        onReturn: () -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.userInfoUpdatePassword(
+            apiRepository.userInfoUpdatePassword(
                 name = name,
                 username = username,
                 studentNumber = studentNumber,
@@ -198,21 +147,19 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     fun userLogin(
         phoneStudentIdEmail: String,
         password: String,
-        onReturn: CoroutineScope.(LoginReturn) -> Unit = {}
+        onError: (String) -> Unit,
+        onReturn: (LoginReturn) -> Unit,
     ) {
         viewModelScope.launch {
-            loginToken = apiRepository.userLogin(phoneStudentIdEmail, password)
-            loginToken.data?.let {
-                onReturn(it)
-            }
+            loginToken = apiRepository.userLogin(phoneStudentIdEmail, password, onError)
+            loginToken.data?.let(onReturn)
         }
     }
 
-    fun userLogout(onReturn: CoroutineScope.() -> Unit) {
+    fun userLogout(onReturn: () -> Unit) {
         viewModelScope.launch {
             apiRepository.userLogout(
-                userId = userInfo.data!!.id,
-                cookieToken = loginToken.data!!.cookieToken
+                userId = userInfo.data!!.id
             )
             onReturn()
         }
@@ -223,16 +170,14 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         societyId: Int,
         request: String,
         isJoin: Boolean,
-        onReturn: CoroutineScope.() -> Unit = {}
+        onReturn: () -> Unit = {}
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyMemberRequestCreate(
+            apiRepository.societyMemberRequestCreate(
                 userId = userId,
                 societyId = societyId,
                 request = request,
-                isJoin = isJoin,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                isJoin = isJoin
             )
             onReturn()
         }
@@ -240,28 +185,24 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     fun societyMemberRequestList(
         societyId: Int,
-        onReturn: CoroutineScope.(ReturnListData<SocietyMemberRequest>) -> Unit
+        onReturn: (ReturnListData<SocietyMemberRequest>) -> Unit
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyMemberRequestList(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                societyId = societyId
             )
-            Log.d(TAG, "societyMemberRequestList: ${a.data.size}")
+//            Log.d(TAG, "societyMemberRequestList: ${a.data.size}")
             onReturn(a)
         }
     }
 
     fun societyJoint(
         societyId: Int,
-        onReturn: CoroutineScope.(ReturnListData<SocietyMember>) -> Unit
+        onReturn: (ReturnListData<SocietyMember>) -> Unit
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyJoint(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                societyId = societyId
             )
             onReturn(a)
         }
@@ -269,112 +210,77 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     fun societyBBSInfo(
         societyId: Int,
-        onReturn: CoroutineScope.(ReturnObjectData<BBSInfo>) -> Unit
+        onReturn: (ReturnObjectData<BBSInfo>) -> Unit
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyBBSInfo(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id,
-//                authUserId = 1
+                societyId = societyId
             )
             onReturn(a)
         }
     }
 
     fun societyBBSPostCreate(
-        societyId: Int,
-        userId: Int,
-        title: String,
-        post: String,
-        level: Int,
-        deviceName: String,
-        onReturn: CoroutineScope.() -> Unit
+        post: Post,
+        onReturn: () -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyBBSPostCreate(
-                societyId = societyId,
-                userId = userId,
-                title = title,
-                post = post,
-                level = level,
-                deviceName = deviceName,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
-            )
+            apiRepository.societyBBSPostCreate(post)
             onReturn()
         }
     }
 
-    fun societyBBSPostById(postId: Int, onReturn: CoroutineScope.(ReturnObjectData<Post>) -> Unit) {
+    fun societyBBSPostById(postId: Int, onReturn: (ReturnObjectData<Post>) -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.societyBBSPostById(
-                postId = postId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                postId = postId
             )
             onReturn(a)
         }
     }
 
-    fun societyBBSPostDelete(userId: Int, postId: Int, onReturn: CoroutineScope.() -> Unit) {
+    fun societyBBSPostDelete(userId: Int, postId: Int, onReturn: () -> Unit) {
         viewModelScope.launch {
-            val a =
-                apiRepository.societyBBSPostDelete(
-                    userId = userId,
-                    postId = postId,
-                    cookieToken = loginToken.data!!.cookieToken,
-                    authUserId = userInfo.data!!.id
-                )
+            apiRepository.societyBBSPostDelete(
+                userId = userId,
+                postId = postId
+            )
             onReturn()
         }
     }
 
     fun societyBBSPostReplyList(
         postId: Int,
-        onReturn: CoroutineScope.(ReturnListData<PostReply>) -> Unit
+        onReturn: (ReturnListData<PostReply>) -> Unit
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyBBSPostReplyList(
-                postId = postId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                postId = postId
             )
-            Log.d(TAG, "societyBBSPostReplyList: ${a.data.size}")
+//            Log.d(TAG, "societyBBSPostReplyList: ${a.data.size}")
             onReturn(a)
         }
     }
 
-//    fun societyBBS
-
     fun societyBBSPostReplyCreate(
-        societyId: Int,
-        postId: Int,
-        userId: Int,
-        reply: String,
-        deviceName: String,
-        onReturn: CoroutineScope.() -> Unit
+        postReply: PostReply,
+        onReturn: () -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyBBSPostReplyCreate(
-                societyId = societyId,
-                postId = postId,
-                userId = userId,
-                reply = reply,
-                deviceName = deviceName,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
-            )
+            apiRepository.societyBBSPostReplyCreate(postReply)
             onReturn()
         }
     }
 
-    fun societyBBSPostReplyDelete(postReplyId: Int, onReturn: CoroutineScope.() -> Unit) {
+    fun societyBBSPostReplyDelete(
+        postReplyId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         viewModelScope.launch {
-            val a = apiRepository.societyBBSPostReplyDelete(
+            apiRepository.societyBBSPostReplyDelete(
                 postReplyId = postReplyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                onError = onError
             )
             onReturn()
         }
@@ -382,13 +288,11 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     fun societyChatInnerList(
         societyId: Int,
-        onReturn: CoroutineScope.(ReturnListData<SocietyChatMessage>) -> Unit
+        onReturn: (ReturnListData<SocietyChatMessage>) -> Unit
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyChatInnerList(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                societyId = societyId
             )
             onReturn(a)
         }
@@ -398,99 +302,92 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         societyId: Int,
         userId: Int,
         message: String,
-        onReturn: CoroutineScope.() -> Unit
+        onReturn: () -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyChatInnerCreate(
+            apiRepository.societyChatInnerCreate(
                 societyId = societyId,
                 userId = userId,
-                message = message,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                message = message
             )
             onReturn()
         }
     }
 
+    fun societyChatInnerClear(
+        societyId: Int,
+        onError: (String) -> Unit,
+        onReturn: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            apiRepository.societyChatInnerClear(societyId, onError)
+            onReturn.invoke()
+        }
+    }
+
     fun societyActivityList(
         societyId: Int,
-        onReturn: CoroutineScope.(ReturnListData<SocietyActivity>) -> Unit
+        onReturn: (ReturnListData<SocietyActivity>) -> Unit
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyActivityList(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                societyId = societyId
             )
             onReturn(a)
         }
     }
 
     fun societyActivityCreate(
-        societyId: Int,
-        deviceName: String,
-        title: String,
-        activity: String,
-        level: Int,
-        onReturn: CoroutineScope.() -> Unit
+        activity: SocietyActivity,
+        onReturn: () -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyActivityCreate(
-                societyId = societyId,
-                deviceName = deviceName,
-                title = title,
-                activity = activity,
-                level = level,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
-            )
+            apiRepository.societyActivityCreate(activity)
             onReturn()
         }
     }
 
-    fun societyActivityRequestList(
-        societyId: Int,
-        onReturn: CoroutineScope.(ReturnListData<SocietyActivityRequest>) -> Unit
+    fun societyActivityDelete(
+        activityId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyActivityRequestList(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
-            )
-            onReturn(a)
+            apiRepository.societyActivityDelete(activityId, onError)
+            onReturn.invoke()
         }
     }
 
-    fun societyActivityRequestCreate(
-        societyId: Int,
+    fun societyActivityJoin(
+        activityId: Int,
         userId: Int,
-        request: String,
-        isJoin: Boolean,
-        onReturn: CoroutineScope.() -> Unit
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyActivityRequestCreate(
-                societyId = societyId,
-                userId = userId,
-                request = request,
-                isJoin = isJoin,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
-            )
-            onReturn()
+            apiRepository.societyActivityJoin(activityId, userId, onError)
+            onReturn.invoke()
         }
     }
 
-    fun societyActivityMemberList(
+    fun societyActivityLeave(
+        activityMemberId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            apiRepository.societyActivityLeave(activityMemberId, onError)
+            onReturn.invoke()
+        }
+    }
+
+    fun societyActivityMember(
         activityId: Int,
         onReturn: CoroutineScope.(ReturnListData<SocietyActivityMember>) -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyActivityMemberList(
-                activityId = activityId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+            val a = apiRepository.societyActivityMember(
+                activityId = activityId
             )
             onReturn(a)
         }
@@ -502,9 +399,7 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyPictureList(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                societyId = societyId
             )
             onReturn(a)
         }
@@ -528,9 +423,7 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         viewModelScope.launch {
             val a = apiRepository.societyPictureDelete(
                 societyId,
-                picToken,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                picToken
             )
             onReturn()
         }
@@ -542,33 +435,19 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyNoticeList(
-                societyId = societyId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                societyId = societyId
             )
             onReturn(a)
         }
     }
 
     fun societyNoticeCreate(
-        societyId: Int,
-        postUserId: Int,
-        title: String,
-        notice: String,
-        permissionLevel: Int,
-        onReturn: CoroutineScope.() -> Unit
+        societyNotice: SocietyNotice,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyNoticeCreate(
-                societyId = societyId,
-                postUserId = postUserId,
-                title = title,
-                notice = notice,
-                permissionLevel = permissionLevel,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
-            )
-            onReturn()
+            apiRepository.societyNoticeCreate(societyNotice, onReturn, onError)
         }
     }
 
@@ -581,7 +460,7 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         onReturn: CoroutineScope.() -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.userRegister(username, phone, email, name, password)
+            apiRepository.userRegister(username, phone, email, name, password)
             onReturn()
         }
     }
@@ -589,12 +468,10 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     fun userJoint(userId: Int, onReturn: CoroutineScope.(ReturnListData<SocietyMember>) -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.userJoint(
-                userId = userId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                userId = userId
             )
             onReturn(a)
-            Log.d(TAG, "userJoint: ${a.data.size}")
+//            Log.d(TAG, "userJoint: ${a.data.size}")
         }
     }
 
@@ -604,24 +481,20 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
             val a = apiRepository.userJoinRequestList(
-                userId = userId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                userId = userId
             )
             onReturn(a)
-            Log.d(TAG, "userJoinRequestList: ${a.data.size}")
+//            Log.d(TAG, "userJoinRequestList: ${a.data.size}")
         }
     }
 
     fun userPostList(userId: Int, onReturn: CoroutineScope.(ReturnListData<Post>) -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.userPostList(
-                userId = userId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                userId = userId
             )
             onReturn(a)
-            Log.d(TAG, "userPostList: ${a.data.size}")
+//            Log.d(TAG, "userPostList: ${a.data.size}")
         }
     }
 
@@ -631,40 +504,19 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
             val a = apiRepository.userPostReplyList(
-                userId = userId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = userInfo.data!!.id
+                userId = userId
             )
             onReturn(a)
-            Log.d(TAG, "userPostReplyList: ${a.data.size}")
+//            Log.d(TAG, "userPostReplyList: ${a.data.size}")
         }
     }
-
-//    fun userPostReplyList(
-//        userId: Int,
-//        postId: Int,
-//        onReturn: CoroutineScope.(ReturnListData<PostReply>) -> Unit
-//    ) {
-//        viewModelScope.launch {
-//            val a = apiRepository.userPostReplyList(
-//                userId = userId,
-//                postId = postId,
-//                cookieToken = loginToken.data!!.cookieToken,
-//                authUserId = userInfo.data!!.id
-//            )
-//            onReturn(a)
-//            Log.d(TAG, "userPostReplyList: ${a.data.size}")
-//        }
-//    }
 
     fun userChatPrivateCreate(opUserId: Int, message: String, onReturn: CoroutineScope.() -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.userChatPrivateCreate(
                 userId = userInfo.data!!.id,
                 opUserId = opUserId,
-                message = message,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
+                message = message
             )
             onReturn()
         }
@@ -677,9 +529,7 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         viewModelScope.launch {
             val a = apiRepository.userChatPrivateList(
                 userId = userInfo.data!!.id,
-                opUserId = opUserId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
+                opUserId = opUserId
             )
             onReturn(a)
         }
@@ -688,28 +538,15 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     fun picList() {
         viewModelScope.launch {
             picDataList = apiRepository.picList(
-                userId = loginToken.data!!.userId,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
+                userId = loginToken.data!!.userId
             )
-            Log.d(TAG, "picList: ${picDataList.data.size}")
+//            Log.d(TAG, "picList: ${picDataList.data.size}")
         }
     }
 
-//    fun picList(userId: Int, onReturn: CoroutineScope.(ReturnListData<PicData>) -> Unit) {
-//        viewModelScope.launch {
-//            val a = apiRepository.picList(
-//                userId = userId,
-//                cookieToken = loginToken.data!!.cookieToken,
-//                authUserId = userInfo.data!!.id
-//            )
-//            onReturn(a)
-//        }
-//    }
-
     fun picCreate(imageBodyPart: MultipartBody.Part, onReturn: CoroutineScope.() -> Unit) {
         viewModelScope.launch {
-            val a = apiRepository.picCreate(
+            apiRepository.picCreate(
                 imageBodyPart = imageBodyPart,
                 userId = userInfo.data!!.id
             )
@@ -720,37 +557,23 @@ class ApiViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     fun picDelete(picToken: String, onReturn: CoroutineScope.() -> Unit) {
         viewModelScope.launch {
-            val a = apiRepository.picDelete(
+            apiRepository.picDelete(
                 userId = loginToken.data!!.userId,
-                picToken = picToken,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
+                picToken = picToken
             )
             onReturn()
         }
     }
 
-    fun picDelete(userId: Int, picToken: String, onReturn: CoroutineScope.() -> Unit) {
+    fun collegeList(onError: (String) -> Unit) {
         viewModelScope.launch {
-            val a = apiRepository.picDelete(
-                userId = userId,
-                picToken = picToken,
-                cookieToken = loginToken.data!!.cookieToken,
-                authUserId = loginToken.data!!.userId
-            )
-            onReturn()
+            collegeList = apiRepository.collegeList(onError)
         }
     }
 
-    fun collegeList() {
+    fun adminUserRegisterAllow(onReturn: (Boolean) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            collegeList = apiRepository.collegeList()
-        }
-    }
-
-    fun adminUserRegisterAllow(onReturn: CoroutineScope.(Boolean) -> Unit) {
-        viewModelScope.launch {
-            val a = apiRepository.adminUserRegisterAllow()
+            val a = apiRepository.adminUserRegisterAllow(onError)
             onReturn(a.notNullOrBlank(UserRegisterAllow()).userRegisterAllow)
         }
     }

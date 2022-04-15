@@ -1,21 +1,35 @@
 package com.wh.society.api.data.society.bbs
 
 import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.IRequestBody
 import com.wh.society.api.data.impl.RealIconUrl
+import org.json.JSONObject
 
-class Post:RealIconUrl {
+open class Post : RealIconUrl, IRequestBody {
     var id: Int = 0
-    var societyId: Int = 0
+    open var societyId: Int = 0
     var societyName: String = ""
-    var userId: Int = 0
+    open var userId: Int = 0
     var username: String = ""
     var userIconUrl: String = ""
-    var deviceName: String = ""
-    var level: Int = 0
-    var title: String = ""
-    var post: String = ""
+    open var deviceName: String = ""
+    open var level: Int = 0
+    open var title: String = ""
+    open var post: String = ""
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
+
+    override fun toJSONObject(): JSONObject {
+        val j = JSONObject()
+        j.put("id", id)
+        j.put("societyId", societyId)
+        j.put("userId", userId)
+        j.put("deviceName", deviceName)
+        j.put("level", level)
+        j.put("title", title)
+        j.put("post", post)
+        return j
+    }
 
     override val realIconUrl: String
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())

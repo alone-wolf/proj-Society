@@ -1,9 +1,12 @@
 package com.wh.society.api.data.society.bbs
 
 import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.IRequestBody
+import com.wh.society.api.data.impl.IZTimestamp
 import com.wh.society.api.data.impl.RealIconUrl
+import org.json.JSONObject
 
-class PostReply:RealIconUrl {
+open class PostReply:RealIconUrl,IRequestBody,IZTimestamp{
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
@@ -12,10 +15,33 @@ class PostReply:RealIconUrl {
     var userId: Int = 0
     var userIconUrl: String = ""
     var username: String = ""
-    var reply: String = ""
+    open var reply: String = ""
     var deviceName: String = ""
-    var createTimestamp: String = ""
-    var updateTimestamp: String = ""
+    override var createTimestamp: String = ""
+    override var updateTimestamp: String = ""
+
+    companion object{
+        fun new(societyId:Int,postId:Int,userId:Int,reply:String,deviceName:String): PostReply {
+            return PostReply().apply {
+                this.societyId = societyId
+                this.postId = postId
+                this.userId = userId
+                this.reply = reply
+                this.deviceName = deviceName
+            }
+        }
+    }
+
+
+    override fun toJSONObject(): JSONObject {
+        val j = JSONObject()
+        j.put("societyId",societyId)
+        j.put("postId",postId)
+        j.put("userId",userId)
+        j.put("reply",reply)
+        j.put("deviceName",deviceName)
+        return j
+    }
 
     override val realIconUrl: String
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())

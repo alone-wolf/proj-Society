@@ -38,6 +38,7 @@ val listItemModifierWithPadding =
 val corner8 = RoundedCornerShape(8.dp)
 
 
+
 class MainActivity : ComponentActivity() {
 
     private val TAG = "WH_"
@@ -71,11 +72,7 @@ class MainActivity : ComponentActivity() {
     val alert = AlertRequest()
 
 
-    @OptIn(
-        ExperimentalAnimationApi::class,
-        ExperimentalMaterialApi::class
-    )
-    @ExperimentalPagerApi
+    @OptIn(ExperimentalPagerApi::class, androidx.compose.material.ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
