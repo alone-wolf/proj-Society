@@ -1,16 +1,17 @@
 package com.wh.society.api.data.society
 
 import com.wh.society.api.data.impl.IJoinnable
+import com.wh.society.api.data.impl.IPermissionLevel
 import com.wh.society.api.data.impl.IRequestBody
 import com.wh.society.api.data.impl.IZTimestamp
 import org.json.JSONObject
 
-class SocietyActivity : IRequestBody, IZTimestamp, IJoinnable {
+class SocietyActivity : IRequestBody, IZTimestamp, IJoinnable,IPermissionLevel {
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
     var deviceName: String = ""
-    var level: Int = 0
+    override var level: Int = 0
     var title: String = ""
     var activity: String = ""
     override var createTimestamp: String = ""

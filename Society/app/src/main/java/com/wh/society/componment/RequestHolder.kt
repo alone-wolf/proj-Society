@@ -9,6 +9,7 @@ import com.wh.society.BaseMainActivity
 import com.wh.society.api.data.*
 import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBS
+import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.request.*
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.viewModel.ApiViewModel
@@ -93,7 +94,7 @@ interface RequestHolder {
             settingStore.autoLogin = false
 
             globalNav.gotoWithBack(GlobalNavPage.LoginPage)
-            apiViewModel.userInfo = ReturnObjectData.blank()
+            apiViewModel.userInfo = UserInfo()
             apiViewModel.societyList = emptyList()
             apiViewModel.bbsList = emptyList()
             apiViewModel.collegeList = ReturnListData.blank()

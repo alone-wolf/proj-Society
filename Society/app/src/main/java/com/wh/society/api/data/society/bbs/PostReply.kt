@@ -3,10 +3,10 @@ package com.wh.society.api.data.society.bbs
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.IRequestBody
 import com.wh.society.api.data.impl.IZTimestamp
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.IRealIconUrl
 import org.json.JSONObject
 
-open class PostReply:RealIconUrl,IRequestBody,IZTimestamp{
+open class PostReply:IRealIconUrl,IRequestBody,IZTimestamp{
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""

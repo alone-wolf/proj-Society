@@ -2,10 +2,10 @@ package com.wh.society.api.data.society.bbs
 
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.IRequestBody
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.IRealIconUrl
 import org.json.JSONObject
 
-open class Post : RealIconUrl, IRequestBody {
+open class Post : IRealIconUrl, IRequestBody {
     var id: Int = 0
     open var societyId: Int = 0
     var societyName: String = ""

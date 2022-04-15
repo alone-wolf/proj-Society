@@ -1,6 +1,5 @@
 package com.wh.society.ui.page.detail.society
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,7 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
@@ -28,19 +26,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.wh.common.typeExt.firstN
 import com.wh.society.R
-import com.wh.society.api.data.*
+import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.society.*
 import com.wh.society.api.data.society.bbs.BBS
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
-import com.wh.society.typeExt.*
+import com.wh.society.typeExt.itemOnCondition
+import com.wh.society.typeExt.smallListTitle
+import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.GlobalScaffold
 import com.wh.society.ui.componment.SocietyDetailTopInfoPart
-
-
 
 
 @ExperimentalAnimationApi
@@ -64,24 +61,23 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
         mutableStateOf(ReturnListData.blank<SocietyNotice>())
     }
 
-    val myJoint = thisSocietyJointList.data.find {
-        it.userId == requestHolder.apiViewModel
-            .userInfo
-            .notNullOrBlank(UserInfo())
-            .id
-    }
-    val isJoint: Boolean = myJoint != null
-    requestHolder.trans.isJoint = isJoint
+    val thisSociety = requestHolder.trans.society
+    val thisUser = requestHolder.apiViewModel.userInfo
+
+    val myJoint = thisSocietyJointList.data.find { it.userId == thisUser.id }
+
+    val isJoin: Boolean = myJoint != null
+    requestHolder.trans.isJoint = isJoin
 
 
     LaunchedEffect(myJoint) {
-        requestHolder.apiViewModel.societyJoint(requestHolder.trans.society.id) { s ->
+        requestHolder.apiViewModel.societyJoint(thisSociety.id) { s ->
             thisSocietyJointList = s
         }
-        requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { s ->
+        requestHolder.apiViewModel.societyActivityList(thisSociety.id) { s ->
             activityList = s
         }
-        requestHolder.apiViewModel.societyNoticeList(requestHolder.trans.society.id) { it ->
+        requestHolder.apiViewModel.societyNoticeList(thisSociety.id) { it ->
             societyNoticeList = it
         }
 
@@ -97,9 +93,8 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
         }
     }
 
-    val isAdmin = isJoint && myJoint!!.permissionLevel == 111
+    val isAdmin = isJoin && myJoint!!.permissionLevel == 111
     requestHolder.trans.isAdmin = isAdmin
-    Log.d("WH_", "SocietyDetailPage: ${requestHolder.trans.isAdmin}")
 
     GlobalScaffold(
         page = GlobalNavPage.DetailSociety,
@@ -109,7 +104,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 IconButton(onClick = {
                     requestHolder.globalNav.goto(GlobalNavPage.SocietyInfoEditorPage)
                 }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "")
+                    Icon(Icons.Default.Edit, "")
                 }
             }
         } else {
@@ -135,8 +130,8 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                         .width(50.dp)
                                         .clickable {
                                             requestHolder.globalNav.goto(
-                                                GlobalNavPage.SocietyMemberDetailPage,
-                                                item
+                                                page = GlobalNavPage.SocietyMemberDetailPage,
+                                                a = item
                                             )
                                         }
                                         .clip(RoundedCornerShape(6.dp))
@@ -146,7 +141,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                                         painter = rememberImagePainter(
                                             data = item.realIconUrl,
                                             builder = {
-                                                this.placeholder(R.drawable.ic_baseline_person_24)
+                                                placeholder(R.drawable.ic_baseline_person_24)
                                             },
                                             imageLoader = requestHolder.coilImageLoader
                                         ),
@@ -244,15 +239,17 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 }
             )
 
+            // society pic manage for admin
             smallListTitle(
                 title = "社团图片",
                 n = societyPictureList.data.size,
+                show = isAdmin,
                 onClick = {
                     requestHolder.globalNav.goto(
                         page = GlobalNavPage.SocietyPictureListPage,
                         a = societyPictureList
                     )
-                },
+                }
             )
 
             // bottom buttons
@@ -274,7 +271,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 }
             }
 
-            itemOnCondition(isJoint) {
+            itemOnCondition(isJoin) {
                 Button(
                     onClick = {
                         requestHolder.globalNav.goto(
@@ -291,16 +288,14 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 }
             }
 
-            itemOnCondition(isJoint) {
+            itemOnCondition(isJoin) {
                 Button(
                     onClick = {
                         requestHolder.apiViewModel.societyMemberRequestCreate(
-                            requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                            requestHolder.apiViewModel.userInfo.id,
                             requestHolder.trans.society.id,
                             request = "${
-                                requestHolder.apiViewModel.userInfo.notNullOrBlank(
-                                    UserInfo()
-                                ).username
+                                requestHolder.apiViewModel.userInfo.username
                             }'s leave request for ${requestHolder.trans.society.name}",
                             isJoin = false
                         ) {}
@@ -315,16 +310,14 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
                 }
             }
 
-            itemOnCondition(!isJoint) {
+            itemOnCondition(!isJoin) {
                 Button(
                     onClick = {
                         requestHolder.apiViewModel.societyMemberRequestCreate(
-                            requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                            requestHolder.apiViewModel.userInfo.id,
                             requestHolder.trans.society.id,
                             request = "${
-                                requestHolder.apiViewModel.userInfo.notNullOrBlank(
-                                    UserInfo()
-                                ).username
+                                requestHolder.apiViewModel.userInfo.username
                             }'s join request for ${requestHolder.trans.society.name}",
                             isJoin = true
                         ) {}

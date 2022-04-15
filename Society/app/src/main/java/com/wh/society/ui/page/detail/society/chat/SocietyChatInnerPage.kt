@@ -108,7 +108,7 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                         key = { item: SocietyChatMessage -> item.id }
                     ) { it ->
                         ChatMessageItem(
-                            meId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                            meId = requestHolder.apiViewModel.userInfo.id,
                             chatMessage = it,
                             requestHolder = requestHolder
                         )
@@ -157,7 +157,7 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                         focusManager.clearFocus()
                         requestHolder.apiViewModel.societyChatInnerCreate(
                             societyId = requestHolder.trans.society.id,
-                            userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                            userId = requestHolder.apiViewModel.userInfo.id,
                             message = message
                         ) {
                             requestHolder.apiViewModel.societyChatInnerList(

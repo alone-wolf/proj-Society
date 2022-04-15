@@ -77,7 +77,7 @@ fun UserDetailPage(requestHolder: RequestHolder) {
                 }
 
                 itemOnCondition(
-                    show = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id != requestHolder.trans.userInfo.id,
+                    show = requestHolder.apiViewModel.userInfo.id != requestHolder.trans.userInfo.id,
                     content = {
                         Button(
                             onClick = {

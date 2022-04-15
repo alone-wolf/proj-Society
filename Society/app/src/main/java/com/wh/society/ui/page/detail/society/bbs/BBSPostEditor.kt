@@ -35,7 +35,7 @@ fun BBSPostEditor(requestHolder: RequestHolder) {
 
     GlobalScaffold(page = GlobalNavPage.DetailPostEditor, requestHolder = requestHolder, actions = {
         IconButton(onClick = {
-            post.userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id
+            post.userId = requestHolder.apiViewModel.userInfo.id
             post.societyId = requestHolder.trans.bbs.id
             post.deviceName = requestHolder.deviceName
             requestHolder.apiViewModel.societyBBSPostCreate(post) {

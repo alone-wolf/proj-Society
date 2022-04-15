@@ -1,9 +1,9 @@
 package com.wh.society.api.data.user
 
 import com.wh.society.api.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.IRealIconUrl
 
-class UserPicture : RealIconUrl {
+class UserPicture : IRealIconUrl {
     var id: Int = 0
     var userId: Int = 0
     var originalFilename: String = ""

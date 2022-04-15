@@ -2,13 +2,14 @@ package com.wh.society.api.data.society
 
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.society.bbs.BBS
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.IRealIconUrl
 import com.wh.society.api.data.shadow.SocietyShadow
 import com.wh.society.api.data.impl.IContain
+import com.wh.society.api.data.impl.IJoinnable
 import com.wh.society.api.data.impl.IRequestBody
 import org.json.JSONObject
 
-open class Society: IContain,RealIconUrl,IRequestBody {
+open class Society: IContain,IRealIconUrl,IRequestBody,IJoinnable {
     var id: Int = 0
     open var name: String = ""
     open var openTimestamp: String = ""
@@ -19,6 +20,7 @@ open class Society: IContain,RealIconUrl,IRequestBody {
     var createTimestamp: String = ""
     var updateTimestamp: String = ""
     open var iconUrl:String =""
+    override var thisUserJoin: Boolean = false
 
     fun shadow(): SocietyShadow {
         return SocietyShadow.fromSociety(this)

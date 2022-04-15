@@ -51,7 +51,7 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
                 val postReply = PostReply.new(
                     societyId = requestHolder.trans.society.id,
                     postId = requestHolder.trans.postId,
-                    userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                    userId = requestHolder.apiViewModel.userInfo.id,
                     reply = "",
                     deviceName = requestHolder.deviceName
                 )
@@ -71,10 +71,10 @@ fun BBSPostDetail(requestHolder: RequestHolder) {
         },
         actions = {
             post.data?.let {
-                if (it.userId == requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id) {
+                if (it.userId == requestHolder.apiViewModel.userInfo.id) {
                     IconButton(onClick = {
                         requestHolder.apiViewModel.societyBBSPostDelete(
-                            userId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                            userId = requestHolder.apiViewModel.userInfo.id,
                             postId = it.id
                         ) {
                             requestHolder.globalNav.goBack()

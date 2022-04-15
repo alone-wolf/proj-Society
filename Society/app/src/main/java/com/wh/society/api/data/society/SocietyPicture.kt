@@ -1,9 +1,9 @@
 package com.wh.society.api.data.society
 
 import com.wh.society.api.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.IRealIconUrl
 
-class SocietyPicture : RealIconUrl {
+class SocietyPicture : IRealIconUrl {
     var id: Int = 0
     var societyId: Int = 0
     var newFilename: String = ""

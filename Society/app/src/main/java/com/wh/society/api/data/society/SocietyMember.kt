@@ -1,9 +1,9 @@
 package com.wh.society.api.data.society
 
 import com.wh.society.api.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.IRealIconUrl
 
-class SocietyMember :RealIconUrl{
+class SocietyMember :IRealIconUrl{
     var id:Int = 0
     var userId: Int = 0
     var societyId: Int = 0
@@ -28,14 +28,6 @@ class SocietyMember :RealIconUrl{
             else -> "Unknown"
         }
     }
-
-//    fun toUserInfo(): UserInfo {
-//        return UserInfo().apply {
-//            this.id = this@SocietyJoint.userId
-//            this.username = this@SocietyJoint.username
-//            this.
-//        }
-//    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

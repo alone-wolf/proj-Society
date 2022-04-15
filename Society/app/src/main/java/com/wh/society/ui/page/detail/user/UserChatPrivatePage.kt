@@ -73,7 +73,7 @@ fun UserChatPrivatePage(requestHolder: RequestHolder) {
                         key = { item: UserChatPrivate -> item.id }
                     ) { it ->
                         ChatMessageItem(
-                            meId = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).id,
+                            meId = requestHolder.apiViewModel.userInfo.id,
                             chatMessage = it,
                             requestHolder = requestHolder
                         )

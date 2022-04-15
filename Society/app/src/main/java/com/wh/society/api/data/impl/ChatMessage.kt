@@ -2,7 +2,7 @@ package com.wh.society.api.data.impl
 
 import com.wh.society.api.ServerApi
 
-interface ChatMessage : RealIconUrl,IZTimestamp {
+interface ChatMessage : IRealIconUrl,IZTimestamp {
     var userId: Int
     var username: String
     var userIconUrl: String

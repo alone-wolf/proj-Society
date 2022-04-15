@@ -44,7 +44,7 @@ fun MinePicList(requestHolder: RequestHolder) {
 
     val confirmDeletePic: (UserPicture) -> Unit = {
         requestHolder.alert.tip("要删除这张图片吗？", onOk = {
-            if (requestHolder.apiViewModel.userInfo.data!!.iconUrl == it.newFilename) {
+            if (requestHolder.apiViewModel.userInfo.iconUrl == it.newFilename) {
                 requestHolder.alert.tip("这张图片正在使用中，不可删除！")
             } else {
                 requestHolder.apiViewModel.picDelete(it.newFilename) {

@@ -71,7 +71,7 @@ fun MinePageTopInfoCard(requestHolder: RequestHolder) {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 10.dp)
                 ) {
-                    val userInfo = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo())
+                    val userInfo = requestHolder.apiViewModel.userInfo
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start

@@ -1,6 +1,9 @@
 package com.wh.society.api.data.society
 
-class SocietyActivityMember {
+import com.wh.society.api.ServerApi
+import com.wh.society.api.data.impl.IRealIconUrl
+
+class SocietyActivityMember:IRealIconUrl {
     var id:Int = 0
 
     var activityId:Int = 0
@@ -8,6 +11,14 @@ class SocietyActivityMember {
     var userId:Int = 0
     var username:String = ""
     var userIconUrl:String = ""
+
+
+    override val realIconUrl: String
+        get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
+            userIconUrl
+        else
+            ServerApi.userPicUrl(userIconUrl)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

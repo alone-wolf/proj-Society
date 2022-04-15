@@ -1,10 +1,9 @@
 package com.wh.society.api.data.user
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.wh.society.api.ServerApi
-import com.wh.society.api.data.impl.RealIconUrl
+import com.wh.society.api.data.impl.IRealIconUrl
 import com.wh.society.api.data.shadow.UserInfoShadow
 import com.wh.society.api.data.impl.IContain
 import com.wh.society.api.data.impl.IRequestBody
@@ -12,7 +11,7 @@ import org.json.JSONObject
 
 
 @Entity
-open class UserInfo : IContain, RealIconUrl, IRequestBody {
+open class UserInfo : IContain, IRealIconUrl, IRequestBody {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
     open var username: String = ""

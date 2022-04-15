@@ -45,7 +45,7 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
 
     Image(
         painter = rememberImagePainter(
-            requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).realIconUrl,
+            requestHolder.apiViewModel.userInfo.realIconUrl,
             imageLoader = requestHolder.coilImageLoader
         ),
         contentDescription = "",
@@ -394,7 +394,7 @@ fun PostReplyItem(
                             modifier = Modifier.alpha(0.7F)
                         )
                     }
-                    if (requestHolder.apiViewModel.userInfo.data!!.id == postReply.userId) {
+                    if (requestHolder.apiViewModel.userInfo.id == postReply.userId) {
                         IconButton(onClick = {
                             requestHolder.apiViewModel.societyBBSPostReplyDelete(
                                 postReply.id,

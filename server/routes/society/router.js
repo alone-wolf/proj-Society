@@ -11,11 +11,39 @@ const { checkCookieToken } = require("../../middleware/auth");
 
 // get all society
 apiRouter.post("/list", checkCookieToken, (req, res, next) => {
+
+  let thisUserId = req.body.cookieTokenUserId;
+
+  let ll = [];
+
   Society.findAll()
-    .then((data) => {
-      res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
-    })
-    .catch((e) => {
+    .then((sl) => {
+      let sll = sl.map((item) => { return item.get({ plain: true }) });
+
+      SocietyMember.findAll({ where: { userId: thisUserId } })
+        .then(sml => {
+          let smll = sml.map((item) => { return item.get({ plain: true }) });
+
+          sll.forEach(e => {
+            if (
+              smll.find((it) => { return it.societyId == e.id })
+            ) {
+              e.thisUserJoin = true;
+            } else {
+              e.thisUserJoin = false;
+            }
+
+            ll.push(e);
+          });
+
+          res.json(STATUS.STATUS_200(sll));
+
+        }).catch((e) => {
+          console.log(e);
+          res.status(500).json(STATUS.STATUS_500);
+        });
+
+    }).catch((e) => {
       console.log(e);
       res.status(500).json(STATUS.STATUS_500);
     });
@@ -174,6 +202,7 @@ apiRouter.use("/notice", checkCookieToken, societyNoticeRouter.apiRouter);
 const societyActivity = require("./activity/router");
 apiRouter.use("/activity", checkCookieToken, societyActivity.apiRouter);
 const societyPicture = require("./picture/router");
+const SocietyMember = require("../../model/society_member");
 apiRouter.use("/picture", societyPicture.apiRouter);
 
 module.exports = { apiRouter };

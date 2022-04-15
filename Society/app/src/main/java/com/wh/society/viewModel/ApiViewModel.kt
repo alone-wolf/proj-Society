@@ -35,7 +35,7 @@ class ApiViewModel : ViewModel() {
 
     var bbsList by mutableStateOf(emptyList<BBS>())
 
-    var userInfo by mutableStateOf(ReturnObjectData.blank<UserInfo>())
+    var userInfo by mutableStateOf(UserInfo())
 
     var loginToken by mutableStateOf(ReturnObjectData.blank<LoginReturn>())
 
@@ -92,12 +92,12 @@ class ApiViewModel : ViewModel() {
     fun userInfo(onReturn: CoroutineScope.(UserInfo) -> Unit) {
         viewModelScope.launch {
             loginToken.data?.cookieToken?.let {
-                userInfo = apiRepository.userInfo(
+                apiRepository.userInfo(
                     userId = loginToken.data!!.userId
-                )
-                userInfo.data?.let { it ->
-                    onReturn(it)
+                ).data?.let {
+                    userInfo = it
                 }
+                onReturn(userInfo)
             } ?: Log.e(TAG, "userInfo: token is blank")
         }
     }
@@ -159,7 +159,7 @@ class ApiViewModel : ViewModel() {
     fun userLogout(onReturn: () -> Unit) {
         viewModelScope.launch {
             apiRepository.userLogout(
-                userId = userInfo.data!!.id
+                userId = userInfo.id
             )
             onReturn()
         }
@@ -371,12 +371,13 @@ class ApiViewModel : ViewModel() {
     }
 
     fun societyActivityLeave(
-        activityMemberId: Int,
+        activityId: Int,
+        userId: Int,
         onReturn: () -> Unit,
         onError: (String) -> Unit
     ) {
         viewModelScope.launch {
-            apiRepository.societyActivityLeave(activityMemberId, onError)
+            apiRepository.societyActivityLeave(activityId,userId, onError)
             onReturn.invoke()
         }
     }
@@ -514,7 +515,7 @@ class ApiViewModel : ViewModel() {
     fun userChatPrivateCreate(opUserId: Int, message: String, onReturn: CoroutineScope.() -> Unit) {
         viewModelScope.launch {
             val a = apiRepository.userChatPrivateCreate(
-                userId = userInfo.data!!.id,
+                userId = userInfo.id,
                 opUserId = opUserId,
                 message = message
             )
@@ -528,7 +529,7 @@ class ApiViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             val a = apiRepository.userChatPrivateList(
-                userId = userInfo.data!!.id,
+                userId = userInfo.id,
                 opUserId = opUserId
             )
             onReturn(a)
@@ -548,7 +549,7 @@ class ApiViewModel : ViewModel() {
         viewModelScope.launch {
             apiRepository.picCreate(
                 imageBodyPart = imageBodyPart,
-                userId = userInfo.data!!.id
+                userId = userInfo.id
             )
 
             onReturn()

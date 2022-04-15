@@ -1,6 +1,6 @@
 package com.wh.society.api.data.impl
 
-interface RealIconUrl {
+interface IRealIconUrl {
 
     val realIconUrl:String
 }

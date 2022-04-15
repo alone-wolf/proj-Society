@@ -35,7 +35,7 @@ import com.wh.society.ui.componment.GlobalScaffold
 @Composable
 fun MineInfoEditor(requestHolder: RequestHolder) {
 
-    val tempUserInfo = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).shadow()
+    val tempUserInfo = requestHolder.apiViewModel.userInfo.shadow()
 
     GlobalScaffold(
         page = GlobalNavPage.MainMineInfoEditorPage,

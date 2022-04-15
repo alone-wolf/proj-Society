@@ -406,11 +406,12 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
     }
 
     suspend fun societyActivityLeave(
-        activityMemberId: Int,
+        activityId: Int,
+        userId: Int,
         onError: (String) -> Unit
     ) {
         try {
-            serverApi.societyActivityLeave(activityMemberId)
+            serverApi.societyActivityLeave(activityId,userId)
         } catch (e: Exception) {
             val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
             handleError(funName, e, onError)

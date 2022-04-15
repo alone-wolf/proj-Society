@@ -190,7 +190,8 @@ interface ServerApi {
     @FormUrlEncoded
     @POST("/society/activity/leave")
     suspend fun societyActivityLeave(
-        @Field("activityMemberId") activityMemberId: Int
+        @Field("activityId") activityId: Int,
+        @Field("userId") userId: Int
     )
 
     @FormUrlEncoded

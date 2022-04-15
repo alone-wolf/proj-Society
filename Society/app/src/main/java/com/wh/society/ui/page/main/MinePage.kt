@@ -43,31 +43,23 @@ fun MinePage(requestHolder: RequestHolder) {
 
     LaunchedEffect(Unit) {
         requestHolder.apiViewModel.userPostList(
-            requestHolder.apiViewModel.userInfo.notNullOrBlank(
-                UserInfo()
-            ).id
+            requestHolder.apiViewModel.userInfo.id
         ) { it ->
             requestHolder.trans.postList = it
             userPostList = it
         }
         requestHolder.apiViewModel.userPostReplyList(
-            requestHolder.apiViewModel.userInfo.notNullOrBlank(
-                UserInfo()
-            ).id
+            requestHolder.apiViewModel.userInfo.id
         ) { it ->
             userPostReplyList = it
         }
         requestHolder.apiViewModel.userJoint(
-            requestHolder.apiViewModel.userInfo.notNullOrBlank(
-                UserInfo()
-            ).id
+            requestHolder.apiViewModel.userInfo.id
         ) { it ->
             userJointList = it
         }
         requestHolder.apiViewModel.userJoinRequestList(
-            requestHolder.apiViewModel.userInfo.notNullOrBlank(
-                UserInfo()
-            ).id
+            requestHolder.apiViewModel.userInfo.id
         ) { it ->
             userJoinRequestList = it
         }
@@ -78,7 +70,7 @@ fun MinePage(requestHolder: RequestHolder) {
             Box {
                 Image(
                     painter = rememberImagePainter(
-                        data = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).realIconUrl,
+                        data = requestHolder.apiViewModel.userInfo.realIconUrl,
                         builder = {
                             crossfade(true)
                             transformations(
@@ -113,7 +105,7 @@ fun MinePage(requestHolder: RequestHolder) {
                         modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
                     )
                     Text(
-                        text = requestHolder.apiViewModel.userInfo.notNullOrBlank(UserInfo()).username,
+                        text = requestHolder.apiViewModel.userInfo.username,
                         modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
                     )
                 }
@@ -152,7 +144,7 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "我的社团申请",
             n = userJoinRequestList.data.size,
             onClick = {
-                requestHolder.globalNav.goto<ReturnListData<SocietyMemberRequest>>(
+                requestHolder.globalNav.goto(
                     page = GlobalNavPage.MainMineSocietyRequestListPage,
                     a = userJoinRequestList
                 )
