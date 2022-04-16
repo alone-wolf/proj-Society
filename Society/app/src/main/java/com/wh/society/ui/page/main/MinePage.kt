@@ -33,8 +33,8 @@ import com.wh.society.ui.componment.*
 
 private var userPostList by mutableStateOf(ReturnListData.blank<Post>())
 private var userPostReplyList by mutableStateOf(ReturnListData.blank<PostReply>())
-private var userJointList by mutableStateOf(ReturnListData.blank<SocietyMember>())
-private var userJoinRequestList by mutableStateOf(ReturnListData.blank<SocietyMemberRequest>())
+private var userJointList by mutableStateOf(emptyList<SocietyMember>())
+private var userJoinRequestList by mutableStateOf(emptyList<SocietyMemberRequest>())
 
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -50,22 +50,16 @@ fun MinePage(requestHolder: RequestHolder) {
         }
         requestHolder.apiViewModel.userPostReplyList(
             requestHolder.apiViewModel.userInfo.id
-        ) { it ->
-            userPostReplyList = it
-        }
+        ) { it -> userPostReplyList = it }
         requestHolder.apiViewModel.userJoint(
             requestHolder.apiViewModel.userInfo.id
-        ) { it ->
-            userJointList = it
-        }
+        ) { it -> userJointList = it.data }
         requestHolder.apiViewModel.userJoinRequestList(
             requestHolder.apiViewModel.userInfo.id
-        ) { it ->
-            userJoinRequestList = it
-        }
+        ) { it -> userJoinRequestList = it.data }
     }
 
-    LazyColumn(modifier = Modifier.fillMaxWidth(), content = {
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
         item {
             Box {
                 Image(
@@ -74,11 +68,7 @@ fun MinePage(requestHolder: RequestHolder) {
                         builder = {
                             crossfade(true)
                             transformations(
-                                BlurTransformation(
-                                    requestHolder.activity,
-                                    radius = 5F,
-                                    sampling = 16F
-                                )
+                                BlurTransformation(requestHolder.activity, 5F, 16F)
                             )
                         }),
                     contentDescription = "",
@@ -117,41 +107,30 @@ fun MinePage(requestHolder: RequestHolder) {
         // 加入的社团 标题
         smallListTitle(
             title = "加入的社团",
-            n = userJointList.data.size,
+            n = userJointList.size,
             onClick = {
-                requestHolder.globalNav.goto<ReturnListData<SocietyMember>>(
-                    page = GlobalNavPage.MainMineSocietyListPage,
-                    a = userJointList
-                )
+                requestHolder.globalNav.goto(GlobalNavPage.MainMineSocietyListPage, userJointList)
             }
         )
         // 加入的社团列表
 
         items(
-            items = userJointList.data.asReversed().firstN(5),
+            items = userJointList.asReversed().firstN(5),
             key = { item: SocietyMember -> item.hashCode() },
             itemContent = { it: SocietyMember ->
                 requestHolder.societyList.find { item: Society -> it.societyId == item.id }?.let {
-                    SocietyItem(
-                        requestHolder = requestHolder,
-                        society = it,
-                    )
+                    SocietyItem(requestHolder, it)
                 }
             }
         )
 
         smallListTitle(
             title = "我的社团申请",
-            n = userJoinRequestList.data.size,
-            onClick = {
-                requestHolder.globalNav.goto(
-                    page = GlobalNavPage.MainMineSocietyRequestListPage,
-                    a = userJoinRequestList
-                )
-            }
+            n = userJoinRequestList.size,
+            onClick = { requestHolder.globalNav.goto(GlobalNavPage.MainMineSocietyRequestListPage) }
         )
         items(
-            items = userJoinRequestList.data.asReversed().firstN(5),
+            items = userJoinRequestList.asReversed().firstN(5),
             key = { item: SocietyMemberRequest -> item.hashCode() },
             itemContent = {
 
@@ -163,10 +142,7 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "发布的帖子",
             n = userPostList.data.size,
             onClick = {
-                requestHolder.globalNav.goto<ReturnListData<Post>>(
-                    page = GlobalNavPage.MainMinePostListPage,
-                    a = userPostList
-                )
+                requestHolder.globalNav.goto(GlobalNavPage.MainMinePostListPage, userPostList)
             }
         )
 
@@ -183,7 +159,7 @@ fun MinePage(requestHolder: RequestHolder) {
             title = "发表的回复",
             n = userPostReplyList.data.size,
             onClick = {
-                requestHolder.globalNav.goto<ReturnListData<PostReply>>(
+                requestHolder.globalNav.goto(
                     page = GlobalNavPage.MainMinePostReplyListPage,
                     a = userPostReplyList
                 )
@@ -221,15 +197,8 @@ fun MinePage(requestHolder: RequestHolder) {
         }
 
         spacer()
-    })
+    }
 }
-
-//@ExperimentalMaterialApi
-//fun LazyListScope.smallListTitle(title: String, n: Int, onClick: () -> Unit) {
-//    item {
-//        SmallListTitle(title, n, onClick)
-//    }
-//}
 
 @ExperimentalAnimationApi
 private fun LazyListScope.minePageTopInfoCard(requestHolder: RequestHolder) {

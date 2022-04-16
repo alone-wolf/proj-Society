@@ -20,6 +20,7 @@ import coil.compose.rememberImagePainter
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
+import com.wh.society.typeExt.borderSwitcher
 import com.wh.society.ui.componment.GlobalScaffold
 
 @ExperimentalMaterialApi
@@ -38,6 +39,7 @@ fun SocietyMemberDetailPage(requestHolder: RequestHolder) {
 
     GlobalScaffold(page = GlobalNavPage.SocietyMemberDetailPage, requestHolder = requestHolder) {
         val joint = requestHolder.trans.societyMember
+        val isMe = memberUserInfo.id == requestHolder.apiViewModel.userInfo.id
 
 
         LazyColumn(
@@ -58,7 +60,7 @@ fun SocietyMemberDetailPage(requestHolder: RequestHolder) {
                                 verticalAlignment = Alignment.Top
                             ) {
                                 Image(
-                                    painter = rememberImagePainter(data = joint.realIconUrl),
+                                    painter = rememberImagePainter(data = memberUserInfo.realIconUrl),
                                     contentDescription = "",
                                     modifier = Modifier
                                         .padding(top = 8.dp)
@@ -72,7 +74,7 @@ fun SocietyMemberDetailPage(requestHolder: RequestHolder) {
                                         .fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = joint.username,
+                                        text = memberUserInfo.username,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 18.sp
                                     )
@@ -85,10 +87,19 @@ fun SocietyMemberDetailPage(requestHolder: RequestHolder) {
                         }
                     }
                 }
+
+
+
+                if (requestHolder.trans.isAdmin && !isMe){
+                    borderSwitcher(joint.permissionLevel == 111,"设置为管理员") {
+//                        requestHolder.apiViewModel.
+                    }
+                }
+
                 item {
                     Button(
                         onClick = {
-                            requestHolder.globalNav.goto<UserInfo>(GlobalNavPage.DetailUserInfo,memberUserInfo)
+                            requestHolder.globalNav.goto(GlobalNavPage.DetailUserInfo,memberUserInfo)
                         },
                         modifier = Modifier
                             .fillMaxWidth()

@@ -16,6 +16,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,7 +31,6 @@ import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.society.SocietyChatMessage
 import com.wh.society.api.data.society.SocietyMember
-import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
@@ -48,17 +48,24 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
 
     val lazyListState = rememberLazyListState()
 
+    val thisSociety = requestHolder.trans.society
+
     var societyMember by remember {
         mutableStateOf(SocietyMember())
     }
 
-    LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
+    val updateChat: () -> Unit = {
+        requestHolder.apiViewModel.societyChatInnerList(thisSociety.id) { it ->
             chatMessageList = it
         }
+    }
 
+    LaunchedEffect(Unit) {
+        updateChat.invoke()
+
+        // 获取发出请求用户的指定社团的成员信息
         requestHolder.apiViewModel.societyMemberBySocietyId(
-            requestHolder.trans.society.id,
+            thisSociety.id,
             requestHolder.toast.toast
         ) {
             societyMember = it
@@ -75,25 +82,25 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
     GlobalScaffold(
         page = GlobalNavPage.SocietyChatInnerPage,
         remoteOperate = {
-            requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
+            requestHolder.apiViewModel.societyChatInnerList(thisSociety.id) { it ->
                 chatMessageList = it
             }
         },
         actions = {
             if (societyMember.permissionLevel == 111) {
                 IconButton(onClick = {
-                    requestHolder.alert.tip("确定要清除聊天记录？", onOk = {
+                    requestHolder.alert.tip("确定要清除聊天记录？") {
                         requestHolder.apiViewModel.societyChatInnerClear(
-                            requestHolder.trans.society.id,
+                            thisSociety.id,
                             requestHolder.toast.toast
                         ) {
-                            requestHolder.apiViewModel.societyChatInnerList(requestHolder.trans.society.id) { it ->
+                            requestHolder.apiViewModel.societyChatInnerList(thisSociety.id) { it ->
                                 chatMessageList = it
                             }
                         }
-                    })
+                    }
                 }) {
-                    Icon(imageVector = Icons.Default.Clear, contentDescription = "")
+                    Icon(Icons.Default.Delete, "")
                 }
             }
         },
@@ -110,7 +117,16 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                         ChatMessageItem(
                             meId = requestHolder.apiViewModel.userInfo.id,
                             chatMessage = it,
-                            requestHolder = requestHolder
+                            requestHolder = requestHolder,
+                            onClick = {
+                                requestHolder.alert.confirm("删除这条聊天记录吗") {
+                                    requestHolder.apiViewModel.societyChatInnerDelete(
+                                        chatId = it.id,
+                                        onReturn = updateChat,
+                                        onError = requestHolder.toast.toast
+                                    )
+                                }
+                            }
                         )
                     }
                     empty(chatMessageList)
@@ -126,7 +142,6 @@ fun SocietyChatInnerPage(requestHolder: RequestHolder) {
                         )
                     }
             )
-
 
 
             Row(

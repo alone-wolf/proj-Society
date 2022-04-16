@@ -22,9 +22,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.wh.society.R
 import com.wh.society.api.data.ReturnListData
+import com.wh.society.api.data.society.Society
 import com.wh.society.api.data.society.SocietyActivityMember
+import com.wh.society.api.data.society.SocietyMember
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
+import com.wh.society.typeExt.imageNames
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.GlobalScaffold
 
@@ -110,38 +113,12 @@ fun SocietyActivityDetailPage(requestHolder: RequestHolder) {
                     }
                 }
 
-                items(
+                imageNames(
                     items = memberList.data,
-                    key = { item: SocietyActivityMember -> item.hashCode() },
-                    itemContent = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { }
-                                .padding(vertical = 10.dp, horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = rememberImagePainter(
-                                    data = it.realIconUrl,
-                                    imageLoader = requestHolder.coilImageLoader
-                                ), "",
-                                modifier = Modifier
-                                    .size(60.dp)
-                                    .shadow(5.dp, CircleShape)
-                                    .background(color = Color.White)
-                                    .clip(shape = CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-                            Text(
-                                text = it.username,
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(start = 16.dp),
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1
-                            )
-                        }
-                    }
+                    names = { it.username },
+                    imageUrls = { it.realIconUrl },
+                    requestHolder = requestHolder,
+                    onClick = {}
                 )
 
                 spacer()

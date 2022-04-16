@@ -40,8 +40,6 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
     val padding = 4.dp
     val size = 80.dp
     val border = 3.dp
-//    val borderShapeR = size / 2 + padding
-//    val shadowClipShapeR = borderShapeR + border
 
     Image(
         painter = rememberImagePainter(
@@ -60,7 +58,7 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
             .shadow(5.dp, shape = CircleShape)
             .clip(shape = CircleShape)
             .clickable { Log.d("WH_", "MinePage: onClick") }
-            .background(Color.Green),
+            .background(Color.LightGray),
         contentScale = ContentScale.Crop
     )
 }
@@ -69,18 +67,24 @@ fun UserBigIcon(requestHolder: RequestHolder, modifier: Modifier) {
 fun ChatMessageItem(
     meId: Int,
     chatMessage: ChatMessage,
-    requestHolder: RequestHolder
+    requestHolder: RequestHolder,
+    onClick: () -> Unit = {}
 ) {
     val isMe = meId == chatMessage.userId
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (isMe) Arrangement.End else Arrangement.Start
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 4.dp, horizontal = 10.dp),
+        horizontalArrangement = if (isMe) Arrangement.End else Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         if (isMe) {
             Column(horizontalAlignment = Alignment.End) {
                 Text(text = "${chatMessage.createTSFmt()}·${chatMessage.username}")
-                Text(text = chatMessage.message, modifier = Modifier.height(40.dp))
+                Text(text = chatMessage.message)
             }
+            Spacer(modifier = Modifier.padding(start = 4.dp))
         }
         Image(
             painter = rememberImagePainter(
@@ -94,9 +98,10 @@ fun ChatMessageItem(
             contentScale = ContentScale.Crop
         )
         if (!isMe) {
+            Spacer(modifier = Modifier.padding(start = 4.dp))
             Column(horizontalAlignment = Alignment.Start) {
-                Text(text = "${chatMessage.username}·${chatMessage.createTimestamp}")
-                Text(text = chatMessage.message, modifier = Modifier.height(40.dp))
+                Text(text = "${chatMessage.username}·${chatMessage.createTSFmt()}")
+                Text(text = chatMessage.message)
             }
         }
     }
@@ -107,9 +112,7 @@ fun ChatMessageItem(
 @Composable
 fun SocietyItem(requestHolder: RequestHolder, society: Society, modifier: Modifier = Modifier) {
     Card(
-        onClick = {
-            requestHolder.globalNav.goto(GlobalNavPage.DetailSociety, society)
-        },
+        onClick = { requestHolder.globalNav.goto(GlobalNavPage.DetailSociety, society) },
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
@@ -132,7 +135,7 @@ fun SocietyItem(requestHolder: RequestHolder, society: Society, modifier: Modifi
                 )
             }
         },
-        elevation = 5.dp
+        elevation = 3.dp
     )
 }
 
@@ -352,69 +355,61 @@ fun PostReplyItem(
     postReply: PostReply,
     modifier: Modifier = Modifier,
     postMaxLine: Int = 5,
-    ignoreClick: Boolean = false,
     onItemDeleteDone: () -> Unit
 ) {
     Card(
-        onClick = {
-//            if (!ignoreClick) {
-//                requestHolder.globalNav.gotoBBSPostDetail(post)
-//            }
-        },
+        onClick = {},
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
-        content = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = rememberImagePainter(
-                            data = postReply.realIconUrl,
-                            imageLoader = requestHolder.coilImageLoader
-                        ),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .padding(top = 12.dp, start = 16.dp, end = 12.dp)
-                            .size(40.dp)
-                            .shadow(3.dp, shape = CircleShape)
-                            .background(color = Color.White)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    Column(
-                        modifier = Modifier.weight(0.7F)
-                    ) {
-                        Text(text = postReply.username)
-                        Text(
-                            text = "来自${postReply.deviceName}",
-                            fontSize = 12.sp,
-                            modifier = Modifier.alpha(0.7F)
-                        )
-                    }
-                    if (requestHolder.apiViewModel.userInfo.id == postReply.userId) {
-                        IconButton(onClick = {
-                            requestHolder.apiViewModel.societyBBSPostReplyDelete(
-                                postReply.id,
-                                onItemDeleteDone,
-                                {  }
-                            )
-//                            requestHolder.apiViewModel.
-                        }) {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = "")
-                        }
-                    }
-                }
-                Column(
+            .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = rememberImagePainter(
+                        data = postReply.realIconUrl,
+                        imageLoader = requestHolder.coilImageLoader
+                    ),
+                    contentDescription = "",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 10.dp)
+                        .padding(top = 12.dp, start = 16.dp, end = 12.dp)
+                        .size(40.dp)
+                        .shadow(3.dp, shape = CircleShape)
+                        .background(color = Color.White)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+                Column(
+                    modifier = Modifier.weight(0.7F)
                 ) {
-                    Text(text = postReply.reply, maxLines = postMaxLine)
+                    Text(text = postReply.username)
+                    Text(
+                        text = "来自${postReply.deviceName}",
+                        fontSize = 12.sp,
+                        modifier = Modifier.alpha(0.7F)
+                    )
+                }
+                if (requestHolder.apiViewModel.userInfo.id == postReply.userId) {
+                    IconButton(onClick = {
+                        requestHolder.apiViewModel.societyBBSPostReplyDelete(
+                            postReply.id,
+                            onItemDeleteDone
+                        ) { }
+                    }) {
+                        Icon(Icons.Default.Delete, "")
+                    }
                 }
             }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 10.dp)
+            ) {
+                Text(text = postReply.reply, maxLines = postMaxLine)
+            }
         }
-    )
+    }
 }

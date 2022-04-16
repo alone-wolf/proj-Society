@@ -6,6 +6,8 @@ const UserSocietyJoint = require("../../../model/society_member");
 const STATUS = require("../../../utils/return_data");
 const User = require("../../../model/user");
 
+
+// 获取发出请求用户的指定社团的成员信息
 apiRouter.post("/by/society/id", (req, res, next) => {
     let societyId = req.body.societyId;
     let userId = req.body.cookieTokenUserId;

@@ -202,6 +202,19 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
         return ReturnListData.blank()
     }
 
+    suspend fun societyMemberRequestDeal(
+        requestId: Int,
+        isAgreed: Boolean,
+        onError: (String) -> Unit
+    ){
+        try {
+            serverApi.societyMemberRequestDeal(requestId, isAgreed)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
     suspend fun societyJoint(
         societyId: Int,
         onError: (String) -> Unit = {}
@@ -339,6 +352,15 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
         }
     }
 
+    suspend fun societyChatInnerDelete(chatId:Int,onError: (String) -> Unit){
+        try {
+            serverApi.societyChatInnerDelete(chatId)
+        }catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
     suspend fun societyChatInnerClear(
         societyId: Int,
         onError: (String) -> Unit = {}
@@ -411,7 +433,7 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
         onError: (String) -> Unit
     ) {
         try {
-            serverApi.societyActivityLeave(activityId,userId)
+            serverApi.societyActivityLeave(activityId, userId)
         } catch (e: Exception) {
             val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
             handleError(funName, e, onError)
@@ -488,6 +510,18 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
             handleError(funName, e, onError)
         }
         return ReturnListData.blank()
+    }
+
+    suspend fun societyNoticeDelete(
+        noticeId:Int,
+        onError: (String) -> Unit
+    ){
+        try {
+            serverApi.societyNoticeDelete(noticeId)
+        }catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
     }
 
     suspend fun societyNoticeCreate(

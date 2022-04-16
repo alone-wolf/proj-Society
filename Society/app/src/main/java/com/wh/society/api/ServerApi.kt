@@ -74,6 +74,7 @@ interface ServerApi {
         @Field("societyId") societyId: Int
     ): ReturnObjectData<Society>
 
+    // // 获取发出请求用户的指定社团的成员信息
     @FormUrlEncoded
     @POST("/society/member/by/society/id")
     suspend fun societyMemberBySocietyId(
@@ -94,6 +95,13 @@ interface ServerApi {
     suspend fun societyMemberRequestList(
         @Field("societyId") societyId: Int
     ): ReturnListData<SocietyMemberRequest>
+
+    @FormUrlEncoded
+    @POST("/society/member/request/deal")
+    suspend fun societyMemberRequestDeal(
+        @Field("requestId")requestId:Int,
+        @Field("isAgreed") isAgreed:Boolean
+    )
 
     @FormUrlEncoded
     @POST("/society/joint")
@@ -155,6 +163,12 @@ interface ServerApi {
         @Field("societyId") societyId: Int,
         @Field("userId") userId: Int,
         @Field("message") message: String
+    )
+
+    @FormUrlEncoded
+    @POST("/society/chat/inner/delete")
+    suspend fun societyChatInnerDelete(
+        @Field("chatId") chatId:Int
     )
 
     @FormUrlEncoded
@@ -225,6 +239,12 @@ interface ServerApi {
     suspend fun societyNoticeList(
         @Field("societyId") societyId: Int
     ): ReturnListData<SocietyNotice>
+
+    @FormUrlEncoded
+    @POST("/society/notice/delete")
+    suspend fun societyNoticeDelete(
+        @Field("noticeId") noticeId:Int
+    )
 
     @POST("/society/notice/create")
     suspend fun societyNoticeCreate(@Body notice: RequestBody)

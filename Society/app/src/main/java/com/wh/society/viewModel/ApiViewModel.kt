@@ -44,7 +44,7 @@ class ApiViewModel : ViewModel() {
 
     val TAG = "WH_"
 
-    fun societyList(onError: (String) -> Unit = {}) {
+    fun societyList(onError: (String) -> Unit = {},onReturn: () -> Unit={}) {
         viewModelScope.launch {
             societyList = apiRepository.societyList(onError).data
             val b: MutableList<BBS> = mutableListOf()
@@ -52,6 +52,7 @@ class ApiViewModel : ViewModel() {
                 b.add(BBS.fromSociety(it))
             }
             bbsList = b
+            onReturn.invoke()
         }
     }
 
@@ -191,8 +192,14 @@ class ApiViewModel : ViewModel() {
             val a = apiRepository.societyMemberRequestList(
                 societyId = societyId
             )
-//            Log.d(TAG, "societyMemberRequestList: ${a.data.size}")
             onReturn(a)
+        }
+    }
+
+    fun societyMemberRequestDeal(requestId:Int,isAgreed:Boolean,onReturn: () -> Unit,onError: (String) -> Unit){
+        viewModelScope.launch {
+            apiRepository.societyMemberRequestDeal(requestId, isAgreed, onError)
+            onReturn.invoke()
         }
     }
 
@@ -314,6 +321,17 @@ class ApiViewModel : ViewModel() {
         }
     }
 
+    fun societyChatInnerDelete(
+        chatId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit,
+    ){
+        viewModelScope.launch {
+            apiRepository.societyChatInnerDelete(chatId, onError)
+            onReturn.invoke()
+        }
+    }
+
     fun societyChatInnerClear(
         societyId: Int,
         onError: (String) -> Unit,
@@ -422,7 +440,7 @@ class ApiViewModel : ViewModel() {
         societyId: Int, picToken: String, onReturn: CoroutineScope.() -> Unit
     ) {
         viewModelScope.launch {
-            val a = apiRepository.societyPictureDelete(
+            apiRepository.societyPictureDelete(
                 societyId,
                 picToken
             )
@@ -432,13 +450,20 @@ class ApiViewModel : ViewModel() {
 
     fun societyNoticeList(
         societyId: Int,
-        onReturn: CoroutineScope.(ReturnListData<SocietyNotice>) -> Unit
+        onReturn: (List<SocietyNotice>) -> Unit
     ) {
         viewModelScope.launch {
             val a = apiRepository.societyNoticeList(
                 societyId = societyId
             )
-            onReturn(a)
+            onReturn(a.data)
+        }
+    }
+
+    fun societyNoticeDelete(noticeId:Int,onReturn: () -> Unit,onError: (String) -> Unit){
+        viewModelScope.launch {
+            apiRepository.societyNoticeDelete(noticeId,onError)
+            onReturn.invoke()
         }
     }
 

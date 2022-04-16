@@ -1,29 +1,35 @@
 package com.wh.society.api.data.society
 
 import com.wh.society.api.data.impl.IRequestBody
+import com.wh.society.api.data.impl.IZTimestamp
 import org.json.JSONObject
 
-class SocietyNotice:IRequestBody {
+open class SocietyNotice : IRequestBody, IZTimestamp {
     var id: Int = 0
-    var title: String = ""
-    var notice: String = ""
-    var postUserId: Int = 0
-    var postUsername: Int = 0
-    var societyId: Int = 0
+    open var title: String = ""
+    open var notice: String = ""
+    open var postUserId: Int = 0
+    var postUsername: String = ""
+    open var societyId: Int = 0
     var societyName: String = ""
 
-    var permissionLevel: Int = 10
+    open var permissionLevel: Int = 10
     override fun toJSONObject(): JSONObject {
         val j = JSONObject()
-        j.put("title",title)
-        j.put("notice",notice)
-        j.put("postUserId",postUserId)
-        j.put("postUsername",postUsername)
-        j.put("societyId",societyId)
-        j.put("societyName",societyName)
-        j.put("permissionLevel",permissionLevel)
+        j.put("title", title)
+        j.put("notice", notice)
+        j.put("postUserId", postUserId)
+        j.put("societyId", societyId)
+        j.put("permissionLevel", permissionLevel)
         return j
     }
+
+    override fun toString(): String {
+        return "SocietyNotice(id=$id, title='$title', notice='$notice', postUserId=$postUserId, postUsername=$postUsername, societyId=$societyId, societyName='$societyName', permissionLevel=$permissionLevel)"
+    }
+
+    override val updateTimestamp: String = ""
+    override val createTimestamp: String = ""
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -48,15 +54,11 @@ class SocietyNotice:IRequestBody {
         result = 31 * result + title.hashCode()
         result = 31 * result + notice.hashCode()
         result = 31 * result + postUserId
-        result = 31 * result + postUsername
+        result = 31 * result + postUsername.hashCode()
         result = 31 * result + societyId
         result = 31 * result + societyName.hashCode()
         result = 31 * result + permissionLevel
         return result
-    }
-
-    override fun toString(): String {
-        return "SocietyNotice(id=$id, title='$title', notice='$notice', postUserId=$postUserId, postUsername=$postUsername, societyId=$societyId, societyName='$societyName', permissionLevel=$permissionLevel)"
     }
 
 }

@@ -10,10 +10,12 @@ import androidx.compose.runtime.mutableStateOf
 abstract class AlertRequest(private val resources: Resources) {
     val show2BtnDialog: MutableState<Boolean> = mutableStateOf(false)
     val show1BtnDialog: MutableState<Boolean> = mutableStateOf(false)
+    val showXBtnDialog: MutableState<Boolean> = mutableStateOf(false)
     var title: String = ""
     var content: @Composable () -> Unit = {}
     var onOKAction: () -> Unit = {}
     var onCancelAction: () -> Unit = {}
+    var btns: Map<String, () -> Unit> = emptyMap()
 
 
     fun alert(
@@ -99,7 +101,18 @@ abstract class AlertRequest(private val resources: Resources) {
         alert(resources.getString(title), content, onOk)
     }
 
-    fun tip(content: String,onOk: () -> Unit = {}) {
+    fun alert(title: String, content: String, btns: Map<String, () -> Unit>) {
+        this.title = title
+        this.content = { Text(text = content) }
+        this.btns = btns
+        this.showXBtnDialog.value = true
+    }
+
+    fun tip(content: String, onOk: () -> Unit = {}) {
         alert("提示", content, onOk = onOk)
+    }
+
+    fun confirm(content: String, onOk: () -> Unit) {
+        alert("确认", content, onOk, onCancel = {})
     }
 }

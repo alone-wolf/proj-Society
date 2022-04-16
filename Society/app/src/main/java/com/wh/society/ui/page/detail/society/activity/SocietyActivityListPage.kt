@@ -1,18 +1,18 @@
 package com.wh.society.ui.page.detail.society.activity
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.wh.society.api.data.ReturnListData
 import com.wh.society.api.data.society.SocietyActivity
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
@@ -24,11 +24,12 @@ import com.wh.society.ui.componment.GlobalScaffold
 @Composable
 fun SocietyActivityListPage(requestHolder: RequestHolder) {
 
-    var activityList by remember { mutableStateOf(ReturnListData.blank<SocietyActivity>()) }
+    var activityList by remember { mutableStateOf(emptyList<SocietyActivity>()) }
+    val thisSociety = requestHolder.trans.society
 
     LaunchedEffect(Unit) {
-        requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { it ->
-            activityList = it
+        requestHolder.apiViewModel.societyActivityList(thisSociety.id) { it ->
+            activityList = it.data
         }
     }
 
@@ -58,22 +59,19 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
                                 onValueChange = { activity = it },
                                 label = { Text(text = "Content") }
                             )
-                            Box {
-
-                            }
                         }
                     },
                     onOk = {
 
                         val societyActivity = SocietyActivity()
-                        societyActivity.societyId = requestHolder.trans.society.id
+                        societyActivity.societyId = thisSociety.id
                         societyActivity.deviceName = requestHolder.deviceName
                         societyActivity.title = activityTitle
                         societyActivity.activity = activity
 
                         requestHolder.apiViewModel.societyActivityCreate(societyActivity) {
-                            requestHolder.apiViewModel.societyActivityList(requestHolder.trans.society.id) { it ->
-                                activityList = it
+                            requestHolder.apiViewModel.societyActivityList(thisSociety.id) { it ->
+                                activityList = it.data
                             }
                         }
 
@@ -89,7 +87,7 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
         LazyColumn(
             content = {
                 items(
-                    items = activityList.data.asReversed(),
+                    items = activityList.asReversed(),
                     key = { item: SocietyActivity -> item.id },
                     itemContent = { it ->
                         Card(
@@ -135,8 +133,3 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
         )
     }
 }
-
-//private operator fun String.times(i: Int): String {
-//    var a  = ""
-//
-//}

@@ -1,7 +1,7 @@
 const express = require("express");
 const apiRouter = express.Router();
 const Society = require("../../../../model/society");
-const UserSocietyJoint = require("../../../../model/society_member");
+const SocietyMember = require("../../../../model/society_member");
 
 const STATUS = require("../../../../utils/return_data");
 const SocietyJoinRequest = require("../../../../model/society_member_request");
@@ -9,7 +9,6 @@ const User = require("../../../../model/user");
 const { brdNewMemberRequest, srdMemberRequestReply, brdMemberChanged } = require("../../../../socketio/socketio");
 
 apiRouter.post("/create", (req, res, next) => {
-    console.log(req.body);
     let societyId = req.body.societyId;
     let userId = req.body.userId;
     let request = req.body.request;
@@ -56,27 +55,53 @@ apiRouter.post("/list", (req, res, next) => {
 apiRouter.post("/deal", (req, res, next) => {
     let requestId = req.body.requestId;
     let isAgreed = req.body.isAgreed || true;
-    let permissionLevel = req.body.permissionLevel || 11;
     SocietyJoinRequest.findOne({ where: { id: requestId } }).then(sjr => {
         if (!sjr) {
             res.status(404).json(STATUS.STATUS_404);
             return;
         }
+        sjr.update({ isAgreed, isDealDone: true });
+
         let userId = sjr.userId;
-        let username = sjr.username;
         let societyId = sjr.societyId;
-        let societyName = sjr.societyName;
-        let userIconUrl = sjr.userIconUrl;
 
-        UserSocietyJoint.create(
-            { userId, username, societyId, societyName, userIconUrl, permissionLevel }
-        ).then(d => {
-            sjr.update({ isAgreed, isDealDone: true });
-            res.json(STATUS.STATUS_200(d));
-            srdMemberRequestReply(userId, societyId, societyName);
-            brdMemberChanged(societyId, societyName);
-        });
+        if (sjr.isJoin && sjr.isAgreed) {
+            let username = sjr.username;
+            let societyName = sjr.societyName;
+            // let userIconUrl = sjr.userIconUrl;
 
+            User.findOne({ where: { id: userId } }).then(d => {
+                let userIconUrl = d.iconUrl;
+
+                SocietyMember.create(
+                    { userId, username, societyId, societyName, userIconUrl, permissionLevel: 11 }
+                ).then(d => {
+                    res.json(STATUS.STATUS_200(d));
+                    srdMemberRequestReply(userId, societyId, societyName);
+                    brdMemberChanged(societyId, societyName);
+                }).catch(e => {
+                    console.log(e);
+                    res.status(500).json(STATUS.STATUS_500)
+                });
+            });
+
+        } else if (!sjr.isJoin && sjr.isAgreed) {
+            SocietyMember.destroy({ where: { userId, societyId } })
+                .then(d => {
+                    res.json(STATUS.STATUS_200(d));
+                }).catch(e => {
+                    console.log(e);
+                    res.status(500).json(STATUS.STATUS_500)
+                });
+        } else {
+            res.json(STATUS.STATUS_200());
+        }
+
+
+
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500)
     });
 });
 

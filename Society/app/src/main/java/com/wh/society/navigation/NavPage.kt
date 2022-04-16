@@ -39,19 +39,19 @@ import com.wh.society.ui.page.setting.SettingPage
 sealed class MainNavPage(val title: String, val route: String, val icon: ImageVector) {
 
     object Society : MainNavPage(
-        title = "Society",
+        title = "社团",
         route = "society",
         icon = Icons.Default.List
     )
 
     object BBS : MainNavPage(
-        title = "BBS",
+        title = "论坛",
         route = "bbs",
         icon = Icons.Default.List
     )
 
     object Mine : MainNavPage(
-        title = "Mine",
+        title = "我的",
         route = "mine",
         icon = Icons.Default.Person
     )
@@ -75,38 +75,39 @@ sealed class GlobalNavPage(
     val content: @Composable (RequestHolder) -> Unit,
     val navExtraOperation: (r: RequestHolder, a: Any) -> Unit = { _, _ -> },
 ) {
+
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     object LoginPage : GlobalNavPage(
-        "Login Page",
+        "登录",
         "login/login-page",
         { LoginPage(requestHolder = it) },
     )
 
     @ExperimentalMaterialApi
     object RegisterPage : GlobalNavPage(
-        "Register Page",
+        "用户注册",
         "login/register-page",
         { RegisterPage(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object FindPasswordPage : GlobalNavPage(
-        "Find Password",
+        "找回密码",
         "login/find-password",
         { FindPasswordPage(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object Setting : GlobalNavPage(
-        "Setting",
+        "设置",
         "setting",
         { SettingPage(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object DetailUserInfo : GlobalNavPage(
-        "User Info",
+        "用户信息",
         "detail/user/info",
         { UserDetailPage(requestHolder = it) },
         { r, a -> r.trans.userInfo = a as UserInfo }
@@ -114,7 +115,7 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object UserChatPrivate : GlobalNavPage(
-        "User Private Chat",
+        "用户私聊",
         "user/chat/private",
         { UserChatPrivatePage(requestHolder = it) }
     )
@@ -122,7 +123,7 @@ sealed class GlobalNavPage(
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     object DetailSociety : GlobalNavPage(
-        "Society Detail",
+        "社团详情",
         "detail/society",
         { SocietyDetailPage(requestHolder = it) },
         { r, a -> r.trans.society = a as Society }
@@ -131,7 +132,7 @@ sealed class GlobalNavPage(
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     object DetailBBS : GlobalNavPage(
-        "BBS Detail",
+        "论坛详情",
         "detail/bbs",
         { BBSDetailPage(requestHolder = it) },
         { r, a -> r.trans.bbs = a as BBS }
@@ -139,7 +140,7 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object DetailPost : GlobalNavPage(
-        "Post Detail",
+        "帖子详情",
         "detail/bbs/post",
         { BBSPostDetail(requestHolder = it) },
         { r, a -> r.trans.postId = a as Int }
@@ -147,7 +148,7 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object DetailPostEditor : GlobalNavPage(
-        "Post Editor",
+        "帖子编辑器",
         "detail/bbs/post/editor",
         { BBSPostEditor(requestHolder = it) }
     )
@@ -155,7 +156,7 @@ sealed class GlobalNavPage(
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     object Main : GlobalNavPage(
-        "Main",
+        "主界面",
         "main",
         { MainPage(requestHolder = it) }
     )
@@ -163,23 +164,21 @@ sealed class GlobalNavPage(
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     object MainMineSocietyListPage : GlobalNavPage(
-        "Society You Join",
+        "加入的社团",
         "main/mine/societyList",
-        { MineSocietyList(requestHolder = it) },
-        { r, a -> r.trans.userMember = a as ReturnListData<SocietyMember> }
+        { MineSocietyList(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object MainMineSocietyRequestListPage : GlobalNavPage(
-        "Society Join Request",
+        "社团成员申请",
         "main/mine/societyRequestList",
-        { MineSocietyRequestListPage(requestHolder = it) },
-        { r, a -> r.trans.societyMemberRequestList = a as ReturnListData<SocietyMemberRequest> }
+        { MineSocietyRequestListPage(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object MainMinePostListPage : GlobalNavPage(
-        "Your Posts",
+        "发布的帖子",
         "main/mine/postList",
         { MinePostListPage(requestHolder = it) },
         { r, a -> r.trans.postList = a as ReturnListData<Post> }
@@ -187,7 +186,7 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object MainMinePostReplyListPage : GlobalNavPage(
-        "Your Replies",
+        "发表的回复",
         "main/mine/postReplyList",
         { MinePostReplyListPage(requestHolder = it) },
         { r, a -> r.trans.postReplyList = a as ReturnListData<PostReply> }
@@ -195,21 +194,21 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object MainMineInfoEditorPage : GlobalNavPage(
-        "Mine Info Editor",
+        "我的信息编辑器",
         "main/mine/info/editor",
         { MineInfoEditor(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object MainMinePicListPage : GlobalNavPage(
-        "Uploaded Pictures",
+        "上传的图片",
         "main/mine/pic",
         { MinePicList(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object MainMineNotifyListPage : GlobalNavPage(
-        "Notify List",
+        "通知列表",
         "main/mine/notify",
         { MineNotifyListPage(requestHolder = it) }
     )
@@ -217,7 +216,7 @@ sealed class GlobalNavPage(
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     object SocietyChatInnerPage : GlobalNavPage(
-        "Society Inner Chat",
+        "社团内部聊天室",
         "detail/society/chat/inner",
         { SocietyChatInnerPage(requestHolder = it) },
         { r, a -> r.trans.society = a as Society }
@@ -225,7 +224,7 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object SocietyMemberListPage : GlobalNavPage(
-        "Society Members",
+        "社团成员",
         "detail/society/member/list",
         { SocietyMemberListPage(requestHolder = it) },
         { r, a -> r.trans.societyMemberList = a as ReturnListData<SocietyMember> }
@@ -233,7 +232,7 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object SocietyMemberDetailPage : GlobalNavPage(
-        "Society Member",
+        "社团成员详情",
         "detail/society/member",
         { SocietyMemberDetailPage(requestHolder = it) },
         { r, a -> r.trans.societyMember = a as SocietyMember }
@@ -241,14 +240,14 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object SocietyActivityListPage : GlobalNavPage(
-        "Society Activity List",
+        "社团活动列表",
         "detail/society/activity/list",
         { SocietyActivityListPage(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object SocietyActivityDetailPage : GlobalNavPage(
-        "Society Activity Detail",
+        "社团活动详情",
         "detail/society/activity/detail",
         { SocietyActivityDetailPage(requestHolder = it) },
         { r, a -> r.trans.societyActivity = a as SocietyActivity }
@@ -256,7 +255,7 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object SocietyPictureListPage : GlobalNavPage(
-        "Society Picture List",
+        "社团图片列表",
         "detail/society/picture/list",
         { SocietyPictureListPage(requestHolder = it) },
         { r, a -> r.trans.societyPictureList = a as ReturnListData<SocietyPicture> }
@@ -264,22 +263,21 @@ sealed class GlobalNavPage(
 
     @ExperimentalMaterialApi
     object SocietyInfoEditorPage : GlobalNavPage(
-        "Society Info Editor",
+        "社团信息编辑器",
         "detail/society/info/editor",
         { SocietyInfoEditor(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object SocietyNoticeListPage : GlobalNavPage(
-        "Society Notice List",
+        "社团公告列表",
         "detail/society/notice/list",
-        { SocietyNoticeListPage(requestHolder = it) },
-        { r, a -> r.trans.societyNoticeList = a as ReturnListData<SocietyNotice> }
+        { SocietyNoticeListPage(requestHolder = it) }
     )
 
     @ExperimentalMaterialApi
     object SocietyMemberRequestListPage : GlobalNavPage(
-        "Society Member Request List",
+        "社团用成员求列表",
         "detail/society/member/request/list",
         { SocietyMemberRequestListPage(requestHolder = it) },
         { r, a -> r.trans.societyMemberRequestList = a as ReturnListData<SocietyMemberRequest> }

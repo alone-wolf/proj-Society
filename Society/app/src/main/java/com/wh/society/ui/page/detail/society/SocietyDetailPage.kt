@@ -58,7 +58,7 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
         mutableStateOf(ReturnListData.blank<SocietyPicture>())
     }
     var societyNoticeList by remember {
-        mutableStateOf(ReturnListData.blank<SocietyNotice>())
+        mutableStateOf(emptyList<SocietyNotice>())
     }
 
     val thisSociety = requestHolder.trans.society
@@ -209,12 +209,9 @@ fun SocietyDetailPage(requestHolder: RequestHolder) {
 
             smallListTitle(
                 title = "社团公告",
-                n = societyNoticeList.data.size,
+                n = societyNoticeList.size,
                 onClick = {
-                    requestHolder.globalNav.goto(
-                        page = GlobalNavPage.SocietyNoticeListPage,
-                        a = societyNoticeList
-                    )
+                    requestHolder.globalNav.goto( GlobalNavPage.SocietyNoticeListPage)
                 }
             )
 

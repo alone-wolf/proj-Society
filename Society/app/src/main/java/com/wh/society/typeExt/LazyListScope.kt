@@ -2,12 +2,15 @@ package com.wh.society.typeExt
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -21,13 +24,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.wh.common.typeExt.everyN
 import com.wh.society.api.data.ReturnListData
+import com.wh.society.componment.RequestHolder
 import com.wh.society.ui.componment.SmallListTitle
 
 fun LazyListScope.spacer(height: Dp = 60.dp) {
@@ -89,7 +97,7 @@ fun <T> LazyListScope.everyNForRow(
 fun <T> LazyListScope.everyNForRow(
     items: List<T>,
     n: Int = 3,
-    itemContent: @Composable LazyItemScope.(T, index:Int, Modifier) -> Unit,
+    itemContent: @Composable LazyItemScope.(T, index: Int, Modifier) -> Unit,
     placeholder: @Composable LazyItemScope.(Modifier) -> Unit = { m -> Spacer(modifier = m) }
 ) {
     items.everyN(n, onEach = { groupId, it ->
@@ -262,6 +270,87 @@ fun LazyListScope.borderSwitcher(v: Boolean, label: String, onClick: () -> Unit)
             AnimatedVisibility(!v) {
                 Icon(Icons.Default.Close, "")
             }
+        }
+    }
+}
+
+fun <T> LazyListScope.imageNames(
+    items: List<T>,
+    names: ((item: T) -> String),
+    keys:((item:T)->Any) = { item: T -> item.hashCode() },
+    imageUrls: ((item: T) -> String),
+    requestHolder: RequestHolder,
+    onClick: (T) -> Unit
+) {
+    items(
+        items = items,
+        key = keys,
+        itemContent = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onClick.invoke(it)
+                    }
+                    .padding(vertical = 10.dp, horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = rememberImagePainter(
+                        data = imageUrls.invoke(it),
+                        imageLoader = requestHolder.coilImageLoader
+                    ), "",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .shadow(5.dp, CircleShape)
+                        .background(color = Color.White)
+                        .clip(shape = CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+                Text(
+                    text = names.invoke(it),
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(start = 16.dp),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
+        })
+}
+
+fun LazyListScope.imageName(
+    imageUrl: String,
+    name: String,
+    requestHolder: RequestHolder,
+    onClick: () -> Unit
+) {
+    item {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(vertical = 10.dp, horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = rememberImagePainter(
+                    data = imageUrl,
+                    imageLoader = requestHolder.coilImageLoader
+                ), "",
+                modifier = Modifier
+                    .size(60.dp)
+                    .shadow(5.dp, CircleShape)
+                    .background(color = Color.White)
+                    .clip(shape = CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                text = name,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 16.dp),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
         }
     }
 }

@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wh.society.api.data.society.SocietyMemberRequest
@@ -21,6 +21,23 @@ import com.wh.society.ui.componment.GlobalScaffold
 @Composable
 fun MineSocietyRequestListPage(requestHolder: RequestHolder) {
 
+    var mineSocietyRequestList by remember {
+        mutableStateOf(emptyList<SocietyMemberRequest>())
+    }
+
+    val updateList:()->Unit = {
+        requestHolder.apiViewModel.userJoinRequestList(
+            userId = requestHolder.apiViewModel.userInfo.id
+        ){
+            mineSocietyRequestList = it.data
+        }
+    }
+
+
+    LaunchedEffect(Unit){
+        updateList.invoke()
+    }
+
     GlobalScaffold(
         page = GlobalNavPage.MainMineSocietyRequestListPage,
         requestHolder = requestHolder
@@ -30,14 +47,12 @@ fun MineSocietyRequestListPage(requestHolder: RequestHolder) {
             content = {
 
                 items(
-                    items = requestHolder.trans.societyMemberRequestList.data,
+                    items = mineSocietyRequestList,
                     key = { item: SocietyMemberRequest -> item.id },
-                    itemContent = {
-                        MemberRequestItem(societyMemberRequest = it)
-                    }
+                    itemContent = { MemberRequestItem(societyMemberRequest = it) }
                 )
 
-                empty(requestHolder.trans.societyMemberRequestList)
+                empty(mineSocietyRequestList)
                 spacer()
             },
             modifier = Modifier.fillMaxSize()
@@ -65,7 +80,7 @@ fun MemberRequestItem(societyMemberRequest: SocietyMemberRequest) {
             Text(text = "时间：${societyMemberRequest.updateTimestamp}")
             Text(text = if (societyMemberRequest.isDealDone) "已处理" else "未处理")
             if (societyMemberRequest.isDealDone) {
-                Text(text = "结果: ${if (societyMemberRequest.isPass) "已通过" else "未通过"}")
+                Text(text = "结果: ${if (societyMemberRequest.isAgreed) "已通过" else "未通过"}")
             }
         }
     }

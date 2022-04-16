@@ -35,7 +35,7 @@ apiRouter.post("/create", (req, res, next) => {
             return;
         }
         let postUsername = data.username;
-        let postUserIconUrl = data.userIconUrl;
+        // let postUserIconUrl = data.userIconUrl;
 
         Society.findOne({ where: { id: societyId } }).then(d => {
             if (!d) {
@@ -44,8 +44,11 @@ apiRouter.post("/create", (req, res, next) => {
             }
             let societyName = d.name;
 
-            SocietyNotice.create({ postUserId, postUsername, title, notice, permissionLevel }).then(d => {
+            SocietyNotice.create(
+                { postUserId, postUsername, societyId, societyName, title, notice, permissionLevel }
+            ).then(d => {
                 res.json(STATUS.STATUS_200(d));
+
                 switch (permissionLevel) {
                     case 0: {
                         brdNewNoticeWatcher(societyId, societyName, postUserId, postUsername, title)

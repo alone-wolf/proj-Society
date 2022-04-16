@@ -1,24 +1,14 @@
 package com.wh.society.ui.page.detail.society.member
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
-import com.wh.society.api.data.society.SocietyMember
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
+import com.wh.society.typeExt.imageNames
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.GlobalScaffold
 
@@ -28,45 +18,13 @@ fun SocietyMemberListPage(requestHolder: RequestHolder) {
     GlobalScaffold(page = GlobalNavPage.SocietyMemberListPage, requestHolder = requestHolder) {
         LazyColumn(
             content = {
-                items(
+
+                imageNames(
                     items = requestHolder.trans.societyMemberList.data,
-                    key = { item: SocietyMember -> item.id },
-                    itemContent = { it ->
-                        Card(
-                            onClick = {
-                                requestHolder.globalNav.goto(GlobalNavPage.SocietyMemberDetailPage,it)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 2.dp, horizontal = 16.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                Image(
-                                    painter = rememberImagePainter(
-                                        data = it.realIconUrl,
-                                        imageLoader = requestHolder.coilImageLoader
-                                    ), contentDescription = "",
-                                    modifier = Modifier
-                                        .size(45.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(start = 20.dp)
-                                ) {
-                                    Text(text = it.username)
-                                }
-                            }
-                        }
-                    }
+                    names = { it.username },
+                    imageUrls = { it.realIconUrl },
+                    requestHolder = requestHolder,
+                    onClick = { requestHolder.globalNav.goto(GlobalNavPage.SocietyMemberDetailPage,it) }
                 )
 
                 empty(requestHolder.trans.societyMemberList)

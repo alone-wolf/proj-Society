@@ -53,6 +53,17 @@ apiRouter.post("/list", (req, res, next) => {
     });
 });
 
+apiRouter.post("/delete", (req, res, next) => {
+    let chatId = req.body.chatId;
+
+    SocietyInnerChat.destroy({ where: { id: chatId } }).then(d => {
+        res.json(STATUS.STATUS_200(d));
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500);
+    });
+});
+
 apiRouter.post("/clear", (req, res, next) => {
     let societyId = req.body.societyId;
     SocietyInnerChat.destroy({ where: { societyId } }).then(d => {

@@ -7,7 +7,7 @@ class SocietyMemberRequest {
     var userId: Int = 0
     var username: String = ""
     var isJoin: Boolean = true
-    var isPass:Boolean = false
+    var isAgreed:Boolean = false
     var request: String = ""
     var isDealDone:Boolean = false
     var updateTimestamp:String = ""
@@ -24,7 +24,7 @@ class SocietyMemberRequest {
         if (userId != other.userId) return false
         if (username != other.username) return false
         if (isJoin != other.isJoin) return false
-        if (isPass != other.isPass) return false
+        if (isAgreed != other.isAgreed) return false
         if (request != other.request) return false
         if (isDealDone != other.isDealDone) return false
         if (updateTimestamp != other.updateTimestamp) return false
@@ -39,7 +39,7 @@ class SocietyMemberRequest {
         result = 31 * result + userId
         result = 31 * result + username.hashCode()
         result = 31 * result + isJoin.hashCode()
-        result = 31 * result + isPass.hashCode()
+        result = 31 * result + isAgreed.hashCode()
         result = 31 * result + request.hashCode()
         result = 31 * result + isDealDone.hashCode()
         result = 31 * result + updateTimestamp.hashCode()
@@ -47,6 +47,6 @@ class SocietyMemberRequest {
     }
 
     override fun toString(): String {
-        return "MemberRequest(id=$id, societyId=$societyId, societyName='$societyName', userId=$userId, username='$username', isJoin=$isJoin, isPass=$isPass, request='$request', isDealDone=$isDealDone, updateTimestamp='$updateTimestamp')"
+        return "MemberRequest(id=$id, societyId=$societyId, societyName='$societyName', userId=$userId, username='$username', isJoin=$isJoin, isPass=$isAgreed, request='$request', isDealDone=$isDealDone, updateTimestamp='$updateTimestamp')"
     }
 }
