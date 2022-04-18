@@ -1,18 +1,17 @@
 package com.wh.admin.data.society
 
-import com.wh.admin.componment.ServerApi
+import com.wh.admin.componment.AdminApi
 import com.wh.admin.data.impl.IRequestBody
-import com.wh.admin.data.society.bbs.BBS
 import com.wh.admin.data.impl.IRealIconUrl
 import com.wh.admin.data.impl.IZTimestamp
-import com.wh.society.api.data.shadow.SocietyShadow
-import com.wh.society.api.data.impl.IContain
+import com.wh.admin.data.shadow.SocietyShadow
+import com.wh.admin.data.impl.IContain
 import org.json.JSONObject
 
 open class Society : IContain, IRealIconUrl, IRequestBody, IZTimestamp {
     var id: Int = 0
     open var name: String = ""
-    open var openTimestamp: String = ""
+    open var openTimestamp: Long = System.currentTimeMillis()
     open var describe: String = ""
     open var college: String = ""
     open var bbsName: String = ""
@@ -47,20 +46,11 @@ open class Society : IContain, IRealIconUrl, IRequestBody, IZTimestamp {
     override val checkArray: Array<String>
         get() = arrayOf(name, describe, college)
 
-    fun toBBS(): BBS {
-        return BBS().apply {
-            this.id = this@Society.id
-            this.name = this@Society.bbsName
-            this.describe = this@Society.bbsDescribe
-            this.openTimestamp = this@Society.openTimestamp
-        }
-    }
-
     override val realIconUrl: String
         get() = if (iconUrl.startsWith("http://") || iconUrl.startsWith("https://") || iconUrl.isBlank())
             iconUrl
         else
-            ServerApi.societyPicUrl(iconUrl)
+            AdminApi.societyPicUrl(iconUrl)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

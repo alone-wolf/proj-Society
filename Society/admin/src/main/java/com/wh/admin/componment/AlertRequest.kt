@@ -1,7 +1,6 @@
 package com.wh.admin.componment
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -11,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 class AlertRequest {
-//    var
 
     private var showOneBtnDialog by mutableStateOf(false)
     private var showTwoBtnDialog by mutableStateOf(false)

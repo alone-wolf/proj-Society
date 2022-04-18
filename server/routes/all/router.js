@@ -78,8 +78,7 @@ apiRouter.post("/user/society/member", (req, res, next) => {
 // 列出用户参加的社团活动成员身份
 apiRouter.post("/user/society/activity/member", (req, res, next) => {
   let userId = req.body.userId;
-  let societyId = req.body.societyId;
-  SocietyActivityMember.findAll({ where: { userId, societyId } })
+  SocietyActivityMember.findAll({ where: { userId } })
     .then(d => {
       res.json(STATUS.STATUS_200(d));
     }).catch(e => {

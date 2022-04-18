@@ -77,10 +77,6 @@ class NavRequest(private val activity: MainActivity) {
         navController.goto(NavDes.SocietyMemberList)
     }
 
-    val toSocietyMemberRequestList = {
-        navController.goto(NavDes.SocietyMemberRequestList)
-    }
-
     val toSocietyActivityList = {
         navController.goto(NavDes.SocietyActivityList)
     }

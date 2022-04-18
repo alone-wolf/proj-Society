@@ -1,6 +1,6 @@
 package com.wh.admin.data.society.bbs
 
-import com.wh.admin.componment.ServerApi
+import com.wh.admin.componment.AdminApi
 import com.wh.admin.data.impl.IRealIconUrl
 import com.wh.admin.data.impl.IZTimestamp
 
@@ -22,7 +22,7 @@ class Post: IRealIconUrl ,IZTimestamp{
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
             userIconUrl
         else
-            ServerApi.userPicUrl(userIconUrl)
+            AdminApi.userPicUrl(userIconUrl)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

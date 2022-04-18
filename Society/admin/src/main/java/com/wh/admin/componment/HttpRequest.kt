@@ -200,6 +200,12 @@ class HttpRequest(activity: MainActivity) {
         }
     }
 
+    fun adminSocietyActivityMemberDelete(memberId: Int, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyActivityMemberDelete(memberId, onReturn, snapBar)
+        }
+    }
+
     fun adminPostDelete(postId: Int, onReturn: () -> Unit) {
         coroutineScope.launch {
             serverDataViewModel.adminPostDelete(postId, onReturn, snapBar)

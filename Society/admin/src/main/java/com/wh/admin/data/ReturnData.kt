@@ -7,8 +7,6 @@ class ReturnObjectData<T> {
     var message: String = ""
     var data: T? = null
 
-    constructor()
-
     constructor(t:T?){
         data = t
     }

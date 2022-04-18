@@ -5,6 +5,7 @@ const PostReply = require("../../model/post_reply");
 const apiRouter = express.Router();
 const logicRouter = express.Router();
 const Society = require("../../model/society");
+const SocietyActivityMember = require("../../model/society_activity_member");
 const SocietyMember = require("../../model/society_member");
 const User = require("../../model/user");
 
@@ -90,7 +91,8 @@ apiRouter.post("/society/create", (req, res, next) => {
     let describe = req.body.describe;
     let bbsName = req.body.bbsName;
     let bbsDescribe = req.body.bbsDescribe;
-    Society.create({ name, describe, bbsName, bbsDescribe }).then(d => {
+    let openTimestamp = req.body.openTimestamp;
+    Society.create({ name, describe, bbsName, bbsDescribe, openTimestamp }).then(d => {
         res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
@@ -116,6 +118,19 @@ apiRouter.post("/society/update", (req, res, next) => {
 apiRouter.post("/society/delete", (req, res, next) => {
     let societyId = req.body.societyId;
     Society.destroy({ where: { id: societyId } }).then(d => {
+        res.json(STATUS.STATUS_200());
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500);
+    });
+});
+
+apiRouter.post("/society/activity/member/delete", (req, res, next) => {
+    let memberId = req.body.memberId;
+
+    SocietyActivityMember.destroy(
+        { where: { id: memberId } }
+    ).then(_ => {
         res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);

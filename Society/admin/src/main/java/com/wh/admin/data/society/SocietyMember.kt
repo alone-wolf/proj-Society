@@ -1,6 +1,6 @@
 package com.wh.admin.data.society
 
-import com.wh.admin.componment.ServerApi
+import com.wh.admin.componment.AdminApi
 import com.wh.admin.data.impl.IRealIconUrl
 import com.wh.admin.data.impl.IZTimestamp
 
@@ -19,7 +19,7 @@ class SocietyMember : IRealIconUrl,IZTimestamp {
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
             userIconUrl
         else
-            ServerApi.userPicUrl(userIconUrl)
+            AdminApi.userPicUrl(userIconUrl)
 
     fun levelToString(): String {
         return when{

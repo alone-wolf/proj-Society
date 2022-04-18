@@ -4,17 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.wh.admin.data.ReturnListData
-import com.wh.admin.data.ReturnObjectData
 import com.wh.admin.data.society.*
 import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.society.bbs.PostReply
 import com.wh.admin.data.user.UserInfo
 
 class ServerDataViewModel : ViewModel() {
-    private val TAG = "WH_"
 
-    private val serverApi = ServerApi.create()
+    private val serverApi = AdminApi.create()
 
     var allUser by mutableStateOf(emptyList<UserInfo>())
     var allSociety by mutableStateOf(emptyList<Society>())
@@ -261,7 +258,7 @@ class ServerDataViewModel : ViewModel() {
         society: Society,
         onReturn: () -> Unit,
         onError: (String) -> Unit
-    ){
+    ) {
         try {
             serverApi.adminSocietyCreate(society.toRequestBody())
             onReturn()
@@ -269,11 +266,12 @@ class ServerDataViewModel : ViewModel() {
             dealWithException(e, onError)
         }
     }
+
     suspend fun adminSocietyUpdate(
         society: Society,
         onReturn: () -> Unit,
         onError: (String) -> Unit
-    ){
+    ) {
         try {
             serverApi.adminSocietyUpdate(society.toRequestBody())
             onReturn()
@@ -319,6 +317,19 @@ class ServerDataViewModel : ViewModel() {
     ) {
         try {
             serverApi.adminSocietyMemberUpdatePermission(userId, societyId, permissionLevel)
+            onReturn()
+        } catch (e: Exception) {
+            dealWithException(e, onError)
+        }
+    }
+
+    suspend fun adminSocietyActivityMemberDelete(
+        memberId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            serverApi.adminSocietyActivityMemberDelete(memberId)
             onReturn()
         } catch (e: Exception) {
             dealWithException(e, onError)

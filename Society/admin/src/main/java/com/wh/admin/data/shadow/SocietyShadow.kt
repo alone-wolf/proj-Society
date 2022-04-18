@@ -1,4 +1,4 @@
-package com.wh.society.api.data.shadow
+package com.wh.admin.data.shadow
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,7 @@ import com.wh.admin.data.society.Society
 
 class SocietyShadow : Society() {
     override var name: String by mutableStateOf(super.name)
-    override var openTimestamp: String by mutableStateOf(super.openTimestamp)
+    override var openTimestamp: Long by mutableStateOf(super.openTimestamp)
     override var describe: String by mutableStateOf(super.describe)
     override var college: String by mutableStateOf(super.college)
     override var bbsName: String by mutableStateOf(super.bbsName)

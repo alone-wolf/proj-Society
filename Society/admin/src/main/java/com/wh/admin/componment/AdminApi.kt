@@ -5,9 +5,7 @@ import com.wh.admin.data.ReturnObjectData
 import com.wh.admin.data.society.*
 import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.society.bbs.PostReply
-import com.wh.admin.data.user.UserChatPrivate
 import com.wh.admin.data.user.UserInfo
-import com.wh.society.api.data.society.SocietyActivityRequest
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,16 +16,13 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 
-interface ServerApi {
+interface AdminApi {
     companion object {
         private const val host = "192.168.50.115"
         private const val ssl = false
         private const val port = 5100
-        private const val sioPort = 5200
-        val baseUrl: String
+        private val baseUrl: String
             get() = "${if (ssl) "https://" else "http://"}${host}:${port}"
-        val sioUrl: String
-            get() = "${if (ssl) "https://" else "http://"}${host}:${sioPort}"
 
 
         fun userPicUrl(picToken: String): String {
@@ -38,13 +33,13 @@ interface ServerApi {
             return "$baseUrl/society/picture/$picToken"
         }
 
-        fun create(): ServerApi {
+        fun create(): AdminApi {
             return Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(ServerApi::class.java)
+                .create(AdminApi::class.java)
         }
     }
 
@@ -109,6 +104,12 @@ interface ServerApi {
         @Field("permissionLevel") permissionLevel: Int
     ): String
 
+    @FormUrlEncoded
+    @POST("/admin/society/activity/member/delete")
+    suspend fun adminSocietyActivityMemberDelete(
+        @Field("memberId") memberId: Int
+    )
+
 
     @FormUrlEncoded
     @POST("/admin/post/delete")
@@ -123,20 +124,6 @@ interface ServerApi {
     ): String
 
 
-//    @POST("/all/post/reply")
-//    suspend fun allPostReply(): ReturnListData<PostReply>
-
-//    @POST("/all/society/pic")
-//    suspend fun allSocietyPic(): ReturnListData<SocietyPicture>
-
-//    @POST("/all/society/member")
-//    suspend fun allSocietyMember(): ReturnListData<SocietyMember>
-
-//    @POST("/all/society/member/request")
-//    suspend fun allSocietyMemberRequest(): ReturnListData<SocietyMemberRequest>
-//
-//    @POST("/all/society/activity")
-//    suspend fun allSocietyActivity(): ReturnListData<SocietyActivity>
 
 
     @POST("/all/user")
@@ -217,20 +204,5 @@ interface ServerApi {
 
     @POST("/all/activity")
     suspend fun allActivity(): ReturnListData<SocietyActivity>
-
-    @POST("/all/society/activity/member/request")
-    suspend fun allSocietyActivityMemberRequest(): ReturnListData<SocietyActivityRequest>
-
-    @POST("/all/society/activity/member")
-    suspend fun allSocietyActivityMember(): ReturnListData<SocietyActivityMember>
-
-    @POST("/all/society/chat/inner")
-    suspend fun allSocietyChatInner(): ReturnListData<SocietyChatMessage>
-
-    @POST("/all/society/notice")
-    suspend fun allSocietyNotice(): ReturnListData<SocietyNotice>
-
-    @POST("/all/user/chat/private")
-    suspend fun allUserChatPrivate(): ReturnListData<UserChatPrivate>
 
 }

@@ -1,4 +1,4 @@
-package com.wh.society.api.data.impl
+package com.wh.admin.data.impl
 
 interface IContain {
 

@@ -1,4 +1,4 @@
-package com.wh.society.ui.componment
+package com.wh.admin.ui.componment
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*

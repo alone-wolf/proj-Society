@@ -3,21 +3,25 @@ package com.wh.admin
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.*
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.wh.admin.componment.AlertRequest
 import com.wh.admin.componment.HttpRequest
 import com.wh.admin.componment.NavRequest
@@ -26,7 +30,6 @@ import com.wh.admin.data.society.Society
 import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.user.UserInfo
 import com.wh.admin.ext.NavHost
-import com.wh.admin.store.SettingStore
 import com.wh.admin.ui.theme.SocietyTheme
 import kotlinx.coroutines.CoroutineScope
 
@@ -56,7 +59,6 @@ class MainActivity : ComponentActivity() {
     }
 
     lateinit var serverDataViewModel: ServerDataViewModel
-    lateinit var settingStore: SettingStore
     lateinit var scaffoldState: ScaffoldState
     lateinit var coroutineScope: CoroutineScope
 
@@ -77,7 +79,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         serverDataViewModel = ViewModelProvider(this)[ServerDataViewModel::class.java]
-        settingStore = SettingStore(this)
 
         setContent {
             SocietyTheme {

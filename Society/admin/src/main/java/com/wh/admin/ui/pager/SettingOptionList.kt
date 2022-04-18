@@ -60,7 +60,7 @@ fun SettingOptionList(activity: MainActivity) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("Allow User Register")
+                Text("允许用户注册账户")
                 AnimatedVisibility(allowUserRegister) {
                     Icon(Icons.Default.Check, "")
                 }
@@ -69,14 +69,5 @@ fun SettingOptionList(activity: MainActivity) {
                 }
             }
         }
-
-//        borderButton("导出全部用户数据", Icons.Default.Info) {}
-//        borderButton("追加导入用户数据", Icons.Default.Info) {}
-//        borderButton("覆盖导入用户数据", Icons.Default.Info) {}
-//        borderButton("生成用户数据表格模板", Icons.Default.Info) {}
-//        borderButton("导出全部社团数据", Icons.Default.Info) {}
-//        borderButton("追加导入社团数据", Icons.Default.Info) {}
-//        borderButton("覆盖导入社团数据", Icons.Default.Info) {}
-//        borderButton("生成社团数据表格模板", Icons.Default.Info) {}
     }
 }

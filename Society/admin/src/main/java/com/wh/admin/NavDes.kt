@@ -85,7 +85,7 @@ sealed class NavDes(
     object SocietyCreator : NavDes(
         "society-creator",
         "创建社团",
-        {}
+        {SocietyCreatorPage(activity = it)}
     )
 
     object SocietyEditor : NavDes(
@@ -104,12 +104,6 @@ sealed class NavDes(
         "society-member-list",
         "社团用户列表",
         { SocietyMemberListPage(activity = it) }
-    )
-
-    object SocietyMemberRequestList : NavDes(
-        "society-member-request-list",
-        "社团成员申请列表",
-        { SocietyMemberRequestListPage(activity = it) }
     )
 
     object SocietyActivityList : NavDes(

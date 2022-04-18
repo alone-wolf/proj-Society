@@ -1,6 +1,6 @@
 package com.wh.admin.data.impl
 
-import com.wh.admin.componment.ServerApi
+import com.wh.admin.componment.AdminApi
 
 interface ChatMessage : IRealIconUrl,IZTimestamp {
     var userId: Int
@@ -13,5 +13,5 @@ interface ChatMessage : IRealIconUrl,IZTimestamp {
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
             userIconUrl
         else
-            ServerApi.userPicUrl(userIconUrl)
+            AdminApi.userPicUrl(userIconUrl)
 }

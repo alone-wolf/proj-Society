@@ -1,10 +1,10 @@
 package com.wh.admin.data.user
 
-import com.wh.admin.componment.ServerApi
+import com.wh.admin.componment.AdminApi
 import com.wh.admin.data.impl.IRequestBody
 import com.wh.admin.data.impl.IZTimestamp
 import com.wh.admin.data.shadow.UserInfoShadow
-import com.wh.society.api.data.impl.IContain
+import com.wh.admin.data.impl.IContain
 import com.wh.admin.data.impl.IRealIconUrl
 import org.json.JSONObject
 
@@ -60,7 +60,7 @@ open class UserInfo : IContain, IRealIconUrl, IRequestBody, IZTimestamp {
         get() = if (iconUrl.startsWith("http://") || iconUrl.startsWith("https://") || iconUrl.isBlank())
             iconUrl
         else
-            ServerApi.userPicUrl(iconUrl)
+            AdminApi.userPicUrl(iconUrl)
 
 
     override val checkArray: Array<String>

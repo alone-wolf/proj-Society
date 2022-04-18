@@ -8,6 +8,7 @@ SocietyActivityMember.init(
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
 
         activityId: DataTypes.INTEGER,
+        activityTitle: DataTypes.STRING,
 
         societyId: DataTypes.INTEGER,
         societyName: DataTypes.STRING,

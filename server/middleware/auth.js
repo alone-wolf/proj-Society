@@ -1,4 +1,3 @@
-const User = require("../model/user");
 const UserLogin = require("../model/user_login");
 const adminToken = "qqq";
 const STATUS = require("../utils/return_data");
@@ -38,10 +37,8 @@ const checkAdminToken = (req, res, next) => {
     // res.end();
   }
 };
-const checkCookieTokenOrAdminToken = (req, res, next) => { };
 
 module.exports = {
   checkCookieToken,
   checkAdminToken,
-  checkCookieTokenOrAdminToken,
 };

@@ -1,6 +1,6 @@
 package com.wh.admin.data.society.bbs
 
-import com.wh.admin.componment.ServerApi
+import com.wh.admin.componment.AdminApi
 import com.wh.admin.data.impl.IRealIconUrl
 import com.wh.admin.data.impl.IZTimestamp
 
@@ -22,7 +22,7 @@ class PostReply: IRealIconUrl ,IZTimestamp{
         get() = if (userIconUrl.startsWith("http://") || userIconUrl.startsWith("https://") || userIconUrl.isBlank())
             userIconUrl
         else
-            ServerApi.userPicUrl(userIconUrl)
+            AdminApi.userPicUrl(userIconUrl)
 
     override fun toString(): String {
         return "PostReply(id=$id, societyId=$societyId, societyName='$societyName', postId=$postId, postTitle='$postTitle', userId=$userId, userIconUrl='$userIconUrl', username='$username', reply='$reply', deviceName='$deviceName', createTimestamp='$createTimestamp', updateTimestamp='$updateTimestamp')"

@@ -86,12 +86,13 @@ apiRouter.post("/join", (req, res, next) => {
         if (d) {
             let societyId = d.societyId;
             let societyName = d.societyName;
+            let activityTitle = d.title;
             User.findOne({ where: { id: userId } }).then(d => {
                 let username = d.username;
                 let userIconUrl = d.iconUrl;
 
                 SocietyActivityMember.create({
-                    userId, username, userIconUrl, societyId, societyName, activityId
+                    userId, username, userIconUrl, societyId, societyName, activityId, activityTitle
                 }).then(d => {
                     res.json(STATUS.STATUS_200(d))
                 }).catch(e => {

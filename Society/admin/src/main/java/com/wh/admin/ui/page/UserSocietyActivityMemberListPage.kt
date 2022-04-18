@@ -11,23 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.SingleLineText
-import com.wh.admin.data.society.SocietyActivity
+import com.wh.admin.data.society.SocietyActivityMember
 
 @Composable
 fun UserSocietyActivityMemberListPage(activity: MainActivity) {
     val userInfo = activity.selectedUserInfo
 
-    val activityList = activity.serverDataViewModel.allActivity
-
     var activityJointList by remember {
-        mutableStateOf(emptyList<SocietyActivity>())
+        mutableStateOf(emptyList<SocietyActivityMember>())
     }
 
     val dataPrepare: () -> Unit = {
 
         activity.http.allUserSocietyActivityMember(userInfo.id) { activityMemberList ->
-            activityJointList =
-                activityList.filter { activityMemberList.any { item -> item.societyId == it.societyId } }
+            activityJointList = activityMemberList
         }
     }
 
@@ -38,22 +35,19 @@ fun UserSocietyActivityMemberListPage(activity: MainActivity) {
     LazyColumn(content = {
         items(
             items = activityJointList,
-            key = { item: SocietyActivity -> item.hashCode() },
+            key = { item: SocietyActivityMember -> item.hashCode() },
             itemContent = { it ->
                 Column(modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-//                        activity.nav.toPostDetail(it
-                    }
+                    .clickable {}
                     .padding(horizontal = 20.dp, vertical = 10.dp)) {
-//                    SingleLineText(text = "标题：${it.}")
                     SingleLineText(text = "社团名称：${it.societyName}")
-//                    SingleLineText(text = "发帖时间：${it.createTSFmt()}")
-//                    SingleLineText(text = "更新时间：${it.updateTSFmt()}")
+                    SingleLineText(text = "活动标题：${it.activityTitle}")
+                    SingleLineText(text = "参加时间：${it.createTSFmt()}")
                     Row {
                         TextButton(onClick = {
                             activity.alert.alertConfirm {
-                                activity.http.adminPostDelete(it.id, dataPrepare)
+                                activity.http.adminSocietyActivityMemberDelete(it.id, dataPrepare)
                             }
                         }) {
                             Text(text = "删除")
