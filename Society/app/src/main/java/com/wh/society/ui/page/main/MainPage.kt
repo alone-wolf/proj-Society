@@ -21,7 +21,7 @@ import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.navigation.MainNavPage
 
-private var _currentPageLabel = "Mine"
+private var _currentPageLabel = "我的"
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -37,34 +37,27 @@ fun MainPage(requestHolder: RequestHolder) {
                 title = { Text(text = currentPageLabel) },
                 actions = {
                     AnimatedVisibility(
-                        visible = currentPageLabel == "Mine",
+                        visible = currentPageLabel == "我的",
                         enter = fadeIn() + slideInHorizontally(initialOffsetX= { it / 2 }),
                         exit = fadeOut() + slideOutHorizontally(targetOffsetX= { it / 2 })
                     ) {
                         Row {
-                            IconButton(onClick = {
-                                requestHolder.globalNav.goto(GlobalNavPage.MainMineNotifyListPage)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Notifications,
-                                    contentDescription = ""
-                                )
+                            if (requestHolder.settingStore.receivePush){
+                                IconButton(onClick = {
+                                    requestHolder.globalNav.goto(GlobalNavPage.MainMineNotifyListPage)
+                                }) {
+                                    Icon(Icons.Default.Notifications, "")
+                                }
                             }
                             IconButton(onClick = {
                                 requestHolder.globalNav.goto(GlobalNavPage.MainMineInfoEditorPage)
                             }) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = ""
-                                )
+                                Icon(Icons.Default.Edit, "")
                             }
                             IconButton(onClick = {
                                 requestHolder.globalNav.goto(GlobalNavPage.Setting)
                             }) {
-                                Icon(
-                                    imageVector = Icons.Default.Settings,
-                                    contentDescription = ""
-                                )
+                                Icon(Icons.Default.Settings, "")
                             }
                         }
                     }

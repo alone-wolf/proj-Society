@@ -32,7 +32,7 @@ apiRouter.post("/user/update", (req, res, next) => {
         describe: req.body.describe,
         iconUrl: req.body.iconUrl,
     }, { where: { id: userId } }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -49,7 +49,7 @@ apiRouter.post("/user/create", (req, res, next) => {
     let describe = req.body.describe;
     let iconUrl = req.body.iconUrl;
     User.create({ name, username, college, phone, email, password, describe, iconUrl }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -69,7 +69,7 @@ apiRouter.post("/user/byid", (req, res, next) => {
 apiRouter.post("/user/delete", (req, res, next) => {
     let userId = req.body.userId;
     User.destroy({ where: { id: userId } }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -91,7 +91,7 @@ apiRouter.post("/society/create", (req, res, next) => {
     let bbsName = req.body.bbsName;
     let bbsDescribe = req.body.bbsDescribe;
     Society.create({ name, describe, bbsName, bbsDescribe }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -106,7 +106,7 @@ apiRouter.post("/society/update", (req, res, next) => {
     let bbsDescribe = req.body.bbsDescribe;
     let iconUrl = req.body.iconUrl;
     Society.update({ name, describe, bbsName, bbsDescribe, iconUrl }, { where: { id: societyId } }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -116,7 +116,7 @@ apiRouter.post("/society/update", (req, res, next) => {
 apiRouter.post("/society/delete", (req, res, next) => {
     let societyId = req.body.societyId;
     Society.destroy({ where: { id: societyId } }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -132,7 +132,7 @@ apiRouter.post("/society/member/create", (req, res, next) => {
             User.findOne({ where: { id: userId } }).then(ud => {
                 let d = { userId, societyId, permissionLevel, username: ud.username, userIconUrl: ud.iconUrl }
                 SocietyMember.create(d).then(dd => {
-                    res.json(STATUS.STATUS_200(dd));
+                    res.json(STATUS.STATUS_200());
                 }).catch(e => {
                     console.log(e);
                     res.status(500).json(STATUS.STATUS_500);
@@ -153,7 +153,7 @@ apiRouter.post("/society/member/delete", (req, res, next) => {
     let userId = req.body.userId;
     let societyId = req.body.societyId;
     SocietyMember.destroy({ where: { userId, societyId } }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -164,8 +164,11 @@ apiRouter.post("/society/member/update/permission", (req, res, next) => {
     let userId = req.body.userId;
     let societyId = req.body.societyId;
     let permissionLevel = req.body.permissionLevel;
-    SocietyMember.update({ permissionLevel }, { where: { userId, societyId } }).then(d => {
-        res.json(STATUS.STATUS_200(d))
+    SocietyMember.update(
+        { permissionLevel },
+        { where: { userId, societyId } }
+    ).then(d => {
+        res.json(STATUS.STATUS_200())
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -175,9 +178,9 @@ apiRouter.post("/society/member/update/permission", (req, res, next) => {
 apiRouter.post("/post/delete", (req, res, next) => {
     let postId = req.body.postId;
 
-    PostReply.destroy({ where: { postId } });
+    PostReply.destroy({ where: { postId } }).catch(e => { console.log(e) });
     Post.destroy({ where: { id: postId } }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
@@ -187,7 +190,7 @@ apiRouter.post("/post/delete", (req, res, next) => {
 apiRouter.post("/post/reply/delete", (req, res, next) => {
     let replyId = req.body.replyId;
     PostReply.destroy({ where: { id: replyId } }).then(d => {
-        res.json(STATUS.STATUS_200(d));
+        res.json(STATUS.STATUS_200());
     }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);

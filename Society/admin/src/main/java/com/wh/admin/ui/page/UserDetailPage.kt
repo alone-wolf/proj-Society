@@ -125,9 +125,8 @@ fun UserDetailPage(activity: MainActivity) {
         textLineButton("用户发布的帖子", activity.nav.toUserPostList)
         textLineButton("用户发表的回复", activity.nav.toUserReplyList)
         textLineButton("用户加入的社团", activity.nav.toUserSocietyMemberList)
-        textLineButton("用户的社团申请", activity.nav.toUserSocietyMemberRequestList)
+//        textLineButton("用户的社团申请", activity.nav.toUserSocietyMemberRequestList)
         textLineButton("用户参加的活动", activity.nav.toUserSocietyActivityMemberList)
-        textLineButton("用户的活动申请", {})
 
     }, modifier = Modifier.fillMaxSize())
 }

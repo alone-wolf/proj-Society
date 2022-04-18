@@ -1,19 +1,18 @@
 const express = require("express");
+const apiRouter = express.Router();
 const Picture = require("../../model/picture");
 const Post = require("../../model/post");
 const PostReply = require("../../model/post_reply");
-const apiRouter = express.Router();
 const Society = require("../../model/society");
 const SocietyActivity = require("../../model/society_activity");
 const SocietyActivityMember = require("../../model/society_activity_member");
-const SocietyActivityRequest = require("../../model/society_activity_request");
-const SocietyInnerChat = require("../../model/society_inner_chat");
+// const SocietyInnerChat = require("../../model/society_inner_chat");
 const SocietyMember = require("../../model/society_member");
 const SocietyMemberRequest = require("../../model/society_member_request");
 const SocietyNotice = require("../../model/society_notice");
 const SocietyPicture = require("../../model/society_picture");
 const User = require("../../model/user");
-const UserChatPrivate = require("../../model/user_chat_private");
+// const UserChatPrivate = require("../../model/user_chat_private");
 
 const STATUS = require("../../utils/return_data");
 
@@ -215,16 +214,16 @@ apiRouter.post("/society/activity/member", (req, res, next) => {
         });
 });
 // 列出社团活动成员申请
-apiRouter.post("/society/activity/member/request", (req, res, next) => {
-    let societyId = req.body.societyId;
-    SocietyActivityRequest.findAll({ where: { societyId } })
-        .then(d => {
-            res.json(STATUS.STATUS_200(d));
-        }).catch(e => {
-            console.log(e);
-            res.status(500).json(STATUS.STATUS_500);
-        });
-});
+// apiRouter.post("/society/activity/member/request", (req, res, next) => {
+//     let societyId = req.body.societyId;
+//     SocietyActivityRequest.findAll({ where: { societyId } })
+//         .then(d => {
+//             res.json(STATUS.STATUS_200(d));
+//         }).catch(e => {
+//             console.log(e);
+//             res.status(500).json(STATUS.STATUS_500);
+//         });
+// });
 // 列出社团通知
 apiRouter.post("/society/notice", (req, res, next) => {
     let societyId = req.body.societyId;

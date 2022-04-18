@@ -116,9 +116,8 @@ fun SocietyDetailPage(activity: MainActivity) {
         }
         textLineButton("论坛帖子", activity.nav.toSocietyPostList)
         textLineButton("社团成员", activity.nav.toSocietyMemberList)
-        textLineButton("成员申请", activity.nav.toSocietyMemberRequestList)
+//        textLineButton("成员申请", activity.nav.toSocietyMemberRequestList)
         textLineButton("社团活动", activity.nav.toSocietyActivityList)
-        textLineButton("活动申请") {}
 
     }, modifier = Modifier.fillMaxSize())
 }

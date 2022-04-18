@@ -49,19 +49,6 @@ apiRouter.post("/list", checkCookieToken, (req, res, next) => {
     });
 });
 
-// create new society
-// apiRouter.post("/create", (req, res, next) => {
-//   let name = req.body.name;
-//   Society.create({ name, describe: name, bbsName: name, bbsDescribe: name, openTimestamp: Date.now() })
-//     .then((data) => {
-//       res.json(STATUS.STATUS_200(JSON.parse(JSON.stringify(data))));
-//     })
-//     .catch((e) => {
-//       console.log(e);
-//       res.status(500).json(STATUS.STATUS_500);
-//     });
-// });
-
 apiRouter.post("/update", checkCookieToken, (req, res, next) => {
   let societyId = req.body.id;
 
@@ -75,11 +62,19 @@ apiRouter.post("/update", checkCookieToken, (req, res, next) => {
   let m = { name, openTimestamp, describe, college, bbsName, bbsDescribe, iconUrl };
 
   Society.update(m, { where: { id: societyId } }).then(d => {
-    res.json(STATUS.STATUS_200(d[0]));
+    res.json(STATUS.STATUS_200());
+
+    PostReply.update({ societyName: name }, { where: { societyId } }).catch(e => { console.log(e) });
+    Post.update({ societyName: name }, { where: { societyId } }).catch(e => { console.log(e) });
+    SocietyActivity.update({ societyName: name }, { where: { societyId } }).catch(e => { console.log(e) });
+    SocietyMemberRequest.update({ societyName: name }, { where: { societyId } }).catch(e => { console.log(e) });
+    SocietyNotice.update({ societyName: name }, { where: { societyId } }).catch(e => { console.log(e) });
+
   }).catch((e) => {
     console.log(e);
     res.status(500).json(STATUS.STATUS_500);
   });
+
 });
 
 apiRouter.post("/info", checkCookieToken, (req, res, next) => {
@@ -97,23 +92,6 @@ apiRouter.post("/info", checkCookieToken, (req, res, next) => {
   });
 });
 
-// delete one society only
-// post with admin token
-// admin function, must check permission
-// apiRouter.post("/delete", (req, res, next) => {
-//   let id = req.body.societyId;
-//   Society.destroy({ where: { id } });
-//   UserSocietyJoint.destroy({ where: { societyId: id } });
-//   SocietyJoinRequest.destroy({ where: { societyId: id } });
-//   Post.destroy({ where: { societyId: id } });
-//   PostReply.destroy({ where: { societyId: id } });
-//   SocietyActivity.destroy({ where: { societyId: id } });
-//   SocietyInnerChat.destroy({ where: { societyId: id } });
-//   res.json(STATUS.STATUS_200());
-// });
-
-// add user and society exit check
-// permission level >= 100 required
 apiRouter.post("/join", checkCookieToken, (req, res, next) => {
   let societyId = req.body.societyId;
   let userId = req.body.userId;
@@ -203,6 +181,12 @@ const societyActivity = require("./activity/router");
 apiRouter.use("/activity", checkCookieToken, societyActivity.apiRouter);
 const societyPicture = require("./picture/router");
 const SocietyMember = require("../../model/society_member");
+const Post = require("../../model/post");
+const PostReply = require("../../model/post_reply");
+const SocietyActivity = require("../../model/society_activity");
+const SocietyInnerChat = require("../../model/society_inner_chat");
+const SocietyMemberRequest = require("../../model/society_member_request");
+const SocietyNotice = require("../../model/society_notice");
 apiRouter.use("/picture", societyPicture.apiRouter);
 
 module.exports = { apiRouter };

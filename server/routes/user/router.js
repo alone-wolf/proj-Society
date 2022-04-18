@@ -6,12 +6,14 @@ const UserLogin = require("../../model/user_login");
 const SocietyMember = require("../../model/society_member");
 const Post = require("../../model/post");
 const PostReply = require("../../model/post_reply");
-const SocietyJoinRequest = require("../../model/society_member_request");
+const SocietyActivityMember = require("../../model/society_activity_member");
+const SocietyMemberRequest = require("../../model/society_member_request");
 const BBSUserWatch = require("../../model/bbs_user_watch");
 const UserChatPrivate = require("../../model/user_chat_private");
-const SocietyActivityRequest = require("../../model/society_activity_request");
 const SocietyInnerChat = require("../../model/society_inner_chat");
 const SocietyNotice = require("../../model/society_notice");
+
+const Op = require("sequelize").Op;
 
 const { checkCookieToken } = require("../../middleware/auth");
 
@@ -67,26 +69,26 @@ apiRouter.post("/info/update", checkCookieToken, (req, res, next) => {
   let college = req.body.college;
   let password = req.body.password;
 
-  let m = { username, email, studentNumber, iconUrl, phone, name, college, password };
-
   User.findOne({ where: { id: userId } }).then(userData => {
     if (!userData) {
       res.status(404).json(STATUS.STATUS_404);
       return;
     }
 
-    userData.update(m).then(newUserData => {
+    userData.update(
+      { username, email, studentNumber, iconUrl, phone, name, college, password }
+    ).then(newUserData => {
+
+      res.json(STATUS.STATUS_200(newUserData));
 
       Post.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
       PostReply.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
-      SocietyActivityRequest.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
       SocietyInnerChat.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
       UserChatPrivate.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
-      SocietyJoinRequest.update({ username }, { where: { userId } }).catch(e => { console.log(e); })
+      SocietyMemberRequest.update({ username }, { where: { userId } }).catch(e => { console.log(e); })
       SocietyMember.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
       SocietyNotice.update({ postUsername: username }, { where: { postUserId: userId } }).catch(e => { console.log(e); })
-
-      res.json(STATUS.STATUS_200(newUserData));
+      SocietyActivityMember.update({ username, userIconUrl: iconUrl }, { where: { userId } }).catch(e => { console.log(e); })
 
     }).catch((e) => {
       console.log(e);
@@ -137,27 +139,36 @@ apiRouter.post("/login", (req, res, next) => {
   let phoneStudentIdEmail = req.body.phoneStudentIdEmail;
   let password = req.body.password;
 
-  User.findOne({ where: { password } }).then(data => {
+  User.findOne({
+    where: {
+      password: password,
+      [Op.or]: [
+        { phone: phoneStudentIdEmail },
+        { studentNumber: phoneStudentIdEmail },
+        { email: phoneStudentIdEmail }
+      ]
+    }
+  }).then(data => {
     if (!data) {
       res.status(404).json(STATUS.STATUS_404);
       return;
     }
-    if (!(data.phone == phoneStudentIdEmail || data.email == phoneStudentIdEmail)) {
-      res.status(404).json(STATUS.STATUS_404);
-      return;
-    }
     let userId = data.id;
+
     UserLogin.destroy({ where: { userId } }).then(d => {
+
       UserLogin.create({ userId }).then(data => {
         res.json(STATUS.STATUS_200(data));
       }).catch(e => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
       });
+
     }).catch(e => {
       console.log(e);
       res.status(500).json(STATUS.STATUS_500);
     });
+
   }).catch(e => {
     console.log(e);
     res.status(500).json(STATUS.STATUS_500);
@@ -175,51 +186,9 @@ apiRouter.post("/logout", checkCookieToken, (req, res, next) => {
   });
 });
 
-// create user
-// authCheckRouter.post("/create", (req, res, next) => {
-//   let name = req.body.name;
-//   let username = req.body.username || name;
-//   let email = req.body.email || "";
-//   let phone = req.body.phone || "";
-//   let studentNumber = req.body.studentNumber;
-//   let password = req.body.password;
-//   User.create({ name, username, email, studentNumber, password, phone })
-//     .then((data) => {
-//       res.json(STATUS.STATUS_200(data));
-//     })
-//     .catch((e) => {
-//       res.status(500).json(STATUS.STATUS_500);
-//       console.log(e);
-//     });
-// });
-
-// authCheckRouter.post("/delete", (req, res, next) => {
-//   let userId = req.body.userId;
-//   User.destroy({ where: { id: userId } }).then(d => {
-//     res.json(STATUS.STATUS_200(d));
-//     UserLogin.destroy({ where: { userId } });
-//     SocietyMember.destroy({ where: { userId } });
-//     UserChatPrivate.destroy({ where: { $or: [{ userId }, { opUserId: userId }] } });
-//     PostReply.destroy({ where: { userId } });
-//     Post.destroy({ where: { userId } });
-//   }).catch((e) => {
-//     console.log(e);
-//     res.status(500).json(STATUS.STATUS_500);
-//   });
-// });
-
-// authCheckRouter.post("/list", (req, res, next) => {
-//   User.findAll().then((data) => {
-//     res.json(STATUS.STATUS_200(data))
-//   }).catch((e) => {
-//     console.log(e);
-//     res.status(500).json(STATUS.STATUS_500);
-//   });
-// });
-
 apiRouter.post("/join/request/list", checkCookieToken, (req, res, next) => {
   let userId = req.body.userId;
-  SocietyJoinRequest.findAll({ where: { userId } }).then(data => {
+  SocietyMemberRequest.findAll({ where: { userId } }).then(data => {
     res.json(STATUS.STATUS_200(data))
   }).catch(e => {
     console.log(e);
