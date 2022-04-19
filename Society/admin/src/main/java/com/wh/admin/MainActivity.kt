@@ -41,7 +41,6 @@ val listItemModifierWithPadding =
 val corner8 = RoundedCornerShape(8.dp)
 
 
-
 class MainActivity : ComponentActivity() {
 
     private val TAG = "WH_"
@@ -74,7 +73,7 @@ class MainActivity : ComponentActivity() {
     val alert = AlertRequest()
 
 
-    @OptIn(ExperimentalPagerApi::class, androidx.compose.material.ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -120,18 +119,17 @@ class MainActivity : ComponentActivity() {
                                 actions = {
                                     if (currentRoute == NavDes.Main.route) {
                                         if (pagerState.currentPage != 2) {
-                                            IconButton(onClick = {
-                                                when (pagerState.currentPage) {
-                                                    0 -> {
-                                                        http.allUser()
+                                            IconButton(
+                                                onClick = {
+                                                    when (pagerState.currentPage) {
+                                                        0 -> http.allUser()
+                                                        1 -> http.allSociety()
                                                     }
-                                                    1 -> {
-                                                        http.allSociety()
-                                                    }
+                                                },
+                                                content = {
+                                                    Icon(Icons.Default.Refresh, "")
                                                 }
-                                            }) {
-                                                Icon(Icons.Default.Refresh, "")
-                                            }
+                                            )
                                         }
                                     }
                                 }
@@ -170,8 +168,6 @@ class MainActivity : ComponentActivity() {
                         alert.Alert1()
                         alert.Alert2()
                         alert.AlertX()
-
-
                     }
                 }
             }

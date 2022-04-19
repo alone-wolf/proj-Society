@@ -147,6 +147,7 @@ class AlertRequest {
         this.title = "提示"
         this.text = { Text(text = text) }
         this.onOk = onOk
-        showOneBtnDialog = true
+        this.onNo = {}
+        showTwoBtnDialog = true
     }
 }

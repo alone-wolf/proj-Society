@@ -110,6 +110,19 @@ interface AdminApi {
         @Field("memberId") memberId: Int
     )
 
+    @FormUrlEncoded
+    @POST("/admin/society/activity/update/level")
+    suspend fun adminSocietyActivityUpdateLevel(
+        @Field("activityId") activityId: Int,
+        @Field("level") level: Int
+    )
+
+    @FormUrlEncoded
+    @POST("/admin/society/activity/delete")
+    suspend fun adminSocietyActivityDelete(
+        @Field("activityId") activityId: Int
+    )
+
 
     @FormUrlEncoded
     @POST("/admin/post/delete")
@@ -122,8 +135,6 @@ interface AdminApi {
     suspend fun adminPostReplyDelete(
         @Field("replyId") replyId: Int
     ): String
-
-
 
 
     @POST("/all/user")

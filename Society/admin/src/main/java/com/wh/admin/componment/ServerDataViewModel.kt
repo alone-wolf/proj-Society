@@ -323,6 +323,19 @@ class ServerDataViewModel : ViewModel() {
         }
     }
 
+    suspend fun adminSocietyActivityDelete(
+        activityId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            serverApi.adminSocietyActivityDelete(activityId)
+            onReturn.invoke()
+        } catch (e: Exception) {
+            dealWithException(e, onError)
+        }
+    }
+
     suspend fun adminSocietyActivityMemberDelete(
         memberId: Int,
         onReturn: () -> Unit,
@@ -332,6 +345,15 @@ class ServerDataViewModel : ViewModel() {
             serverApi.adminSocietyActivityMemberDelete(memberId)
             onReturn()
         } catch (e: Exception) {
+            dealWithException(e, onError)
+        }
+    }
+
+    suspend fun adminSocietyActivityUpdateLevel(activityId: Int,level:Int,onReturn: () -> Unit,onError: (String) -> Unit){
+        try {
+            serverApi.adminSocietyActivityUpdateLevel(activityId, level)
+            onReturn.invoke()
+        }catch (e: Exception) {
             dealWithException(e, onError)
         }
     }

@@ -6,6 +6,7 @@ import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.society.bbs.PostReply
 import com.wh.admin.data.user.UserInfo
 import kotlinx.coroutines.launch
+import java.util.logging.Level
 
 class HttpRequest(activity: MainActivity) {
     private val coroutineScope = activity.coroutineScope
@@ -200,9 +201,28 @@ class HttpRequest(activity: MainActivity) {
         }
     }
 
+    fun adminSocietyActivityDelete(activityId: Int, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyActivityDelete(
+                activityId, onReturn, snapBar
+            )
+        }
+    }
+
     fun adminSocietyActivityMemberDelete(memberId: Int, onReturn: () -> Unit) {
         coroutineScope.launch {
             serverDataViewModel.adminSocietyActivityMemberDelete(memberId, onReturn, snapBar)
+        }
+    }
+
+    fun adminSocietyActivityUpdateLevel(activityId: Int, level: Int, onReturn: () -> Unit) {
+        coroutineScope.launch {
+            serverDataViewModel.adminSocietyActivityUpdateLevel(
+                activityId = activityId,
+                level = level,
+                onReturn = onReturn,
+                onError = snapBar
+            )
         }
     }
 

@@ -5,6 +5,7 @@ const PostReply = require("../../model/post_reply");
 const apiRouter = express.Router();
 const logicRouter = express.Router();
 const Society = require("../../model/society");
+const SocietyActivity = require("../../model/society_activity");
 const SocietyActivityMember = require("../../model/society_activity_member");
 const SocietyMember = require("../../model/society_member");
 const User = require("../../model/user");
@@ -123,6 +124,27 @@ apiRouter.post("/society/delete", (req, res, next) => {
         console.log(e);
         res.status(500).json(STATUS.STATUS_500);
     });
+});
+
+apiRouter.post("/society/activity/update/level", (req, res, next) => {
+    let activityId = req.body.activityId;
+    let level = req.body.level;
+
+    SocietyActivity.update({ level }, { where: { id: activityId } }).then(d => {
+        res.json(STATUS.STATUS_200());
+    }).catch(e => {
+        console.log(e);
+        res.status(500).json(STATUS.STATUS_500);
+    });
+})
+
+apiRouter.post("/society/activity/delete", (req, res, next) => {
+    let activityId = req.body.activityId;
+
+    res.json(STATUS.STATUS_200());
+
+    SocietyActivity.destroy({ where: { id: activityId } }).catch(e => { console.log(e) });
+    SocietyActivityMember.destroy({ where: { activityId: activityId } }).catch(e => { console.log(e) });
 });
 
 apiRouter.post("/society/activity/member/delete", (req, res, next) => {
