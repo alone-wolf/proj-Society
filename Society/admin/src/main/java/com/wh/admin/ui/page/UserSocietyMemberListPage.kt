@@ -62,54 +62,68 @@ fun UserSocietyMemberListPage(activity: MainActivity) {
                     )
                 }
 
+                var showDropdownMenu by remember { mutableStateOf(false) }
+
+
                 Column(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        activity.alert.showXBtnAlert("提示", {
-                            Column {
 
+                        activity.alert.showXBtnAlert(
+                            title = "操作",
+                            text = "选择要进行的操作",
+                            btnX = mapOf(
+                                "修改权限" to {
+                                    activity.alert.show2BtnAlert(
+                                        title = "修改权限",
+                                        text = {
 
-                                var show by remember { mutableStateOf(false) }
-
-                                Box {
-                                    TextButton(onClick = { show = true }) {
-                                        Text(text = "权限 ${level2[permissionLevelForUpdate]}")
-                                    }
-
-                                    DropdownMenu(expanded = show,
-                                        onDismissRequest = { show = false },
-                                        content = {
-                                            level2.forEach {
-                                                DropdownMenuItem(onClick = {
-                                                    show = false
-                                                    permissionLevelForUpdate = it.key
+                                            Box {
+                                                TextButton(onClick = {
+                                                    showDropdownMenu = true
                                                 }) {
-                                                    Text(text = it.value)
+                                                    Text(text = "权限 ${level2[permissionLevelForUpdate]}")
                                                 }
+
+                                                DropdownMenu(expanded = showDropdownMenu,
+                                                    onDismissRequest = {
+                                                        showDropdownMenu = false
+                                                    },
+                                                    content = {
+                                                        level2.forEach {
+                                                            DropdownMenuItem(onClick = {
+                                                                showDropdownMenu = false
+                                                                permissionLevelForUpdate = it.key
+                                                            }) {
+                                                                Text(text = it.value)
+                                                            }
+                                                        }
+                                                    }
+                                                )
                                             }
+
+                                        },
+                                        onOk = {
+                                            activity.http.adminSocietyMemberUpdatePermission(
+                                                userId = userInfo.id,
+                                                societyId = it.id,
+                                                permissionLevel = permissionLevelForUpdate,
+                                                dataPrepare
+                                            )
                                         }
                                     )
-
-                                }
-                            }
-                        }, mapOf(
-                            "更新权限" to {
-                                activity.http.adminSocietyMemberUpdatePermission(
-                                    userId = userInfo.id,
-                                    societyId = it.id,
-                                    permissionLevel = permissionLevelForUpdate,
-                                    dataPrepare
-                                )
-                            },
-                            "删除" to {
-                                activity.http.adminSocietyMemberDelete(
-                                    userId = userInfo.id,
-                                    it.id,
-                                    dataPrepare
-                                )
-                            },
-                            "OK" to {}
-                        ))
+                                },
+                                "删除社团" to {
+                                    activity.http.adminSocietyMemberDelete(
+                                        userId = userInfo.id,
+                                        it.id,
+                                        dataPrepare
+                                    )
+                                },
+                                "取消" to {}
+                            )
+                        )
+                        
                     }
                     .padding(horizontal = 20.dp, vertical = 10.dp)) {
                     SingleLineText(text = "社团id：${it.id}")

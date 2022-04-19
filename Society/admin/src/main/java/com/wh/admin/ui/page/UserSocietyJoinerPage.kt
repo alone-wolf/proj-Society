@@ -1,15 +1,13 @@
 package com.wh.admin.ui.page
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.data.society.Society
 import com.wh.admin.listItemModifierWithPadding
@@ -53,46 +51,53 @@ fun UserSocietyJoinerPage(activity: MainActivity) {
                     11 to "普通成员"
                 )
 
-                Row(modifier = listItemModifierWithPadding.clickable {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
 
-                    activity.alert.show2BtnAlert(
-                        "提示",
-                        {
-                            Column {
-                                Text(text = "要将用户 ${userInfo.username} 设置为社团 ${it.name} 的成员吗")
-                                Box {
-                                    TextButton(onClick = { show = true }) {
-                                        Text(text = "用户权限 ${level2[permissionLevel]}")
-                                    }
-                                    DropdownMenu(
-                                        expanded = show,
-                                        onDismissRequest = { show = false },
-                                        content = {
-                                            level2.forEach {
-                                                DropdownMenuItem(onClick = {
-                                                    show = false
-                                                    permissionLevel = it.key
-                                                }) {
-                                                    Text(text = it.value)
-                                                }
+                            activity.alert.show2BtnAlert(
+                                "提示",
+                                {
+                                    Column {
+                                        Text(text = "要将用户 ${userInfo.username} 设置为社团 ${it.name} 的成员吗")
+                                        Box {
+                                            TextButton(onClick = { show = true }) {
+                                                Text(text = "用户权限 ${level2[permissionLevel]}")
                                             }
+                                            DropdownMenu(
+                                                expanded = show,
+                                                onDismissRequest = { show = false },
+                                                content = {
+                                                    level2.forEach {
+                                                        DropdownMenuItem(onClick = {
+                                                            show = false
+                                                            permissionLevel = it.key
+                                                        }) {
+                                                            Text(text = it.value)
+                                                        }
+                                                    }
+                                                }
+                                            )
                                         }
-                                    )
+                                    }
+                                },
+                                onOk = {
+                                    activity.http.adminSocietyMemberCreate(
+                                        userId = userInfo.id,
+                                        societyId = it.id,
+                                        permissionLevel = permissionLevel
+                                    ) {
+                                        dataPrepare.invoke()
+                                    }
                                 }
-                            }
-                        },
-                        onOk = {
-                            activity.http.adminSocietyMemberCreate(
-                                userId = userInfo.id,
-                                societyId = it.id,
-                                permissionLevel = permissionLevel
-                            ) {
-                                dataPrepare.invoke()
-                            }
+                            )
+
                         }
-                    )
-                }) {
-                    Text(text = it.name)
+                        .padding(vertical = 10.dp, horizontal = 16.dp)
+                ) {
+                    Text(text = "社团名称：${it.name}")
+                    Text(text = "所属学院：${it.optCollege}")
                 }
             }
         )
