@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wh.society.api.NoAuthApi
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.*
@@ -409,6 +410,13 @@ class ApiViewModel : ViewModel() {
                 activityId = activityId
             )
             onReturn(a)
+        }
+    }
+
+    fun societyActivityMemberDelete(memberId:Int,onReturn: () -> Unit,onError: (String) -> Unit){
+        viewModelScope.launch {
+            apiRepository.societyActivityMemberDelete(memberId,onError)
+            onReturn.invoke()
         }
     }
 

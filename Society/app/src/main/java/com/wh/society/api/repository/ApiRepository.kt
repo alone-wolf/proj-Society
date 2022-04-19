@@ -453,6 +453,15 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
         return ReturnListData.blank()
     }
 
+    suspend fun societyActivityMemberDelete(memberId:Int,onError: (String) -> Unit){
+        try {
+            serverApi.societyActivityMemberDelete(memberId)
+        }catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
     suspend fun societyPictureList(
         societyId: Int,
         onError: (String) -> Unit = {}

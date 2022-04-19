@@ -28,10 +28,10 @@ app.use("/pic", pictureRouter.apiRouter);
 const collegeRouter = require("./routes/college/router");
 app.use("/college", collegeRouter.apiRouter);
 const adminRouter = require("./routes/admin/router");
-app.use("/admin", checkAdminToken, adminRouter.apiRouter);
+app.use("/admin", adminRouter.apiRouter);
 const allRouter = require("./routes/all/router");
 app.use('/all', checkAdminToken, allRouter.apiRouter);
 
-app.use("/", express.static(path.join(__dirname, "public")));
+// app.use("/", express.static(path.join(__dirname, "public")));
 
 module.exports = app;

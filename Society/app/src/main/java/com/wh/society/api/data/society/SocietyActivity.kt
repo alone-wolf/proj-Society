@@ -6,14 +6,14 @@ import com.wh.society.api.data.impl.IRequestBody
 import com.wh.society.api.data.impl.IZTimestamp
 import org.json.JSONObject
 
-class SocietyActivity : IRequestBody, IZTimestamp, IJoinnable,IPermissionLevel {
+open class SocietyActivity : IRequestBody, IZTimestamp, IJoinnable,IPermissionLevel {
     var id: Int = 0
     var societyId: Int = 0
     var societyName: String = ""
     var deviceName: String = ""
     override var level: Int = 0
-    var title: String = ""
-    var activity: String = ""
+    open var title: String = ""
+    open var activity: String = ""
     override var createTimestamp: String = ""
     override var updateTimestamp: String = ""
     override var thisUserJoin: Boolean = false

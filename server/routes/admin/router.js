@@ -1,4 +1,5 @@
 const express = require("express");
+const { checkAdminToken } = require("../../middleware/auth");
 const Picture = require("../../model/picture");
 const Post = require("../../model/post");
 const PostReply = require("../../model/post_reply");
@@ -13,7 +14,7 @@ const User = require("../../model/user");
 const STATUS = require("../../utils/return_data");
 
 
-apiRouter.post("/user/list", (req, res, next) => {
+apiRouter.post("/user/list", checkAdminToken, (req, res, next) => {
     User.findAll().then(d => {
         res.json(STATUS.STATUS_200(d));
     }).catch(e => {
@@ -22,7 +23,7 @@ apiRouter.post("/user/list", (req, res, next) => {
     });
 });
 
-apiRouter.post("/user/update", (req, res, next) => {
+apiRouter.post("/user/update", checkAdminToken, (req, res, next) => {
     let userId = req.body.id;
     User.update({
         name: req.body.name,
@@ -41,7 +42,7 @@ apiRouter.post("/user/update", (req, res, next) => {
     });
 })
 
-apiRouter.post("/user/create", (req, res, next) => {
+apiRouter.post("/user/create", checkAdminToken, (req, res, next) => {
     let name = req.body.name;
     let username = req.body.username;
     let college = req.body.college;
@@ -58,7 +59,7 @@ apiRouter.post("/user/create", (req, res, next) => {
     });
 });
 
-apiRouter.post("/user/byid", (req, res, next) => {
+apiRouter.post("/user/byid", checkAdminToken, (req, res, next) => {
     let userId = req.body.userId;
     User.findOne({ where: { id: userId } }).then(d => {
         res.json(STATUS.STATUS_200(d));
@@ -68,7 +69,7 @@ apiRouter.post("/user/byid", (req, res, next) => {
     });
 });
 
-apiRouter.post("/user/delete", (req, res, next) => {
+apiRouter.post("/user/delete", checkAdminToken, (req, res, next) => {
     let userId = req.body.userId;
     User.destroy({ where: { id: userId } }).then(d => {
         res.json(STATUS.STATUS_200());
@@ -78,7 +79,7 @@ apiRouter.post("/user/delete", (req, res, next) => {
     });
 });
 
-apiRouter.post("/society/list", (req, res, next) => {
+apiRouter.post("/society/list", checkAdminToken, (req, res, next) => {
     Society.findAll().then(d => {
         res.json(STATUS.STATUS_200(d));
     }).catch(e => {
@@ -87,7 +88,7 @@ apiRouter.post("/society/list", (req, res, next) => {
     });
 });
 
-apiRouter.post("/society/create", (req, res, next) => {
+apiRouter.post("/society/create", checkAdminToken, (req, res, next) => {
     let name = req.body.name;
     let describe = req.body.describe;
     let bbsName = req.body.bbsName;
@@ -101,7 +102,7 @@ apiRouter.post("/society/create", (req, res, next) => {
     });
 });
 
-apiRouter.post("/society/update", (req, res, next) => {
+apiRouter.post("/society/update", checkAdminToken, (req, res, next) => {
     let societyId = req.body.id;
     let name = req.body.name;
     let describe = req.body.describe;
@@ -116,7 +117,7 @@ apiRouter.post("/society/update", (req, res, next) => {
     });
 });
 
-apiRouter.post("/society/delete", (req, res, next) => {
+apiRouter.post("/society/delete", checkAdminToken, (req, res, next) => {
     let societyId = req.body.societyId;
     Society.destroy({ where: { id: societyId } }).then(d => {
         res.json(STATUS.STATUS_200());
@@ -126,7 +127,7 @@ apiRouter.post("/society/delete", (req, res, next) => {
     });
 });
 
-apiRouter.post("/society/activity/update/level", (req, res, next) => {
+apiRouter.post("/society/activity/update/level", checkAdminToken, (req, res, next) => {
     let activityId = req.body.activityId;
     let level = req.body.level;
 
@@ -138,7 +139,7 @@ apiRouter.post("/society/activity/update/level", (req, res, next) => {
     });
 })
 
-apiRouter.post("/society/activity/delete", (req, res, next) => {
+apiRouter.post("/society/activity/delete", checkAdminToken, (req, res, next) => {
     let activityId = req.body.activityId;
 
     res.json(STATUS.STATUS_200());
@@ -147,7 +148,7 @@ apiRouter.post("/society/activity/delete", (req, res, next) => {
     SocietyActivityMember.destroy({ where: { activityId: activityId } }).catch(e => { console.log(e) });
 });
 
-apiRouter.post("/society/activity/member/delete", (req, res, next) => {
+apiRouter.post("/society/activity/member/delete", checkAdminToken, (req, res, next) => {
     let memberId = req.body.memberId;
 
     SocietyActivityMember.destroy(
@@ -160,7 +161,7 @@ apiRouter.post("/society/activity/member/delete", (req, res, next) => {
     });
 });
 
-apiRouter.post("/society/member/create", (req, res, next) => {
+apiRouter.post("/society/member/create", checkAdminToken, (req, res, next) => {
     let userId = req.body.userId;
     let societyId = req.body.societyId;
     let permissionLevel = req.body.permissionLevel || 11;
@@ -186,7 +187,7 @@ apiRouter.post("/society/member/create", (req, res, next) => {
     });
 })
 
-apiRouter.post("/society/member/delete", (req, res, next) => {
+apiRouter.post("/society/member/delete", checkAdminToken, (req, res, next) => {
     let userId = req.body.userId;
     let societyId = req.body.societyId;
     SocietyMember.destroy({ where: { userId, societyId } }).then(d => {
@@ -197,7 +198,7 @@ apiRouter.post("/society/member/delete", (req, res, next) => {
     });
 });
 
-apiRouter.post("/society/member/update/permission", (req, res, next) => {
+apiRouter.post("/society/member/update/permission", checkAdminToken, (req, res, next) => {
     let userId = req.body.userId;
     let societyId = req.body.societyId;
     let permissionLevel = req.body.permissionLevel;
@@ -212,7 +213,7 @@ apiRouter.post("/society/member/update/permission", (req, res, next) => {
     });
 });
 
-apiRouter.post("/post/delete", (req, res, next) => {
+apiRouter.post("/post/delete", checkAdminToken, (req, res, next) => {
     let postId = req.body.postId;
 
     PostReply.destroy({ where: { postId } }).catch(e => { console.log(e) });
@@ -224,7 +225,7 @@ apiRouter.post("/post/delete", (req, res, next) => {
     });
 });
 
-apiRouter.post("/post/reply/delete", (req, res, next) => {
+apiRouter.post("/post/reply/delete", checkAdminToken, (req, res, next) => {
     let replyId = req.body.replyId;
     PostReply.destroy({ where: { id: replyId } }).then(d => {
         res.json(STATUS.STATUS_200());
@@ -234,7 +235,7 @@ apiRouter.post("/post/reply/delete", (req, res, next) => {
     });
 })
 
-apiRouter.post("/pic/list", (req, res, next) => {
+apiRouter.post("/pic/list", checkAdminToken, (req, res, next) => {
     Picture.findAll().then(d => {
         res.json(STATUS.STATUS_200(d));
     }).catch(e => {
@@ -248,7 +249,7 @@ apiRouter.post("/user/register/allow", (req, res, next) => {
     res.json(STATUS.STATUS_200({ userRegisterAllow }));
 });
 
-apiRouter.post("/user/register/allow/switch", (req, res, next) => {
+apiRouter.post("/user/register/allow/switch", checkAdminToken, (req, res, next) => {
     userRegisterAllow = !userRegisterAllow;
     res.json(STATUS.STATUS_200({ userRegisterAllow }));
 });

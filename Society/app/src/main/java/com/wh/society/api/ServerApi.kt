@@ -214,6 +214,13 @@ interface ServerApi {
         @Field("activityId") activityId: Int
     ): ReturnListData<SocietyActivityMember>
 
+
+    @FormUrlEncoded
+    @POST("/society/activity/member/delete")
+    suspend fun societyActivityMemberDelete(
+        @Field("memberId") memberId:Int
+    )
+
     @FormUrlEncoded
     @POST("/society/picture/list")
     suspend fun societyPictureList(

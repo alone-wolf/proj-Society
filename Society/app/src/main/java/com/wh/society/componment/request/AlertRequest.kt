@@ -33,7 +33,7 @@ abstract class AlertRequest(private val resources: Resources) {
         title: String,
         content: @Composable () -> Unit,
         onOk: () -> Unit,
-        onCancel: () -> Unit
+        onCancel: () -> Unit = {}
     ) {
         this.title = title
         this.content = content
