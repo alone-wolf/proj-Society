@@ -70,7 +70,7 @@ apiRouter.post("/create", (req, res, next) => {
 // 删除指定活动
 apiRouter.post("/delete", (req, res, next) => {
     let activityId = req.body.activityId;
-    Society.destroy({ where: { id: activityId } }).then(d => {
+    SocietyActivity.destroy({ where: { id: activityId } }).then(d => {
         res.json(STATUS.STATUS_200(d));
     }).catch(e => {
         console.log(e);
