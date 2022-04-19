@@ -6,6 +6,7 @@ import com.wh.admin.data.society.*
 import com.wh.admin.data.society.bbs.Post
 import com.wh.admin.data.society.bbs.PostReply
 import com.wh.admin.data.user.UserInfo
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -38,6 +39,7 @@ interface AdminApi {
                 .baseUrl(baseUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(OkHttpClient.Builder().addInterceptor(AdminTokenInterceptor()).build())
                 .build()
                 .create(AdminApi::class.java)
         }

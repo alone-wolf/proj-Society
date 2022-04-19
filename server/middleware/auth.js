@@ -1,5 +1,4 @@
 const UserLogin = require("../model/user_login");
-const adminToken = "qqq";
 const STATUS = require("../utils/return_data");
 
 const checkCookieToken = (req, res, next) => {
@@ -21,22 +20,15 @@ const checkCookieToken = (req, res, next) => {
     });
   }
 }
-const checkAdminToken = (req, res, next) => {
-  next();
-  return;
+const adminToken = "asdfghjkjhgfdchvbjkuyfvghjb";
 
-  if (req.headers.adminToken === adminToken) {
-    next();
+const checkAdminToken = (req, res, next) => {
+  if (req.headers["admin-token"] == adminToken) {
+    next()
   } else {
-    // res.writeHeader(403, "unauthed", { "Content-Type": "application/json" });
-    res.json({
-      status: 403,
-      message: "unauthed",
-      data: {},
-    });
-    // res.end();
+    res.status(403).json(STATUS_403);
   }
-};
+}
 
 module.exports = {
   checkCookieToken,
