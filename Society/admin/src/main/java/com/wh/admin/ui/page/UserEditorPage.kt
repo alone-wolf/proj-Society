@@ -16,6 +16,7 @@ fun UserEditorPage(activity: MainActivity) {
         textFiled(userShadow.name, "姓名") { userShadow.name = it }
         textFiled(userShadow.phone, "手机号") { userShadow.phone = it }
         textFiled(userShadow.email, "邮箱") { userShadow.email = it }
+        textFiled(userShadow.password, "密码") { userShadow.password = it }
         borderButton("保存") {
             activity.http.adminUserUpdate(userShadow) {
                 activity.http.allUser()

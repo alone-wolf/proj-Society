@@ -15,6 +15,7 @@ import com.wh.admin.MainActivity
 import com.wh.admin.SingleLineText
 import com.wh.admin.data.society.Society
 import com.wh.admin.data.society.SocietyMember
+import com.wh.admin.ext.empty
 
 @Composable
 fun UserSocietyMemberListPage(activity: MainActivity) {
@@ -134,6 +135,8 @@ fun UserSocietyMemberListPage(activity: MainActivity) {
                 }
             }
         )
+
+        empty(societyList)
 
     }, modifier = Modifier.fillMaxSize())
 }

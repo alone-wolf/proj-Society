@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.wh.admin.MainActivity
 import com.wh.admin.data.society.SocietyMemberRequest
+import com.wh.admin.ext.empty
 
 @Composable
 fun UserSocietyMemberRequestListPage(activity: MainActivity) {
@@ -37,6 +38,8 @@ fun UserSocietyMemberRequestListPage(activity: MainActivity) {
                     }
                 }
             )
+
+            empty(requestList)
         },
         modifier = Modifier.fillMaxSize()
     )

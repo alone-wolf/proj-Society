@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.data.society.Society
+import com.wh.admin.ext.empty
 import com.wh.admin.listItemModifierWithPadding
 
 @Composable
@@ -101,5 +102,7 @@ fun UserSocietyJoinerPage(activity: MainActivity) {
                 }
             }
         )
+
+        empty(societyList)
     }, modifier = Modifier.fillMaxSize())
 }

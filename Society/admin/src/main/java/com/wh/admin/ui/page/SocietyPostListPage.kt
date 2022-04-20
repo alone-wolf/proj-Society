@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.data.society.bbs.Post
+import com.wh.admin.ext.empty
 
 @Composable
 fun SocietyPostListPage(activity: MainActivity) {
@@ -67,6 +68,8 @@ fun SocietyPostListPage(activity: MainActivity) {
                 }
             }
         )
+
+        empty(postList)
 
     }, modifier = Modifier.fillMaxSize())
 }

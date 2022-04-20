@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
@@ -27,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -143,11 +145,13 @@ fun LazyListScope.empty(isEmpty: Boolean) {
 fun LazyListScope.empty() {
     item {
         Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "Empty")
+            Text(text = "列表为空")
         }
     }
 }
@@ -277,27 +281,35 @@ fun LazyListScope.borderSwitcher(v: Boolean, label: String, onClick: () -> Unit)
 fun <T> LazyListScope.imageNames(
     items: List<T>,
     names: ((item: T) -> String),
-    keys:((item:T)->Any) = { item: T -> item.hashCode() },
+    keys: ((item: T) -> Any) = { item: T -> item.hashCode() },
     imageUrls: ((item: T) -> String),
     requestHolder: RequestHolder,
-    onClick: (T) -> Unit
+    onClick: (T) -> Unit,
+    onLongClick: (T) -> Unit = {}
 ) {
     items(
         items = items,
         key = keys,
-        itemContent = {
+        itemContent = { item ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        onClick.invoke(it)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = {
+                                onClick.invoke(item)
+                            },
+                            onLongPress = {
+                                onLongClick.invoke(item)
+                            }
+                        )
                     }
                     .padding(vertical = 10.dp, horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = rememberImagePainter(
-                        data = imageUrls.invoke(it),
+                        data = imageUrls.invoke(item),
                         imageLoader = requestHolder.coilImageLoader
                     ), "",
                     modifier = Modifier
@@ -308,7 +320,7 @@ fun <T> LazyListScope.imageNames(
                     contentScale = ContentScale.Crop
                 )
                 Text(
-                    text = names.invoke(it),
+                    text = names.invoke(item),
                     fontSize = 18.sp,
                     modifier = Modifier.padding(start = 16.dp),
                     overflow = TextOverflow.Ellipsis,

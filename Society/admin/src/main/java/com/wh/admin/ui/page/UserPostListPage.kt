@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.SingleLineText
 import com.wh.admin.data.society.bbs.Post
+import com.wh.admin.ext.empty
 
 @Composable
 fun UserPostListPage(activity: MainActivity) {
@@ -58,6 +59,8 @@ fun UserPostListPage(activity: MainActivity) {
                 }
             }
         )
+
+        empty(posts)
 
     }, modifier = Modifier.fillMaxSize())
 }

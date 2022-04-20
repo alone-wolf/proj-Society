@@ -69,6 +69,22 @@ fun LazyListScope.borderButton(text: String, onClick: () -> Unit) {
     }
 }
 
+fun <T> LazyListScope.empty(list: List<T>) {
+    if (list.isEmpty()) {
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "列表为空")
+            }
+        }
+    }
+}
+
 fun LazyListScope.borderButton(text: String, icon: ImageVector, onClick: () -> Unit) {
     item {
         Row(

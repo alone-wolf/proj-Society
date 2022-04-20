@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.SingleLineText
 import com.wh.admin.data.society.SocietyActivityMember
+import com.wh.admin.ext.empty
 
 @Composable
 fun UserSocietyActivityMemberListPage(activity: MainActivity) {
@@ -56,6 +57,8 @@ fun UserSocietyActivityMemberListPage(activity: MainActivity) {
                 }
             }
         )
+
+        empty(activityJointList)
 
     }, modifier = Modifier.fillMaxSize())
 }

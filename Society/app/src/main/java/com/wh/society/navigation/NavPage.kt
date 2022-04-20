@@ -14,7 +14,7 @@ import com.wh.society.api.data.society.bbs.Post
 import com.wh.society.api.data.society.bbs.PostReply
 import com.wh.society.api.data.user.UserInfo
 import com.wh.society.componment.RequestHolder
-import com.wh.society.ui.page.detail.UserDetailPage
+import com.wh.society.ui.page.detail.user.UserDetailPage
 import com.wh.society.ui.page.detail.society.SocietyDetailPage
 import com.wh.society.ui.page.detail.society.SocietyInfoEditor
 import com.wh.society.ui.page.detail.society.activity.SocietyActivityDetailPage

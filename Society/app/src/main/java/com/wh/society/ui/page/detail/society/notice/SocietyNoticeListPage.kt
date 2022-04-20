@@ -1,6 +1,5 @@
 package com.wh.society.ui.page.detail.society.notice
 
-import android.text.TextUtils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,15 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -25,12 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.wh.society.api.data.shadow.SocietyNoticeShadow
-import com.wh.society.api.data.shadow.SocietyShadow
 import com.wh.society.api.data.society.SocietyNotice
 import com.wh.society.componment.RequestHolder
 import com.wh.society.navigation.GlobalNavPage
 import com.wh.society.typeExt.empty
-import com.wh.society.typeExt.imageNames
 import com.wh.society.typeExt.spacer
 import com.wh.society.ui.componment.GlobalScaffold
 import com.wh.society.ui.componment.RoundedTextFiled
@@ -66,10 +59,18 @@ fun SocietyNoticeListPage(requestHolder: RequestHolder) {
                     requestHolder.alert.alert(
                         title = "发布社团公告",
                         content = {
-                            Column(
-                                modifier = Modifier.height(125.dp),
-                                verticalArrangement = Arrangement.SpaceBetween
-                            ) {
+
+                            var showDropdownMenu by remember {
+                                mutableStateOf(false)
+                            }
+
+                            val plm = mapOf(
+                                0 to "全部用户可见",
+                                10 to "仅成员可见",
+                                100 to "仅管理员可见"
+                            )
+
+                            Column{
                                 RoundedTextFiled(
                                     value = societyNotice.title,
                                     onValueChange = { societyNotice.title = it },
@@ -80,6 +81,23 @@ fun SocietyNoticeListPage(requestHolder: RequestHolder) {
                                     onValueChange = { societyNotice.notice = it },
                                     placeHolder = "公告内容"
                                 )
+                                Box {
+                                    DropdownMenu(
+                                        expanded = showDropdownMenu,
+                                        onDismissRequest = { showDropdownMenu = false }) {
+                                        plm.entries.forEach {
+                                            DropdownMenuItem(onClick = {
+                                                showDropdownMenu = false
+                                                societyNotice.permissionLevel = it.key
+                                            }) {
+                                                Text(text = "${it.key} ${it.value}")
+                                            }
+                                        }
+                                    }
+                                    OutlinedButton(onClick = { showDropdownMenu = true }) {
+                                        Text(text = "${societyNotice.permissionLevel} ${plm[societyNotice.permissionLevel]}")
+                                    }
+                                }
                             }
                         },
                         onOk = {
@@ -88,10 +106,6 @@ fun SocietyNoticeListPage(requestHolder: RequestHolder) {
                                 onReturn = { updateSocietyNoticeList.invoke() },
                                 onError = requestHolder.toast.toast
                             )
-                        },
-                        onCancel = {
-                            societyNotice.title = ""
-                            societyNotice.notice = ""
                         }
                     )
                 }) {

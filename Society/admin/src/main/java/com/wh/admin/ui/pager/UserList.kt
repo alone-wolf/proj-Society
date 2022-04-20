@@ -18,6 +18,7 @@ import coil.compose.rememberImagePainter
 import com.wh.admin.MainActivity
 import com.wh.admin.SingleLineText
 import com.wh.admin.data.user.UserInfo
+import com.wh.admin.ext.empty
 import com.wh.admin.listItemModifierWithPadding
 
 @Composable
@@ -61,5 +62,7 @@ fun UserList(activity: MainActivity) {
                 }
             }
         )
+
+        empty(activity.serverDataViewModel.allUser)
     }
 }

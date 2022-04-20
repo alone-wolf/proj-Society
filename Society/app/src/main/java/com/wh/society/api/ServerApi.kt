@@ -104,6 +104,19 @@ interface ServerApi {
     )
 
     @FormUrlEncoded
+    @POST("/society/member/list/by/society")
+    suspend fun societyMemberListBySociety(
+        @Field("societyId")societyId:Int
+    ):ReturnListData<SocietyMember>
+
+    @FormUrlEncoded
+    @POST("/society/member/update/permissionLevel")
+    suspend fun societyMemberUpdatePermissionLevel(
+        @Field("memberId")memberId:Int,
+        @Field("permissionLevel")permissionLevel:Int
+    )
+
+    @FormUrlEncoded
     @POST("/society/joint")
     suspend fun societyJoint(
         @Field("id") societyId: Int

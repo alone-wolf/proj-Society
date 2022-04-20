@@ -206,9 +206,35 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
         requestId: Int,
         isAgreed: Boolean,
         onError: (String) -> Unit
-    ){
+    ) {
         try {
             serverApi.societyMemberRequestDeal(requestId, isAgreed)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+    }
+
+    suspend fun societyMemberListBySociety(
+        societyId: Int,
+        onError: (String) -> Unit
+    ): ReturnListData<SocietyMember> {
+        try {
+            return serverApi.societyMemberListBySociety(societyId)
+        } catch (e: Exception) {
+            val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
+            handleError(funName, e, onError)
+        }
+        return ReturnListData.blank()
+    }
+
+    suspend fun societyMemberUpdatePermissionLevel(
+        memberId: Int,
+        permissionLevel: Int,
+        onError: (String) -> Unit
+    ) {
+        try {
+            serverApi.societyMemberUpdatePermissionLevel(memberId, permissionLevel)
         } catch (e: Exception) {
             val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
             handleError(funName, e, onError)
@@ -352,10 +378,10 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
         }
     }
 
-    suspend fun societyChatInnerDelete(chatId:Int,onError: (String) -> Unit){
+    suspend fun societyChatInnerDelete(chatId: Int, onError: (String) -> Unit) {
         try {
             serverApi.societyChatInnerDelete(chatId)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
             handleError(funName, e, onError)
         }
@@ -453,10 +479,10 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
         return ReturnListData.blank()
     }
 
-    suspend fun societyActivityMemberDelete(memberId:Int,onError: (String) -> Unit){
+    suspend fun societyActivityMemberDelete(memberId: Int, onError: (String) -> Unit) {
         try {
             serverApi.societyActivityMemberDelete(memberId)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
             handleError(funName, e, onError)
         }
@@ -522,12 +548,12 @@ class ApiRepository(private val serverApi: ServerApi, private val noAuthApi: NoA
     }
 
     suspend fun societyNoticeDelete(
-        noticeId:Int,
+        noticeId: Int,
         onError: (String) -> Unit
-    ){
+    ) {
         try {
             serverApi.societyNoticeDelete(noticeId)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             val funName = object {}.javaClass.enclosingMethod.name ?: "funName"
             handleError(funName, e, onError)
         }

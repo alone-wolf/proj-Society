@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.SingleLineText
 import com.wh.admin.data.society.bbs.PostReply
+import com.wh.admin.ext.empty
 
 @Composable
 fun UserReplyListPage(activity: MainActivity) {
@@ -53,6 +54,8 @@ fun UserReplyListPage(activity: MainActivity) {
                 }
             }
         )
+
+        empty(replies)
 
     }, modifier = Modifier.fillMaxSize())
 }

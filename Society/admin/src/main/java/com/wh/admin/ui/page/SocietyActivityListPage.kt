@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.wh.admin.MainActivity
 import com.wh.admin.data.society.SocietyActivity
 import com.wh.admin.data.society.bbs.Post
+import com.wh.admin.ext.empty
 
 @Composable
 fun SocietyActivityListPage(activity: MainActivity) {
@@ -117,6 +118,8 @@ fun SocietyActivityListPage(activity: MainActivity) {
                 }
             }
         )
+
+        empty(activityList)
 
     }, modifier = Modifier.fillMaxSize())
 }

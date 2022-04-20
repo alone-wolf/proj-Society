@@ -3,11 +3,11 @@ package com.wh.society.api.data.society
 import com.wh.society.api.ServerApi
 import com.wh.society.api.data.impl.IRealIconUrl
 
-class SocietyMember :IRealIconUrl{
+open class SocietyMember :IRealIconUrl{
     var id:Int = 0
     var userId: Int = 0
     var societyId: Int = 0
-    var permissionLevel: Int = 1
+    open var permissionLevel: Int = 1
     var joinTimestamp: Long = 0L
     var username:String = ""
     var userIconUrl:String = ""
@@ -28,6 +28,12 @@ class SocietyMember :IRealIconUrl{
             else -> "Unknown"
         }
     }
+
+//    fun shadow(): SocietyMemberShadow {
+//        val s= SocietyMemberShadow()
+//        s.permissionLevel = this.permissionLevel
+//        return s
+//    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

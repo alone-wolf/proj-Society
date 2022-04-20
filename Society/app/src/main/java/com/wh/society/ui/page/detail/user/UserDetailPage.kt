@@ -1,4 +1,4 @@
-package com.wh.society.ui.page.detail
+package com.wh.society.ui.page.detail.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -88,7 +88,7 @@ fun UserDetailPage(requestHolder: RequestHolder) {
                                 .padding(vertical = 8.dp, horizontal = 16.dp)
                                 .height(50.dp),
                         ) {
-                            Text(text = "Private Chat")
+                            Text(text = "私聊")
                         }
                     }
                 )

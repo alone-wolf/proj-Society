@@ -45,9 +45,9 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
         // 管理员增加一个 加号 fab
         fab = if (isAdmin) {
             {
-
                 val activityShadow = SocietyActivityShadow()
-
+                activityShadow.societyId = requestHolder.trans.society.id
+                activityShadow.deviceName = requestHolder.deviceName
 
                 var showDropdownMenu by remember {
                     mutableStateOf(false)
@@ -67,12 +67,12 @@ fun SocietyActivityListPage(requestHolder: RequestHolder) {
                                 TextField(
                                     value = activityShadow.title,
                                     onValueChange = { activityShadow.title = it },
-                                    label = { Text(text = "Activity Title") }
+                                    label = { Text(text = "活动标题") }
                                 )
                                 TextField(
                                     value = activityShadow.activity,
                                     onValueChange = { activityShadow.activity = it },
-                                    label = { Text(text = "Content") }
+                                    label = { Text(text = "内容") }
                                 )
                                 Box {
                                     OutlinedButton(onClick = { showDropdownMenu = true }) {

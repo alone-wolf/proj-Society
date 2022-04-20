@@ -1,0 +1,38 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "server/node_modules": true,
+        ".vscode": true,
+        "pusher/node_modules": true,
+        "Society": true,
+        ".gitignore": true,
+        "server/bin": true,
+        "server/uploads": true,
+        "server/socketio": true,
+        "server/sequelize": true,
+        "server/package.json": true,
+        "server/database.sqlite": true,
+        "server/config.json": true,
+        "server/utils": true
+    },
+    "hide-files.files": [
+        "server/node_modules",
+        ".vscode",
+        "pusher/node_modules",
+        "Society",
+        ".gitignore",
+        "server/bin",
+        "server/uploads",
+        "server/socketio",
+        "server/sequelize",
+        "server/package.json",
+        "server/database.sqlite",
+        "server/config.json",
+        "server/utils"
+    ]
+}

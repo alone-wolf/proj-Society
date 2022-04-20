@@ -45,7 +45,7 @@ class ApiViewModel : ViewModel() {
 
     val TAG = "WH_"
 
-    fun societyList(onError: (String) -> Unit = {},onReturn: () -> Unit={}) {
+    fun societyList(onError: (String) -> Unit = {}, onReturn: () -> Unit = {}) {
         viewModelScope.launch {
             societyList = apiRepository.societyList(onError).data
             val b: MutableList<BBS> = mutableListOf()
@@ -197,9 +197,37 @@ class ApiViewModel : ViewModel() {
         }
     }
 
-    fun societyMemberRequestDeal(requestId:Int,isAgreed:Boolean,onReturn: () -> Unit,onError: (String) -> Unit){
+    fun societyMemberRequestDeal(
+        requestId: Int,
+        isAgreed: Boolean,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         viewModelScope.launch {
             apiRepository.societyMemberRequestDeal(requestId, isAgreed, onError)
+            onReturn.invoke()
+        }
+    }
+
+    fun societyMemberListBySociety(
+        societyId: Int,
+        onReturn: (ReturnListData<SocietyMember>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            val a = apiRepository.societyMemberListBySociety(societyId, onError)
+            onReturn.invoke(a)
+        }
+    }
+
+    fun societyMemberUpdatePermissionLevel(
+        memberId: Int,
+        permissionLevel: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            apiRepository.societyMemberUpdatePermissionLevel(memberId, permissionLevel, onError)
             onReturn.invoke()
         }
     }
@@ -326,7 +354,7 @@ class ApiViewModel : ViewModel() {
         chatId: Int,
         onReturn: () -> Unit,
         onError: (String) -> Unit,
-    ){
+    ) {
         viewModelScope.launch {
             apiRepository.societyChatInnerDelete(chatId, onError)
             onReturn.invoke()
@@ -396,7 +424,7 @@ class ApiViewModel : ViewModel() {
         onError: (String) -> Unit
     ) {
         viewModelScope.launch {
-            apiRepository.societyActivityLeave(activityId,userId, onError)
+            apiRepository.societyActivityLeave(activityId, userId, onError)
             onReturn.invoke()
         }
     }
@@ -413,9 +441,13 @@ class ApiViewModel : ViewModel() {
         }
     }
 
-    fun societyActivityMemberDelete(memberId:Int,onReturn: () -> Unit,onError: (String) -> Unit){
+    fun societyActivityMemberDelete(
+        memberId: Int,
+        onReturn: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         viewModelScope.launch {
-            apiRepository.societyActivityMemberDelete(memberId,onError)
+            apiRepository.societyActivityMemberDelete(memberId, onError)
             onReturn.invoke()
         }
     }
@@ -468,9 +500,9 @@ class ApiViewModel : ViewModel() {
         }
     }
 
-    fun societyNoticeDelete(noticeId:Int,onReturn: () -> Unit,onError: (String) -> Unit){
+    fun societyNoticeDelete(noticeId: Int, onReturn: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            apiRepository.societyNoticeDelete(noticeId,onError)
+            apiRepository.societyNoticeDelete(noticeId, onError)
             onReturn.invoke()
         }
     }

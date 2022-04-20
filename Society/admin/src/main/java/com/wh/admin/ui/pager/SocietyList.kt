@@ -18,6 +18,7 @@ import coil.compose.rememberImagePainter
 import com.wh.admin.MainActivity
 import com.wh.admin.SingleLineText
 import com.wh.admin.data.society.Society
+import com.wh.admin.ext.empty
 import com.wh.admin.listItemModifierWithPadding
 
 @Composable
@@ -63,5 +64,7 @@ fun SocietyList(activity: MainActivity) {
                 }
             }
         )
+
+        empty(activity.serverDataViewModel.allSociety)
     }
 }

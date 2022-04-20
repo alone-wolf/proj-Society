@@ -88,14 +88,6 @@ fun SocietyMemberDetailPage(requestHolder: RequestHolder) {
                     }
                 }
 
-
-
-                if (requestHolder.trans.isAdmin && !isMe){
-                    borderSwitcher(joint.permissionLevel == 111,"设置为管理员") {
-//                        requestHolder.apiViewModel.
-                    }
-                }
-
                 item {
                     Button(
                         onClick = {
