@@ -111,7 +111,7 @@ const srdMemberRequestReply = (userId, societyId, societyName) => {
     emitPushSrd(
         userId,
         "society-member-request-reply",
-        { societyId, mesocietyNamessage }
+        { societyId, societyName }
     );
 };
 
